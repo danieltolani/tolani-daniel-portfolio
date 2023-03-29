@@ -1,0 +1,80 @@
+@font-face {
+  font-family: "aeonic";
+  src: url(../assets/fonts/AeonikPro-Roman-VF.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "neue";
+  src: url(../assets/fonts/Neue-Plak-Extended-Regular.f7d043f6.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "druk";
+  src: url(../assets/fonts/Druk-Text-Wide-Bold.db9e48ee.woff) format("woff");
+}
+@font-face {
+  font-family: "integral";
+  src: url(../assets/fonts/Integral-CF-Regular.e801d2be.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "integral";
+  src: url(../assets/fonts/Integral-CF-ExtraBold.12e9b8ee.woff) format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+main.work-section section.text-section {
+  max-width: 93%;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 6rem;
+}
+main.work-section section.text-section h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-family: "aeonic", sans-serif;
+  font-weight: 800;
+  align-items: center;
+  align-self: center;
+  place-self: center;
+  justify-self: center;
+}
+main.work-section section.text-section h1 img {
+  vertical-align: middle;
+}
+main.work-section section.text-section p {
+  color: #2E3840;
+  text-align: center;
+  max-width: 30em;
+  margin: 0 auto;
+  line-height: 26px;
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+}
+main.work-section section.text-section p > img {
+  width: 5% !important;
+  vertical-align: middle;
+}
+main.work-section section.text-section > h1 > img, main.work-section section.text-section p > img {
+  max-width: 100%;
+  width: 3%;
+  height: auto;
+}
+main.work-section section.footer-section p {
+  color: #2E3840;
+  text-align: center;
+  max-width: 30em;
+  margin: 0 auto;
+  line-height: 26px;
+  font-size: 1.2rem;
+  margin-bottom: 3rem;
+}
+main.work-section section.footer-section p > img {
+  width: 5% !important;
+  vertical-align: middle;
+}
+
+/*# sourceMappingURL=work.css.map */

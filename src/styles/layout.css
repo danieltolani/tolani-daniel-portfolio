@@ -1,0 +1,83 @@
+@font-face {
+  font-family: "aeonic";
+  src: url(../assets/fonts/AeonikPro-Roman-VF.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "neue";
+  src: url(../assets/fonts/Neue-Plak-Extended-Regular.f7d043f6.woff) format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "druk";
+  src: url(../assets/fonts/Druk-Text-Wide-Bold.db9e48ee.woff) format("woff");
+}
+@font-face {
+  font-family: "integral";
+  src: url(../assets/fonts/Integral-CF-Regular.e801d2be.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "integral";
+  src: url(../assets/fonts/Integral-CF-ExtraBold.12e9b8ee.woff) format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+.nav-section {
+  position: sticky;
+  padding: 2.7em 0;
+  max-width: 93%;
+  margin: 0 auto;
+}
+.nav-section .nav-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.nav-section .nav-links .brand-logo-2-container {
+  display: none;
+}
+.nav-section .nav-links .nav-routes-container {
+  display: flex;
+}
+.nav-section .nav-links .nav-routes-container .side-bar-link:not(:first-child) {
+  margin-left: 3em;
+}
+.nav-section .nav-links .nav-routes-container a.side-bar-link {
+  color: #434343;
+  text-decoration: none;
+}
+.nav-section .nav-links .nav-rhs button.button {
+  border: 0;
+  padding: 1em 1.875em;
+  font-size: 1rem;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #A02279 11.45%, #A02279 11.45%);
+  color: #FFFFFF;
+  cursor: pointer;
+}
+.nav-section .nav-links .nav-rhs .menu-container {
+  display: none;
+}
+
+@media screen and (max-width: 890px) {
+  .nav-section .nav-links .brand-logo {
+    display: block;
+  }
+  .nav-section .nav-links .nav-routes-container {
+    display: none;
+  }
+  .nav-section .nav-links .nav-rhs {
+    display: flex;
+    align-items: center;
+  }
+  .nav-section .nav-links .nav-rhs .menu-container {
+    margin-left: 1.5rem;
+    display: flex;
+  }
+}
+
+/*# sourceMappingURL=layout.css.map */

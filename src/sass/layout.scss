@@ -1,0 +1,74 @@
+@import 'utils';
+
+.nav-section{
+    position: sticky;
+    padding: 2.7em 0;
+    max-width: 93%;
+    margin: 0 auto;
+
+    .nav-links{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .brand-logo-2-container{
+            display: none;
+        }
+    
+        .nav-routes-container{
+            display: flex;
+    
+            .side-bar-link:not(:first-child){
+                margin-left: 3em;
+            }
+
+            a.side-bar-link{
+                color: $text-dark;
+                text-decoration: none;
+            }
+        }
+        
+        .nav-rhs{
+            button.button{
+                border: 0;
+                padding: 1em 1.875em;
+                font-size: 1rem;
+                border-radius: 10px;
+                background: $primary-color;
+                color: $text-light;
+                cursor: pointer;
+            }
+
+            .menu-container{
+                display: none;
+            }
+        }
+        
+    }
+}
+
+@media screen and (max-width: 890px) {
+    .nav-section{
+
+        .nav-links{
+
+            .brand-logo{
+                display: block;
+            }
+
+            .nav-routes-container{
+                display: none;
+            }
+
+            .nav-rhs{
+                display: flex;
+                align-items: center;
+
+                .menu-container{
+                    margin-left: 1.5rem;
+                    display: flex;
+                }
+            }
+        }
+    }
+}

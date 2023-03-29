@@ -1,0 +1,12 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-app {
+  margin: 0 auto;
+  font-family: "aeonic", sans-serif;
+}
+
+/*# sourceMappingURL=app.css.map */

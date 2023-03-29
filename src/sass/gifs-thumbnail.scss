@@ -1,0 +1,105 @@
+@import 'utils';
+
+section.thumbnail-section{
+    // border: 2px solid #ce1111;
+    // height: 220px;
+
+    
+    .thumbnail{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 220px;
+
+        cursor: pointer;
+        position: relative;
+
+
+        img.gif{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .card--star {
+            position: absolute;
+            top: 30px;
+            right: 34px;
+        }
+
+        .card-details{
+            position: absolute;
+            bottom: 30px;
+            left: 34px;
+            margin-top: 1rem;
+
+            .card-row-1{
+                display: flex;
+                justify-content: space-between;
+
+                & > h1{
+                    font-size: 0.75rem;
+                    font-weight: $font-weight-2;
+                }
+
+                & > a{
+                    font-weight: $font-weight-3;
+                    mix-blend-mode: difference;
+                    color: white;
+                }
+
+                & > p{
+                    font-size: 0.75rem;
+                    font-weight: $font-weight-3;
+                }
+            }
+
+            .card-row-2{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 0.625em;
+                margin-bottom: 0.625em;
+
+                // & > h1{
+                //     font-size: 0.75em;
+                //     font-weight: $font-weight-2;
+                // }
+
+                // & > p{
+                //     font-size: 0.875rem;
+                //     font-weight: $font-weight-2;
+                // }
+
+                // & > a {
+                //     font-weight: $font-weight-2;
+                //     text-decoration: none;
+                // }
+
+            }
+
+            .card-rating{
+                & > svg:not(:first-child){
+                    margin-left: 0.5em;
+                }
+            }
+        }
+    }
+}
+
+.gif-wrapper{
+    // margin-top: 3.625rem;
+    margin-bottom: 3.375rem;
+
+}
+
+.gif-data-container{
+    
+    max-width: 93%;
+    margin: 0 auto;
+    // width: 100%;
+    display: grid;
+    // grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax( 310px, 1fr));
+    grid-auto-rows: 220px;
+    grid-gap: 12px;
+    height: calc(220px * 2 + 12px);
+}
