@@ -26,6 +26,9 @@
   font-weight: 800;
   font-style: normal;
 }
+main.work-section {
+  font-family: "aeonic", sans-serif !important;
+}
 main.work-section section.text-section {
   max-width: 93%;
   margin: 0 auto;
@@ -75,6 +78,32 @@ main.work-section section.footer-section p {
 main.work-section section.footer-section p > img {
   width: 5% !important;
   vertical-align: middle;
+}
+
+@media screen and (max-width: 600px) {
+  main.work-section section.text-section {
+    margin-top: 2rem;
+  }
+  main.work-section section.text-section h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  main.work-section section.text-section p {
+    max-width: 20rem;
+  }
+  main.work-section section.text-section > h1 > img, main.work-section section.text-section p > img {
+    max-width: 100%;
+    width: 12% !important;
+    height: auto;
+    transform: translateY(-2px);
+  }
+  main.work-section section.footer-section p {
+    max-width: 20rem;
+  }
+  main.work-section section.footer-section p > img {
+    width: 14% !important;
+    vertical-align: middle;
+  }
 }
 
 /*# sourceMappingURL=work.css.map */

@@ -3,6 +3,8 @@
 main.work-section{
     // max-width: 93%;
     // margin: 0 auto;
+    font-family: 'aeonic', sans-serif !important;
+
     section.text-section{
 
         max-width: 93%;
@@ -66,3 +68,46 @@ main.work-section{
         }
     }
 }
+
+
+@media screen and (max-width: 600px) {
+    main.work-section{
+        section.text-section{
+            margin-top: 2rem; 
+
+            h1{
+                font-size: 1.5rem;
+                margin-bottom: 0.5rem;
+
+            }
+
+            p{
+             max-width: 20rem;
+            }
+
+            & > h1, p{
+                // border: 2px solid red;
+                & > img {
+                    max-width: 100%;
+                    width: 12% !important;
+                    height: auto;
+                    transform: translateY(-2px)
+                }
+        } 
+
+        }
+
+        section.footer-section{
+            p {
+                & > img {
+                    width: 14% !important;
+                    vertical-align: middle;
+                }
+
+             max-width: 20rem;
+
+
+            }
+        }
+    }
+  }

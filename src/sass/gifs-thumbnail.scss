@@ -4,6 +4,7 @@ section.thumbnail-section{
     // border: 2px solid #ce1111;
     // height: 220px;
 
+    font-family: 'aeonic', sans-serif !important;
     
     .thumbnail{
         display: flex;
@@ -101,5 +102,5 @@ section.thumbnail-section{
     grid-template-columns: repeat(auto-fit, minmax( 310px, 1fr));
     grid-auto-rows: 220px;
     grid-gap: 12px;
-    height: calc(220px * 2 + 12px);
+    // height: calc(220px * 2 + 12px);
 }
