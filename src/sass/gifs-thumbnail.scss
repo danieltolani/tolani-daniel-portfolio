@@ -4,7 +4,7 @@ section.thumbnail-section{
     // border: 2px solid #ce1111;
     // height: 220px;
 
-    font-family: 'aeonic', sans-serif !important;
+    font-family: 'Matter SQ TRIAL', sans-serif !important;
     
     .thumbnail{
         display: flex;
@@ -46,6 +46,7 @@ section.thumbnail-section{
                     font-weight: $font-weight-3;
                     mix-blend-mode: difference;
                     color: white;
+                    letter-spacing: -0.01rem;
                 }
 
                 & > p{
