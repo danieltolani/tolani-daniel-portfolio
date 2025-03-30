@@ -1,6 +1,6 @@
 import React from "react";
 import Gifs from "./gifs";
-import '../styles/work.css'
+import '../sass/work.scss'
 
 const Work = () => {
     return(

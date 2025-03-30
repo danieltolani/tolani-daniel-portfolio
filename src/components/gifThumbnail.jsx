@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/gifs-thumbnail.css'
+import '../sass/gifs-thumbnail.scss'
 
 const GifThumbnail = (props) => {
     return(

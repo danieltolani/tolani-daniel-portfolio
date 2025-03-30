@@ -1,7 +1,6 @@
 import React from "react";
 import GifThumbnail from "./gifThumbnail";
-
-import '../styles/gifs-thumbnail.css'
+import '../sass/gifs-thumbnail.scss'
 
 const Gif = () => {
   return (

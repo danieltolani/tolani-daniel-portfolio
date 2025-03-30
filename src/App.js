@@ -1,7 +1,6 @@
 import Layout from './components/Layout';
 import Work from './components/Work';
-
-import '../src/styles/app.css'
+import './sass/app.scss'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 function App() {
