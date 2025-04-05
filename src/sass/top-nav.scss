@@ -1,11 +1,22 @@
 @use 'utils' as *;
 
 @keyframes blink {
-    0%, 100% {
+    0%, 49% {
         opacity: 1;
     }
-    50% {
+    50%, 100% {
         opacity: 0;
+    }
+}
+
+@keyframes invertColors {
+    0%, 49% {
+        --svg-fill: #44FF86;
+        --svg-stroke: #000;
+    }
+    50%, 100% {
+        --svg-fill: #000;
+        --svg-stroke: #44FF86;
     }
 }
 
@@ -50,11 +61,25 @@
 
         .logo {
             text-decoration: none;
+            
+            .copyright {
+                margin-left: 0.15em;
+            }
         }
 
         .time {
             letter-spacing: -0.5px;
             line-height: 1;
+            animation: invertColors 1s infinite steps(1);
+
+            svg {
+                path[fill="#44FF86"] {
+                    fill: var(--svg-fill, #44FF86);
+                }
+                path[fill="#000"] {
+                    fill: var(--svg-stroke, #000);
+                }
+            }
 
             .blink {
                 animation: blink 1s infinite steps(1);
