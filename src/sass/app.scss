@@ -1,3 +1,9 @@
+@use 'utils' as *;
+@use 'layout';
+@use 'work';
+@use 'home';
+@use 'about';
+
 *{
     margin: 0;
     padding: 0;
@@ -6,5 +12,7 @@
 
 .main-app{
     margin: 0 auto;
-    font-family: 'Matter SQ TRIAL', sans-serif !important;
+    font-family: 'FindersKeepers', sans-serif !important;
+    background-color: black;
+    min-height: 100vh;
 }

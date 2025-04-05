@@ -1,0 +1,80 @@
+@use 'utils' as *;
+
+@keyframes blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+}
+
+.top-nav-section {
+    --nav-radius: 0.5rem;
+    --nav-padding: 0.5em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 2.7em 0;
+    max-width: 93%;
+    margin: 0 auto;
+
+    .nav-list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > * {  // Apply to all direct children
+            background: #101010;
+            padding: var(--nav-padding);
+            border-radius: var(--nav-radius);
+            color: #FFFFFF;
+            font-size: 2em;
+
+            &::before {
+                content: "";
+                display: table;
+                margin-bottom: calc(-0.5lh + 0.17em);
+                transition: none !important;
+            }
+            
+            &::after {
+                content: "";
+                display: table;
+                margin-bottom: calc(-0.5lh + 0.27em);
+                transition: none !important;
+            }
+        }
+
+        .logo {
+            text-decoration: none;
+        }
+
+        .time {
+            letter-spacing: -0.5px;
+            line-height: 1;
+
+            .blink {
+                animation: blink 1s infinite steps(1);
+                display: inline-block;
+                width: 0.15em;
+                text-align: center;
+                margin-top: -0.4em;
+                transform: translateY(-0.08em);
+            }
+        }
+
+        .contact {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+
+            &:hover.active {
+                color: #CBCCCD;
+                transform: translateY(-0.15px);
+            }
+        }
+    }
+}

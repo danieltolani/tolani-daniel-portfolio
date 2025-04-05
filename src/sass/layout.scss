@@ -1,47 +1,74 @@
-@import 'utils';
+@use 'utils' as *;
 
 .nav-section{
-    position: sticky;
-    padding: 2.7em 0;
-    max-width: 93%;
-    margin: 0 auto;
+    position: fixed;
+    bottom: 4em;
+    left: 50%;
+    transform: translateX(-50%);
+    // padding: 0.5em 0.5em;
+    width: fit-content;
+    background: white;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    --nav-radius: 0.5em;
+    --nav-padding: 0.5em;
+    border-radius: var(--nav-radius);
+    // padding: var(--nav-padding);
+    // box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    
 
     .nav-links{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        .brand-logo-2-container{
-            display: none;
-        }
-    
-        .nav-routes-container{
             display: flex;
-    
-            .side-bar-link:not(:first-child){
-                margin-left: 3em;
-            }
+            text-align: center;
+            align-items: center;
+            position: relative;
+            // gap: 2em;
+            // padding: 0.5em 0.5em;
 
-            a.side-bar-link{
+
+
+            a.nav-link{
                 color: $text-dark;
                 text-decoration: none;
-            }
-        }
-        
-        .nav-rhs{
-            button.button{
-                border: 0;
-                padding: 1em 1.875em;
-                font-size: 1rem;
-                border-radius: 10px;
-                background: $primary-color;
-                color: $text-light;
-                cursor: pointer;
-            }
+                font-size: 2em;
+                text-transform: uppercase;
+                display: flow-root;
+                padding: 0 var(--nav-padding);
+                transition: transform 0.12s ease-out, color 0.2s ease-out;
+                
+                &::before {
+                    content: "";
+                    display: table;
+                    margin-bottom: calc(-0.5lh + 0.17em);
+                    transition: none !important;
+                }
+                
+                &::after {
+                    content: "";
+                    display: table;
+                    margin-bottom: calc(-0.5lh + 0.27em);
+                    transition: none !important;
+                }
+                
+                &:hover:not(.active) {
+                    color: #101010;
+                    transform: translateY(1.5px);
+                }
 
-            .menu-container{
-                display: none;
-            }
+                &:hover.active {
+                    color: #CBCCCD;
+                    transform: translateY(-0.15px);
+                }
+
+                &:first-child:not(.active) {
+                    padding-left: var(--nav-padding);
+                }
+
+                &:last-child:not(.active) {
+                    padding-right: var(--nav-padding);
+                }
+
+                
         }
         
     }

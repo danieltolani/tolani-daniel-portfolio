@@ -2,13 +2,15 @@ import React from "react";
 
 import { NavLink } from "react-router-dom";
 import { useState, useEffect } from "react";
-import '../sass/layout.scss'
+import '../../sass/layout.scss'
 
 
 const CustomNavLink = ({ to, ...props }) => {
     let activeStyle = {
-      textDecoration: 'underline',
-      color: '#444444',
+      backgroundColor: '#101010',
+      color: '#CBCCCD',
+      padding: 'calc(var(--nav-padding))',
+      borderRadius: 'calc(var(--nav-radius) - 0.5rem)'  // Master radius minus padding
     };
   
     return (
@@ -42,13 +44,10 @@ const Layout = () => {
     return (
       <section className="nav-section">
         <nav className="nav-links">
-
-            <div className='nav-routes-container'>
-                <CustomNavLink className='side-bar-link' to='/' >Home</CustomNavLink>
-                <CustomNavLink className='side-bar-link' to='/About' >About</CustomNavLink>
-                <CustomNavLink className='side-bar-link' to='/NFTS' >Work</CustomNavLink>
-                <CustomNavLink className='side-bar-link' to='/NFTS' >Archive</CustomNavLink>
-            </div>
+                <CustomNavLink className='nav-link' to='/' >Home</CustomNavLink>
+                <CustomNavLink className='nav-link' to='/work' >Work</CustomNavLink>
+                <CustomNavLink className='nav-link' to='/about' >About</CustomNavLink>
+                <CustomNavLink className='nav-link' to='/archive' >Archive</CustomNavLink>
         </nav>
       </section>   
     )
