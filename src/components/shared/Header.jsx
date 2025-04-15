@@ -5,7 +5,7 @@ import '../../sass/top-nav.scss';
 const Header = () => {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [copied, setCopied] = useState(false);
-    const email = 'tolanidaniel@gmail.com'; // Replace with your actual email
+    const email = 'tolanidaniel02@gmail.com'; // Replace with your actual email
 
     useEffect(() => {
         const timer = setInterval(() => {
