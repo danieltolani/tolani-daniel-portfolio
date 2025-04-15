@@ -47,7 +47,7 @@ const Layout = () => {
                 <CustomNavLink className='nav-link' to='/' >Home</CustomNavLink>
                 <CustomNavLink className='nav-link' to='/work' >Work</CustomNavLink>
                 <CustomNavLink className='nav-link' to='/about' >About</CustomNavLink>
-                <CustomNavLink className='nav-link' to='/archive' >Play</CustomNavLink>
+                <CustomNavLink className='nav-link' to='/play' >Play</CustomNavLink>
         </nav>
       </section>   
     )
