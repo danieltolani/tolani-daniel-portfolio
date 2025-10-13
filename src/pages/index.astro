@@ -1,712 +1,529 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import "../styles/portfolio.css";
+
+// Import all styleframes
+import sf0 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-0.png";
+import sf1 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-1.png";
+import sf2 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-2.png";
+import sf3 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-3.png";
+import sf4 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-4.png";
+import sf5 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-5.png";
+import sf6 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-6.png";
+import sf7 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-7.png";
+import sf8 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-8.png";
+import sf9 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-9.png";
+import sf10 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-10.png";
+import sf11 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-11.png";
+import sf12 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-12.png";
+import sf13 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-13.png";
+import sf14 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-14.png";
+import sf15 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-15.png";
+import sf16 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-16.png";
+import sf17 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-17.png";
+import sf18 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-18.png";
+import sf19 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-19.png";
+import sf20 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-20.png";
+import sf21 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-21.png";
+import sf22 from "../assets/STYLEFRAMES/FRMV-TSR-SF/FRMV-TSR-SF-22.png";
+
+// Create array of styleframes with their src
+const styleframeUrls = [
+	{ src: sf0.src, num: 0 },
+	{ src: sf1.src, num: 1 },
+	{ src: sf2.src, num: 2 },
+	{ src: sf3.src, num: 3 },
+	{ src: sf4.src, num: 4 },
+	{ src: sf5.src, num: 5 },
+	{ src: sf6.src, num: 6 },
+	{ src: sf7.src, num: 7 },
+	{ src: sf8.src, num: 8 },
+	{ src: sf9.src, num: 9 },
+	{ src: sf10.src, num: 10 },
+	{ src: sf11.src, num: 11 },
+	{ src: sf12.src, num: 12 },
+	{ src: sf13.src, num: 13 },
+	{ src: sf14.src, num: 14 },
+	{ src: sf15.src, num: 15 },
+	{ src: sf16.src, num: 16 },
+	{ src: sf17.src, num: 17 },
+	{ src: sf18.src, num: 18 },
+	{ src: sf19.src, num: 19 },
+	{ src: sf20.src, num: 20 },
+	{ src: sf21.src, num: 21 },
+	{ src: sf22.src, num: 22 }
+].map(item => item.src);
 ---
 
 <Layout>
-	<div class="page-container">
+	<div class="page-container scroll-container">
 		<!-- Header Navigation -->
-		<header class="header">
+		<header class="header" id="main-header">
 			<div class="header-logo">
-				<span>dnx.HOME</span>
+				<p>DNX.HOME</p>
 			</div>
-			<nav class="header-nav">
-				<a href="#work" class="nav-link active">PRjt.work</a>
-				<a href="#about" class="nav-link">ab.me</a>
-				<a href="#contact" class="nav-link">ct.mail</a>
+			<nav class="nav">
+				<a href="#projects">PRJT.WORK</a>
+				<a href="#about">AB.ME</a>
+				<a href="#contact">CT.MAIL</a>
 			</nav>
 		</header>
 
 		<!-- Hero Section -->
 		<main class="hero-section snap-section">
 			<div class="hero-content-wrapper">
-				<div class="hero-content">
-						<!-- Project Title & Description -->
-						<div class="hero-desc">
-							<div class="hero-text">
-								<h1 class="hero-title">
-									FARAM<span class="special-o">O</span>VE
-								</h1>
-								<p class="hero-description">
-									When home delivery became a necessity after
-									COVID-19, Faramove wanted to reassure
-									customers that a smarter solution was
-									coming. I crafted a teaser video that
-									introduced the mobile app and built
-									anticipation for its launch.
-								</p>
-							</div>
+				<div class="hero-content" id="hero-card">
+					<!-- Project Title & Description -->
+					<div class="hero-desc">
+						<div class="hero-text">
+							<h1 class="hero-title">
+								FARAM<span class="special-o">O</span>VE
+							</h1>
+							<p class="hero-description">
+								When home delivery became a necessity after
+								COVID-19, Faramove wanted to reassure customers
+								that a smarter solution was coming. I crafted a
+								teaser video that introduced the mobile app and
+								built anticipation for its launch.
+							</p>
+						</div>
 
-							<!-- Thumbnail Carousel -->
-							<div class="carousel-container">
-								<div class="carousel-track" id="carouselTrack">
-									<div class="thumbnail" data-index="0">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="1">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="2">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="3">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="4">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="5">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<!-- Duplicate slides for seamless loop -->
-									<div class="thumbnail" data-index="0">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="1">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="2">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="3">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="4">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
-									<div class="thumbnail" data-index="5">
-										<div
-											class="thumbnail-content"
-											style="background-color: #222325;"
-										>
-										</div>
-									</div>
+					<!-- Thumbnail Carousel -->
+					<div class="carousel-wrapper" id="smoothy-carousel">
+						{[...Array(23)].map((_, index) => (
+							<div class="carousel-item">
+								<div class="carousel-item-inner">
+									<span class="carousel-number">{index + 1}</span>
 								</div>
 							</div>
-						</div>
+						))}
+					</div>
+					</div>
 
-						<!-- Project Metadata -->
-						<div class="project-metadata">
-							<div class="metadata-item">
-								<span class="metadata-label">YEAR</span>
-								<span class="metadata-value">2023</span>
-							</div>
-							<div class="metadata-item">
-								<span class="metadata-label">ROLE</span>
-								<span class="metadata-value"
-									>Sound & Motion Designer</span
-								>
-							</div>
-							<div class="metadata-item">
-								<span class="metadata-label">TOOLS</span>
-								<span class="metadata-value"
-									>Figma Adobe AE, PR & Illustrator</span
-								>
-							</div>
-							<div class="metadata-item">
-								<span class="metadata-label">TYPE</span>
-								<span class="metadata-value">Launch Teaser</span
-								>
-							</div>
+					<!-- Project Metadata -->
+					<div class="project-metadata">
+						<div class="metadata-item">
+							<span class="metadata-label">YEAR</span>
+							<span class="metadata-value">2023</span>
 						</div>
+						<div class="metadata-item">
+							<span class="metadata-label">ROLE</span>
+							<span class="metadata-value"
+								>Sound & Motion Designer</span
+							>
+						</div>
+						<div class="metadata-item">
+							<span class="metadata-label">TOOLS</span>
+							<span class="metadata-value"
+								>Figma Adobe AE, PR & Illustrator</span
+							>
+						</div>
+						<div class="metadata-item">
+							<span class="metadata-label">TYPE</span>
+							<span class="metadata-value">Launch Teaser</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</main>
 
-		<!-- Video Section with Play Button -->
-		<section class="video-section">
+		<!-- VIDEO SECTION -->
+		<section class="snap-section video-section">
 			<div class="video-container">
-				<div class="video-overlay"></div>
+			  <div class="video-wrapper">
+				<!-- Video Player -->
+				<video
+				  id="video-player"
+				  class="video-player"
+				  poster="/assets/vlcsnap.png"
+				  preload="metadata"
+				>
+				  <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+				  Your browser does not support the video tag.
+				</video>
+				
+				<!-- Video Overlay (shown when video is not playing) -->
+				<div id="video-overlay" class="video-overlay"></div>
+			  </div>
+	  
+			  <!-- PLAY BUTTON -->
+			  <button id="play-button" class="play-button" aria-label="Play video">
 				<div class="play-button-wrapper">
-					<button class="play-button" aria-label="Play video">
-						<span class="play-icon">PLAY</span>
-					</button>
+				  <div class="play-button-circle play-button-circle-1">
+					<img
+					  alt=""
+					  src="/assets/ellipse-619.svg"
+					/>
+				  </div>
+				  <div class="play-button-circle play-button-circle-2">
+					<img
+					  alt=""
+					  src="/assets/ellipse-620.svg"
+					/>
+				  </div>
+				  <p class="play-button-text">PLAY</p>
 				</div>
+			  </button>
+	  
+			  <!-- Video Controls (shown when video is playing) -->
+			  <div id="video-controls" class="video-controls">
+				<button
+				  id="pause-button"
+				  aria-label="Pause video"
+				>
+				  <svg fill="currentColor" viewBox="0 0 24 24">
+					<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+				  </svg>
+				</button>
+				
+				<div class="video-controls-progress">
+				  <span id="current-time" class="video-controls-time">0:00</span>
+				  <input
+					id="progress-bar"
+					type="range"
+					min="0"
+					max="100"
+					value="0"
+					class="video-progress-bar"
+				  />
+				  <span id="duration" class="video-controls-time">0:00</span>
+				</div>
+	  
+				<button
+				  id="mute-button"
+				  aria-label="Mute/Unmute"
+				>
+				  <svg fill="currentColor" viewBox="0 0 24 24">
+					<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+				  </svg>
+				</button>
+	  
+				<button
+				  id="fullscreen-button"
+				  aria-label="Fullscreen"
+				>
+				  <svg fill="currentColor" viewBox="0 0 24 24">
+					<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+				  </svg>
+				</button>
+			  </div>
 			</div>
-		</section>
-	</div>
-
-	<!-- Process Section -->
-	<section class="process-section">
-		<div class="process-content">
-			<h2 class="process-title">A PROCESS WAS FOUND.</h2>
-			<div class="process-text">
-				<p>
-					In the cold breathe of new year goals (2023), <em
-						>DESIGN FOR MOTION</em
-					> by <span class="author-name">Austin Shaw</span> was the first
-					book on my read list. Learning to practice free-writing, where
-					I would pour out all I understood about a subject or project.
-					There was no prefect fit for this process than a project where
-					I had no script, no voice over and no brief.
-				</p>
+		  </section>
+	  
+		  <!-- VIDEO MODAL -->
+		  <div id="video-modal" class="video-modal">
+			<div class="video-modal-content">
+			  <!-- Close Button -->
+			  <button id="modal-close" class="modal-close" aria-label="Close modal">
+				<svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			  </button>
+	  
+			  <!-- Modal Video Player -->
+			  <video
+				id="modal-video-player"
+				class="modal-video-player"
+				controls
+				autoplay
+			  >
+				<source id="modal-video-source" src="" type="video/mp4" />
+				Your browser does not support the video tag.
+			  </video>
 			</div>
-
-			<!-- Decorative Grid -->
-			<div class="decorative-grid">
-				<div class="grid-lines"></div>
-			</div>
-
-			<!-- Sketch Images -->
-			<div class="sketch-gallery">
-				<div class="sketch-item sketch-large">
-					<div class="sketch-placeholder">
-						<span class="sketch-label">Design Process Sketches</span
-						>
-					</div>
-				</div>
-				<div class="sketch-item sketch-medium">
-					<div class="sketch-placeholder">
-						<span class="sketch-label">Storyboard</span>
-					</div>
-				</div>
-				<div class="sketch-item sketch-medium">
-					<div class="sketch-placeholder">
-						<span class="sketch-label">Wireframes</span>
-					</div>
-				</div>
-			</div>
-
-			<!-- Process Notes -->
-			<div class="process-notes">
-				<div class="note-card">
-					<p>
-						The first step was to write, write some more and
-						continue to write - This went on for about 45mins where
-						I would aim at getting all the words, synonyms, concept,
-						ideas or anything at all of what I understood about the
-						problem I was trying to solve and communicated. <strong
-							>Logistics - that is fast.</strong
-						>
-					</p>
-				</div>
-				<div class="note-card">
-					<p>I ignore my inability to sketch</p>
-				</div>
-			</div>
-
-			<!-- Challenge Badge -->
-			<div class="challenge-section">
-				<div class="challenge-badge">
-					<span class="challenge-label">CHALLENGE</span>
-					<span class="challenge-number">ONE</span>
-				</div>
-				<h3 class="challenge-title">THE SKETCH.</h3>
-			</div>
+		  </div>
 		</div>
-	</section>
+	  </Layout>
+	  
+  <script>
+	import Smooothy from 'smooothy';
 
-	<!-- Design Section -->
-	<section class="design-section">
-		<div class="design-content">
-			<div class="design-layout">
-				<!-- Vertical Thumbnail Gallery -->
-				<div class="vertical-gallery">
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);"
-						>
-						</div>
-					</div>
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);"
-						>
-						</div>
-					</div>
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"
-						>
-						</div>
-					</div>
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
-						>
-						</div>
-					</div>
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);"
-						>
-						</div>
-					</div>
-					<div class="vertical-thumbnail">
-						<div
-							class="vertical-thumb-content"
-							style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
-						>
-						</div>
-					</div>
-				</div>
-
-				<!-- Main Video Frame -->
-				<div class="main-video-frame">
-					<div class="video-frame-content">
-						<div class="frame-counter">
-							<span class="counter-item">1</span>
-							<span class="counter-of">OF</span>
-							<span class="counter-item">12</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- Design Text Content -->
-				<div class="design-text-content">
-					<h2 class="section-heading">Design.</h2>
-					<div class="design-insights">
-						<div class="insight-block">
-							<h3 class="insight-title">make a u-turn</h3>
-							<p class="insight-text">
-								This project only had the 4-major features of
-								the app as the script, meant for me to work
-								with. The first assumption was thinking what
-								needed to be done was showing off the mobile app
-								interfaces but then this is a teaser. This
-								wouldn't be the first of its kind to come into
-								the market. It needed a second or two of "Please
-								do not skip me."
-							</p>
-						</div>
-						<div class="insight-block">
-							<h3 class="insight-title">pique interest</h3>
-							<p class="insight-text">
-								Shortly before this project, I had worked on a
-								looping loader animation for the mobile app. The
-								idea came to me to reuse the looping motion as
-								the opener and look for a way to make the first
-								3 seconds remarkable. Since the logo already
-								looked nice, I needed to only do some more
-								transformations for the rest of the video to
-								pick up from. This would make the dump the idea
-								of showing off the interfaces and depend solely
-								on graphic elements to tell the story.
-							</p>
-						</div>
-						<div class="insight-block">
-							<h3 class="insight-title">pixellated noise</h3>
-							<p class="insight-text">
-								The flow for the rest of the video came
-								naturally. I wanted a way to represent speed but
-								without using motion blurs. The fast moving
-								lines from 00:33secs combines random wiggle
-								expressions and glitches simply by applying a
-								wiggle expression on the trim path and gap
-								property of a stroke.
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<!-- Animation Frames -->
-			<div class="animation-frames">
-				<div class="anim-frame">
-					<div
-						class="anim-placeholder"
-						style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"
-					>
-						<span class="frame-label">Arrow Movement 1</span>
-					</div>
-				</div>
-				<div class="anim-frame">
-					<div
-						class="anim-placeholder"
-						style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);"
-					>
-						<span class="frame-label">Arrow Movement 2</span>
-					</div>
-				</div>
-				<div class="anim-frame">
-					<div
-						class="anim-placeholder"
-						style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);"
-					>
-						<span class="frame-label">Arrow Movement 3</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Speed Lines Section -->
-	<section class="speed-section">
-		<div class="speed-content">
-			<div class="speed-layout">
-				<!-- Faramove 3D Graphics -->
-				<div class="faramove-graphics">
-					<div class="graphic-placeholder">
-						<div class="logo-3d">F</div>
-					</div>
-				</div>
-
-				<!-- Speed Discussion -->
-				<div class="speed-text">
-					<h3 class="insight-title">speed lines</h3>
-					<p class="insight-text">
-						The flow for the rest of the video came naturally. I
-						wanted a way to represent speed but without using motion
-						blurs. The fast moving lines from 00:33secs combines
-						random wiggle expressions and glitches.
-					</p>
-				</div>
-			</div>
-
-			<!-- Grid with Images -->
-			<div class="image-grid">
-				<div class="grid-row">
-					<div class="grid-item">
-						<div
-							class="grid-placeholder"
-							style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);"
-						>
-						</div>
-					</div>
-					<div class="grid-item">
-						<div
-							class="grid-placeholder"
-							style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);"
-						>
-						</div>
-					</div>
-				</div>
-				<div class="grid-item-full">
-					<div
-						class="grid-placeholder"
-						style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);"
-					>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- 3D Section -->
-	<section class="three-d-section">
-		<div class="three-d-content">
-			<h2 class="section-title-alt">2D but make it look 3d.</h2>
-			<div class="three-d-text">
-				<p>
-					Wrapping up the design phase and NOT worrying about my
-					animation capabilities as though I had another animator on
-					standby was one of the reasons this project came to life.
-				</p>
-			</div>
-
-			<!-- 3D Images Grid -->
-			<div class="three-d-grid">
-				<div class="three-d-item">
-					<div
-						class="three-d-placeholder"
-						style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
-					>
-					</div>
-				</div>
-				<div class="three-d-item">
-					<div
-						class="three-d-placeholder"
-						style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
-					>
-					</div>
-				</div>
-				<div class="three-d-item">
-					<div
-						class="three-d-placeholder"
-						style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
-					>
-					</div>
-				</div>
-			</div>
-
-			<div class="three-d-notes">
-				<div class="note-card">
-					<p>
-						There are several ways to rig a fake 3D box in
-						aftereffects. I wanted one that will allow me the
-						freedom of having the shapes as flat 2D if I wanted to
-						un-wrap it. This is because this where I had texts and I
-						needed change its content later on.
-					</p>
-				</div>
-				<div class="note-card">
-					<p>
-						The first step was to write, write some more and
-						continue to write - This went on for about 45mins where
-						I would aim at getting all the words, synonyms, concept,
-						ideas or anything at all of what I understood about the
-						problem I was trying to solve and communicated.
-					</p>
-				</div>
-			</div>
-
-			<div class="challenge-section">
-				<div class="challenge-badge">
-					<span class="challenge-label">CHALLENGE</span>
-					<span class="challenge-number">TWO</span>
-				</div>
-				<h3 class="challenge-title">THE RIGS.</h3>
-			</div>
-		</div>
-	</section>
-
-	<!-- Credits Section -->
-	<section class="credits-section">
-		<div class="credits-content">
-			<h2 class="credits-title">Credits</h2>
-
-			<div class="credits-layout">
-				<div class="credits-grid">
-					<div class="credit-row">
-						<span class="credit-label">Client</span>
-						<span class="credit-value">Faramove</span>
-					</div>
-					<div class="credit-row">
-						<span class="credit-label">Sound Design</span>
-						<span class="credit-value">Daniel Tolani</span>
-					</div>
-					<div class="credit-row">
-						<span class="credit-label">Motion Design</span>
-						<span class="credit-value">Daniel Tolani</span>
-					</div>
-					<div class="credit-row">
-						<span class="credit-label">Script</span>
-						<span class="credit-value">Faith Adeoye</span>
-					</div>
-					<div class="credit-row">
-						<span class="credit-label">Director</span>
-						<span class="credit-value">Iyanu Odunewu</span>
-					</div>
-					<div class="credit-row">
-						<span class="credit-label">Creative Direction</span>
-						<span class="credit-value">Daniel Tolani</span>
-					</div>
-				</div>
-
-				<div class="credits-extra">
-					<p>Music and SFX<br />Artlist.io</p>
-					<p>Expressway top view<br />dreamstime.com</p>
-					<p>Hero 3D<br />Olawole Adaja</p>
-				</div>
-			</div>
-
-			<!-- Arrow Movement Grid -->
-			<div class="arrow-grid">
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);"
-					>
-					</div>
-				</div>
-				<div class="arrow-item">
-					<div
-						class="arrow-placeholder"
-						style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
-					>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Style Modal -->
-	<div class="modal" id="styleFrameModal">
-		<div class="modal-backdrop"></div>
-		<div class="modal-content">
-			<button class="modal-close" id="closeModal" aria-label="Close video"
-				>×</button
-			>
-			<div class="style_frame-placeholder"></div>
-		</div>
-	</div>
-</Layout>
-
-<script>
-	// Modal and thumbnail interactions
-	const modal = document.getElementById("styleFrameModal");
-	const closeModalBtn = document.getElementById("closeModal");
-	const thumbnails = document.querySelectorAll(".thumbnail");
-	const verticalThumbnails = document.querySelectorAll(".vertical-thumbnail");
-	const playButton = document.querySelector(".play-button");
-
-	// Thumbnail click handlers
-	thumbnails.forEach((thumbnail) => {
-		thumbnail.addEventListener("click", () => {
-			modal?.classList.add("active");
-			document.body.style.overflow = "hidden";
-		});
-	});
-
-	// Vertical thumbnail click handlers
-	verticalThumbnails.forEach((thumbnail) => {
-		thumbnail.addEventListener("click", () => {
-			modal?.classList.add("active");
-			document.body.style.overflow = "hidden";
-		});
-	});
-
-	// Play button click handler
-	playButton?.addEventListener("click", () => {
-		modal?.classList.add("active");
-		document.body.style.overflow = "hidden";
-	});
-
-	// Modal close handlers
-	closeModalBtn?.addEventListener("click", () => {
-		modal?.classList.remove("active");
-		document.body.style.overflow = "";
-	});
-
-	modal?.querySelector(".modal-backdrop")?.addEventListener("click", () => {
-		modal?.classList.remove("active");
-		document.body.style.overflow = "";
-	});
-
-	// ESC key to close modal
-	document.addEventListener("keydown", (e) => {
-		if (e.key === "Escape" && modal?.classList.contains("active")) {
-			modal?.classList.remove("active");
-			document.body.style.overflow = "";
-		}
-	});
-
-	// Smooth scroll behavior
-	document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-		anchor.addEventListener(
-			"click",
-			function (this: HTMLAnchorElement, e: Event) {
-				e.preventDefault();
-				const href = this.getAttribute("href");
-				if (href && href !== "#") {
-					const target = document.querySelector(href);
-					if (target) {
-						target.scrollIntoView({
-							behavior: "smooth",
-							block: "start",
-						});
+	// Initialize Smooothy Carousel
+	const wrapper = document.getElementById('smoothy-carousel') as HTMLElement;
+	
+	if (wrapper) {
+		// Get all carousel items
+		const items = wrapper.querySelectorAll('.carousel-item') as NodeListOf<HTMLElement>;
+		
+		const carousel = new Smooothy(wrapper, {
+			infinite: true,
+			snap: false,
+			dragSensitivity: 0.005,
+			lerpFactor: 0.35,
+			scrollInput: true,
+			onUpdate: (core) => {
+				// Apply parallax to inner elements
+				items.forEach((item, index) => {
+					const inner = item.querySelector('.carousel-item-inner') as HTMLElement;
+					if (inner && core.parallaxValues && core.parallaxValues[index] !== undefined) {
+						const parallax = core.parallaxValues[index] * 30;
+						inner.style.transform = `translateX(${parallax}px)`;
 					}
+				});
+			}
+		});
+
+		// Animation loop with auto-scroll marquee
+		let autoScrollSpeed = -0.008; // Negative = scroll left, Positive = scroll right
+		
+		function tick() {
+			// Update carousel on each frame
+			carousel.update();
+			
+			// Auto-scroll (marquee effect)
+			carousel.target += autoScrollSpeed;
+			
+			requestAnimationFrame(tick);
+		}
+		tick();
+
+		console.log('Smooothy initialized:', carousel);
+	} else {
+		console.error('Carousel wrapper not found');
+	}
+
+	// Hide hero card when video section is snapped into view
+	const heroCard = document.getElementById('hero-card');
+	const heroSection = document.querySelector('.hero-section');
+	const videoSection = document.querySelector('.video-section');
+	const scrollContainer = document.querySelector('.scroll-container');
+	const mainHeader = document.getElementById('main-header');
+  
+	if (scrollContainer && heroCard && heroSection && videoSection && mainHeader) {
+	  scrollContainer.addEventListener('scroll', () => {
+		const heroRect = heroSection.getBoundingClientRect();
+		const videoRect = videoSection.getBoundingClientRect();
+		
+		// If video section is at the top of viewport (snapped), hide hero card and header
+		if (videoRect.top <= 10) {
+		  heroCard.style.opacity = '0';
+		  heroCard.style.pointerEvents = 'none';
+		  mainHeader.style.transform = 'translateY(-100%)';
+		} else {
+		  heroCard.style.opacity = '1';
+		  heroCard.style.pointerEvents = 'auto';
+		  mainHeader.style.transform = 'translateY(0)';
+		}
+	  });
+	}
+	  
+		// Video Player Controls
+		const video = document.getElementById('video-player') as HTMLVideoElement;
+		const playButton = document.getElementById('play-button');
+		const pauseButton = document.getElementById('pause-button');
+		const muteButton = document.getElementById('mute-button');
+		const fullscreenButton = document.getElementById('fullscreen-button');
+		const progressBar = document.getElementById('progress-bar') as HTMLInputElement;
+		const currentTimeDisplay = document.getElementById('current-time');
+		const durationDisplay = document.getElementById('duration');
+		const videoOverlay = document.getElementById('video-overlay');
+		const videoControls = document.getElementById('video-controls');
+	  
+		let isPlaying = false;
+	  
+		// Format time helper
+		function formatTime(seconds: number): string {
+		  const mins = Math.floor(seconds / 60);
+		  const secs = Math.floor(seconds % 60);
+		  return `${mins}:${secs.toString().padStart(2, '0')}`;
+		}
+	  
+		// Play video
+		function playVideo() {
+		  video?.play();
+		  isPlaying = true;
+		  if (playButton) playButton.style.opacity = '0';
+		  if (playButton) playButton.style.pointerEvents = 'none';
+		  if (videoOverlay) videoOverlay.style.opacity = '0';
+		  if (videoControls) videoControls.style.opacity = '1';
+		}
+	  
+		// Pause video
+		function pauseVideo() {
+		  video?.pause();
+		  isPlaying = false;
+		  if (playButton) playButton.style.opacity = '1';
+		  if (playButton) playButton.style.pointerEvents = 'auto';
+		  if (videoOverlay) videoOverlay.style.opacity = '1';
+		}
+	  
+		// Toggle mute
+		function toggleMute() {
+		  if (video) {
+			video.muted = !video.muted;
+			if (muteButton) {
+			  muteButton.innerHTML = video.muted
+				? '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>'
+				: '<svg fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>';
+			}
+		  }
+		}
+	  
+		// Toggle fullscreen
+		function toggleFullscreen() {
+		  if (!document.fullscreenElement) {
+			videoSection?.requestFullscreen();
+		  } else {
+			document.exitFullscreen();
+		  }
+		}
+	  
+		// Update progress bar
+		function updateProgress() {
+		  if (video && progressBar && currentTimeDisplay && durationDisplay) {
+			const percent = (video.currentTime / video.duration) * 100;
+			progressBar.value = percent.toString();
+			currentTimeDisplay.textContent = formatTime(video.currentTime);
+			durationDisplay.textContent = formatTime(video.duration);
+		  }
+		}
+	  
+		// Seek video
+		function seekVideo(e: Event) {
+		  if (video && progressBar) {
+			const target = e.target as HTMLInputElement;
+			const percent = parseFloat(target.value);
+			video.currentTime = (percent / 100) * video.duration;
+		  }
+		}
+	  
+		// Event listeners
+		playButton?.addEventListener('click', playVideo);
+		pauseButton?.addEventListener('click', pauseVideo);
+		muteButton?.addEventListener('click', toggleMute);
+		fullscreenButton?.addEventListener('click', toggleFullscreen);
+		progressBar?.addEventListener('input', seekVideo);
+		video?.addEventListener('timeupdate', updateProgress);
+		
+		// Load video metadata
+		video?.addEventListener('loadedmetadata', () => {
+		  if (durationDisplay && video) {
+			durationDisplay.textContent = formatTime(video.duration);
+		  }
+		});
+	  
+		// Video ended
+		video?.addEventListener('ended', () => {
+		  pauseVideo();
+		  if (progressBar) progressBar.value = '0';
+		});
+	  
+		// Show/hide controls on hover when playing
+		videoSection?.addEventListener('mouseenter', () => {
+		  if (isPlaying && videoControls) {
+			videoControls.style.opacity = '1';
+		  }
+		});
+	  
+		let hideControlsTimeout: any;
+		videoSection?.addEventListener('mousemove', () => {
+		  if (isPlaying && videoControls) {
+			videoControls.style.opacity = '1';
+			clearTimeout(hideControlsTimeout);
+			hideControlsTimeout = setTimeout(() => {
+			  if (videoControls) videoControls.style.opacity = '0.3';
+			}, 2000);
+		  }
+		});
+	  
+		videoSection?.addEventListener('mouseleave', () => {
+		  if (isPlaying && videoControls) {
+			videoControls.style.opacity = '0.3';
+		  }
+		});
+	  
+		// Pause video when section goes out of view
+		if (videoSection && video) {
+		  const observer = new IntersectionObserver(
+			(entries) => {
+			  entries.forEach((entry) => {
+				// If video section is not intersecting (out of view) and video is playing, pause it
+				if (!entry.isIntersecting && isPlaying) {
+				  pauseVideo();
 				}
+			  });
 			},
-		);
-	});
-</script>
+			{
+			  threshold: 0.5, // Trigger when 50% of the section is out of view
+			  root: null, // Use viewport as root
+			}
+		  );
+	  
+		  observer.observe(videoSection);
+		}
+	  
+		// Gallery Modal Functionality
+		const modal = document.getElementById('video-modal');
+		const modalVideo = document.getElementById('modal-video-player') as HTMLVideoElement;
+		const modalVideoSource = document.getElementById('modal-video-source') as HTMLSourceElement;
+		const modalClose = document.getElementById('modal-close');
+		const galleryItems = document.querySelectorAll('.gallery-item');
+	  
+		// Open modal with video
+		function openModal(videoUrl: string) {
+		  if (modal && modalVideo && modalVideoSource) {
+			modalVideoSource.src = videoUrl;
+			modalVideo.load();
+			modal.classList.add('active');
+			document.body.style.overflow = 'hidden'; // Prevent background scrolling
+			
+			// Pause main video if playing
+			if (isPlaying) {
+			  pauseVideo();
+			}
+		  }
+		}
+	  
+		// Close modal
+		function closeModal() {
+		  if (modal && modalVideo) {
+			modal.classList.remove('active');
+			modalVideo.pause();
+			modalVideo.currentTime = 0;
+			document.body.style.overflow = ''; // Re-enable scrolling
+		  }
+		}
+	  
+		// Add click handlers to gallery items
+		galleryItems.forEach((item) => {
+		  item.addEventListener('click', () => {
+			const videoUrl = item.getAttribute('data-video');
+			if (videoUrl) {
+			  openModal(videoUrl);
+			}
+		  });
+		});
+	  
+		// Close modal on close button click
+		modalClose?.addEventListener('click', closeModal);
+	  
+		// Close modal on outside click
+		modal?.addEventListener('click', (e) => {
+		  if (e.target === modal) {
+			closeModal();
+		  }
+		});
+	  
+		// Close modal on Escape key
+		document.addEventListener('keydown', (e) => {
+		  if (e.key === 'Escape' && modal?.classList.contains('active')) {
+			closeModal();
+		  }
+		});
+	  
+		// Pause marquee on hover
+		const marqueeContent = document.querySelector('.marquee-content') as HTMLElement;
+		const marqueeContainer = document.querySelector('.marquee-container');
+	  
+		marqueeContainer?.addEventListener('mouseenter', () => {
+		  if (marqueeContent) {
+			marqueeContent.style.animationPlayState = 'paused';
+		  }
+		});
+	  
+		marqueeContainer?.addEventListener('mouseleave', () => {
+		  if (marqueeContent) {
+			marqueeContent.style.animationPlayState = 'running';
+		  }
+		});
+	  </script>
