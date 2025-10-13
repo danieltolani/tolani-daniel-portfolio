@@ -1,11 +1,712 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Layout from "../layouts/Layout.astro";
+import "../styles/portfolio.css";
 ---
 
 <Layout>
-	<Welcome />
+	<div class="page-container">
+		<!-- Header Navigation -->
+		<header class="header">
+			<div class="header-logo">
+				<span>dnx.HOME</span>
+			</div>
+			<nav class="header-nav">
+				<a href="#work" class="nav-link active">PRjt.work</a>
+				<a href="#about" class="nav-link">ab.me</a>
+				<a href="#contact" class="nav-link">ct.mail</a>
+			</nav>
+		</header>
+
+		<!-- Hero Section -->
+		<main class="hero-section snap-section">
+			<div class="hero-content-wrapper">
+				<div class="hero-content">
+						<!-- Project Title & Description -->
+						<div class="hero-desc">
+							<div class="hero-text">
+								<h1 class="hero-title">
+									FARAM<span class="special-o">O</span>VE
+								</h1>
+								<p class="hero-description">
+									When home delivery became a necessity after
+									COVID-19, Faramove wanted to reassure
+									customers that a smarter solution was
+									coming. I crafted a teaser video that
+									introduced the mobile app and built
+									anticipation for its launch.
+								</p>
+							</div>
+
+							<!-- Thumbnail Carousel -->
+							<div class="carousel-container">
+								<div class="carousel-track" id="carouselTrack">
+									<div class="thumbnail" data-index="0">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="1">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="2">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="3">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="4">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="5">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<!-- Duplicate slides for seamless loop -->
+									<div class="thumbnail" data-index="0">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="1">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="2">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="3">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="4">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+									<div class="thumbnail" data-index="5">
+										<div
+											class="thumbnail-content"
+											style="background-color: #222325;"
+										>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Project Metadata -->
+						<div class="project-metadata">
+							<div class="metadata-item">
+								<span class="metadata-label">YEAR</span>
+								<span class="metadata-value">2023</span>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">ROLE</span>
+								<span class="metadata-value"
+									>Sound & Motion Designer</span
+								>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">TOOLS</span>
+								<span class="metadata-value"
+									>Figma Adobe AE, PR & Illustrator</span
+								>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">TYPE</span>
+								<span class="metadata-value">Launch Teaser</span
+								>
+							</div>
+						</div>
+				</div>
+			</div>
+		</main>
+
+		<!-- Video Section with Play Button -->
+		<section class="video-section">
+			<div class="video-container">
+				<div class="video-overlay"></div>
+				<div class="play-button-wrapper">
+					<button class="play-button" aria-label="Play video">
+						<span class="play-icon">PLAY</span>
+					</button>
+				</div>
+			</div>
+		</section>
+	</div>
+
+	<!-- Process Section -->
+	<section class="process-section">
+		<div class="process-content">
+			<h2 class="process-title">A PROCESS WAS FOUND.</h2>
+			<div class="process-text">
+				<p>
+					In the cold breathe of new year goals (2023), <em
+						>DESIGN FOR MOTION</em
+					> by <span class="author-name">Austin Shaw</span> was the first
+					book on my read list. Learning to practice free-writing, where
+					I would pour out all I understood about a subject or project.
+					There was no prefect fit for this process than a project where
+					I had no script, no voice over and no brief.
+				</p>
+			</div>
+
+			<!-- Decorative Grid -->
+			<div class="decorative-grid">
+				<div class="grid-lines"></div>
+			</div>
+
+			<!-- Sketch Images -->
+			<div class="sketch-gallery">
+				<div class="sketch-item sketch-large">
+					<div class="sketch-placeholder">
+						<span class="sketch-label">Design Process Sketches</span
+						>
+					</div>
+				</div>
+				<div class="sketch-item sketch-medium">
+					<div class="sketch-placeholder">
+						<span class="sketch-label">Storyboard</span>
+					</div>
+				</div>
+				<div class="sketch-item sketch-medium">
+					<div class="sketch-placeholder">
+						<span class="sketch-label">Wireframes</span>
+					</div>
+				</div>
+			</div>
+
+			<!-- Process Notes -->
+			<div class="process-notes">
+				<div class="note-card">
+					<p>
+						The first step was to write, write some more and
+						continue to write - This went on for about 45mins where
+						I would aim at getting all the words, synonyms, concept,
+						ideas or anything at all of what I understood about the
+						problem I was trying to solve and communicated. <strong
+							>Logistics - that is fast.</strong
+						>
+					</p>
+				</div>
+				<div class="note-card">
+					<p>I ignore my inability to sketch</p>
+				</div>
+			</div>
+
+			<!-- Challenge Badge -->
+			<div class="challenge-section">
+				<div class="challenge-badge">
+					<span class="challenge-label">CHALLENGE</span>
+					<span class="challenge-number">ONE</span>
+				</div>
+				<h3 class="challenge-title">THE SKETCH.</h3>
+			</div>
+		</div>
+	</section>
+
+	<!-- Design Section -->
+	<section class="design-section">
+		<div class="design-content">
+			<div class="design-layout">
+				<!-- Vertical Thumbnail Gallery -->
+				<div class="vertical-gallery">
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);"
+						>
+						</div>
+					</div>
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);"
+						>
+						</div>
+					</div>
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"
+						>
+						</div>
+					</div>
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
+						>
+						</div>
+					</div>
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);"
+						>
+						</div>
+					</div>
+					<div class="vertical-thumbnail">
+						<div
+							class="vertical-thumb-content"
+							style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+						>
+						</div>
+					</div>
+				</div>
+
+				<!-- Main Video Frame -->
+				<div class="main-video-frame">
+					<div class="video-frame-content">
+						<div class="frame-counter">
+							<span class="counter-item">1</span>
+							<span class="counter-of">OF</span>
+							<span class="counter-item">12</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Design Text Content -->
+				<div class="design-text-content">
+					<h2 class="section-heading">Design.</h2>
+					<div class="design-insights">
+						<div class="insight-block">
+							<h3 class="insight-title">make a u-turn</h3>
+							<p class="insight-text">
+								This project only had the 4-major features of
+								the app as the script, meant for me to work
+								with. The first assumption was thinking what
+								needed to be done was showing off the mobile app
+								interfaces but then this is a teaser. This
+								wouldn't be the first of its kind to come into
+								the market. It needed a second or two of "Please
+								do not skip me."
+							</p>
+						</div>
+						<div class="insight-block">
+							<h3 class="insight-title">pique interest</h3>
+							<p class="insight-text">
+								Shortly before this project, I had worked on a
+								looping loader animation for the mobile app. The
+								idea came to me to reuse the looping motion as
+								the opener and look for a way to make the first
+								3 seconds remarkable. Since the logo already
+								looked nice, I needed to only do some more
+								transformations for the rest of the video to
+								pick up from. This would make the dump the idea
+								of showing off the interfaces and depend solely
+								on graphic elements to tell the story.
+							</p>
+						</div>
+						<div class="insight-block">
+							<h3 class="insight-title">pixellated noise</h3>
+							<p class="insight-text">
+								The flow for the rest of the video came
+								naturally. I wanted a way to represent speed but
+								without using motion blurs. The fast moving
+								lines from 00:33secs combines random wiggle
+								expressions and glitches simply by applying a
+								wiggle expression on the trim path and gap
+								property of a stroke.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Animation Frames -->
+			<div class="animation-frames">
+				<div class="anim-frame">
+					<div
+						class="anim-placeholder"
+						style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);"
+					>
+						<span class="frame-label">Arrow Movement 1</span>
+					</div>
+				</div>
+				<div class="anim-frame">
+					<div
+						class="anim-placeholder"
+						style="background: linear-gradient(135deg, #16a085 0%, #1abc9c 100%);"
+					>
+						<span class="frame-label">Arrow Movement 2</span>
+					</div>
+				</div>
+				<div class="anim-frame">
+					<div
+						class="anim-placeholder"
+						style="background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);"
+					>
+						<span class="frame-label">Arrow Movement 3</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Speed Lines Section -->
+	<section class="speed-section">
+		<div class="speed-content">
+			<div class="speed-layout">
+				<!-- Faramove 3D Graphics -->
+				<div class="faramove-graphics">
+					<div class="graphic-placeholder">
+						<div class="logo-3d">F</div>
+					</div>
+				</div>
+
+				<!-- Speed Discussion -->
+				<div class="speed-text">
+					<h3 class="insight-title">speed lines</h3>
+					<p class="insight-text">
+						The flow for the rest of the video came naturally. I
+						wanted a way to represent speed but without using motion
+						blurs. The fast moving lines from 00:33secs combines
+						random wiggle expressions and glitches.
+					</p>
+				</div>
+			</div>
+
+			<!-- Grid with Images -->
+			<div class="image-grid">
+				<div class="grid-row">
+					<div class="grid-item">
+						<div
+							class="grid-placeholder"
+							style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);"
+						>
+						</div>
+					</div>
+					<div class="grid-item">
+						<div
+							class="grid-placeholder"
+							style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);"
+						>
+						</div>
+					</div>
+				</div>
+				<div class="grid-item-full">
+					<div
+						class="grid-placeholder"
+						style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);"
+					>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- 3D Section -->
+	<section class="three-d-section">
+		<div class="three-d-content">
+			<h2 class="section-title-alt">2D but make it look 3d.</h2>
+			<div class="three-d-text">
+				<p>
+					Wrapping up the design phase and NOT worrying about my
+					animation capabilities as though I had another animator on
+					standby was one of the reasons this project came to life.
+				</p>
+			</div>
+
+			<!-- 3D Images Grid -->
+			<div class="three-d-grid">
+				<div class="three-d-item">
+					<div
+						class="three-d-placeholder"
+						style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"
+					>
+					</div>
+				</div>
+				<div class="three-d-item">
+					<div
+						class="three-d-placeholder"
+						style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"
+					>
+					</div>
+				</div>
+				<div class="three-d-item">
+					<div
+						class="three-d-placeholder"
+						style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"
+					>
+					</div>
+				</div>
+			</div>
+
+			<div class="three-d-notes">
+				<div class="note-card">
+					<p>
+						There are several ways to rig a fake 3D box in
+						aftereffects. I wanted one that will allow me the
+						freedom of having the shapes as flat 2D if I wanted to
+						un-wrap it. This is because this where I had texts and I
+						needed change its content later on.
+					</p>
+				</div>
+				<div class="note-card">
+					<p>
+						The first step was to write, write some more and
+						continue to write - This went on for about 45mins where
+						I would aim at getting all the words, synonyms, concept,
+						ideas or anything at all of what I understood about the
+						problem I was trying to solve and communicated.
+					</p>
+				</div>
+			</div>
+
+			<div class="challenge-section">
+				<div class="challenge-badge">
+					<span class="challenge-label">CHALLENGE</span>
+					<span class="challenge-number">TWO</span>
+				</div>
+				<h3 class="challenge-title">THE RIGS.</h3>
+			</div>
+		</div>
+	</section>
+
+	<!-- Credits Section -->
+	<section class="credits-section">
+		<div class="credits-content">
+			<h2 class="credits-title">Credits</h2>
+
+			<div class="credits-layout">
+				<div class="credits-grid">
+					<div class="credit-row">
+						<span class="credit-label">Client</span>
+						<span class="credit-value">Faramove</span>
+					</div>
+					<div class="credit-row">
+						<span class="credit-label">Sound Design</span>
+						<span class="credit-value">Daniel Tolani</span>
+					</div>
+					<div class="credit-row">
+						<span class="credit-label">Motion Design</span>
+						<span class="credit-value">Daniel Tolani</span>
+					</div>
+					<div class="credit-row">
+						<span class="credit-label">Script</span>
+						<span class="credit-value">Faith Adeoye</span>
+					</div>
+					<div class="credit-row">
+						<span class="credit-label">Director</span>
+						<span class="credit-value">Iyanu Odunewu</span>
+					</div>
+					<div class="credit-row">
+						<span class="credit-label">Creative Direction</span>
+						<span class="credit-value">Daniel Tolani</span>
+					</div>
+				</div>
+
+				<div class="credits-extra">
+					<p>Music and SFX<br />Artlist.io</p>
+					<p>Expressway top view<br />dreamstime.com</p>
+					<p>Hero 3D<br />Olawole Adaja</p>
+				</div>
+			</div>
+
+			<!-- Arrow Movement Grid -->
+			<div class="arrow-grid">
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #cfd9df 0%, #e2ebf0 100%);"
+					>
+					</div>
+				</div>
+				<div class="arrow-item">
+					<div
+						class="arrow-placeholder"
+						style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);"
+					>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Style Modal -->
+	<div class="modal" id="styleFrameModal">
+		<div class="modal-backdrop"></div>
+		<div class="modal-content">
+			<button class="modal-close" id="closeModal" aria-label="Close video"
+				>×</button
+			>
+			<div class="style_frame-placeholder"></div>
+		</div>
+	</div>
 </Layout>
+
+<script>
+	// Modal and thumbnail interactions
+	const modal = document.getElementById("styleFrameModal");
+	const closeModalBtn = document.getElementById("closeModal");
+	const thumbnails = document.querySelectorAll(".thumbnail");
+	const verticalThumbnails = document.querySelectorAll(".vertical-thumbnail");
+	const playButton = document.querySelector(".play-button");
+
+	// Thumbnail click handlers
+	thumbnails.forEach((thumbnail) => {
+		thumbnail.addEventListener("click", () => {
+			modal?.classList.add("active");
+			document.body.style.overflow = "hidden";
+		});
+	});
+
+	// Vertical thumbnail click handlers
+	verticalThumbnails.forEach((thumbnail) => {
+		thumbnail.addEventListener("click", () => {
+			modal?.classList.add("active");
+			document.body.style.overflow = "hidden";
+		});
+	});
+
+	// Play button click handler
+	playButton?.addEventListener("click", () => {
+		modal?.classList.add("active");
+		document.body.style.overflow = "hidden";
+	});
+
+	// Modal close handlers
+	closeModalBtn?.addEventListener("click", () => {
+		modal?.classList.remove("active");
+		document.body.style.overflow = "";
+	});
+
+	modal?.querySelector(".modal-backdrop")?.addEventListener("click", () => {
+		modal?.classList.remove("active");
+		document.body.style.overflow = "";
+	});
+
+	// ESC key to close modal
+	document.addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && modal?.classList.contains("active")) {
+			modal?.classList.remove("active");
+			document.body.style.overflow = "";
+		}
+	});
+
+	// Smooth scroll behavior
+	document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+		anchor.addEventListener(
+			"click",
+			function (this: HTMLAnchorElement, e: Event) {
+				e.preventDefault();
+				const href = this.getAttribute("href");
+				if (href && href !== "#") {
+					const target = document.querySelector(href);
+					if (target) {
+						target.scrollIntoView({
+							behavior: "smooth",
+							block: "start",
+						});
+					}
+				}
+			},
+		);
+	});
+</script>
