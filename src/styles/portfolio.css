@@ -172,6 +172,7 @@ html {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                cursor: pointer;
 
 
                 &:hover {
@@ -204,6 +205,59 @@ html {
                 pointer-events: none;
                 user-select: none;
                 -webkit-user-drag: none;
+            }
+
+            /* Lightbox Modal */
+            .lightbox-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: rgba(0, 0, 0, 0.95);
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 300ms ease;
+                
+                &.active {
+                    display: flex;
+                    opacity: 1;
+                }
+            }
+
+            .lightbox-content {
+                position: relative;
+                max-width: 90vw;
+                max-height: 90vh;
+            }
+
+            .lightbox-image {
+                max-width: 90vw;
+                max-height: 90vh;
+                object-fit: contain;
+                border-radius: 0.625rem;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                display: block;
+            }
+
+            .lightbox-close {
+                /* position: relative;
+                top: 0;
+                left: 0; */
+                background: #141417;
+                border: none;
+                cursor: pointer;
+                color: white;
+                z-index: 10000;
+                pointer-events: pointer;
+                outline: none;
+                
+                &:focus {
+                    outline: none;
+                }
             }
 
         }

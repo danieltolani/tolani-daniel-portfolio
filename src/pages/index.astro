@@ -92,7 +92,7 @@ const styleframeUrls = [
 					<div class="carousel-wrapper" id="smoothy-carousel">
 						{styleframeUrls.map((url, index) => (
 							<div class="carousel-item">
-								<div class="carousel-item-inner">
+								<div class="carousel-item-inner" data-image-url={url} data-image-index={index}>
 									<img src={url} alt={`Styleframe ${index}`} class="carousel-image" />
 									<span class="carousel-number">STY-{index}</span>
 								</div>
@@ -100,6 +100,16 @@ const styleframeUrls = [
 						))}
 							</div>
 						</div>
+
+					<!-- Lightbox Modal for Expanded Images -->
+					<div id="lightbox-modal" class="lightbox-modal">
+						<button id="lightbox-close" class="lightbox-close" aria-label="Close">
+							CLOSE
+						</button>
+						<div class="lightbox-content">
+							<img id="lightbox-image" class="lightbox-image" src="" alt="Expanded styleframe" />
+						</div>
+					</div>
 
 						<!-- Project Metadata -->
 						<div class="project-metadata">
@@ -238,6 +248,102 @@ const styleframeUrls = [
 	  
   <script>
 	import Smooothy from 'smooothy';
+	import { gsap } from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	// Register GSAP plugins
+	gsap.registerPlugin(ScrollTrigger);
+
+	// GSAP Parallax Effect - Hero Content Wrapper
+	const heroContentWrapper = document.querySelector('.hero-content-wrapper');
+	const videoSection = document.querySelector('.video-section');
+	const scrollContainer = document.querySelector('.scroll-container');
+
+	if (heroContentWrapper && videoSection) {
+		// Ease-out for fast start, slow end when scrolling back
+		const easeOut = "power2.out"; // Fast start, slow end - perfect for scroll back
+		
+		// Calculate distance based on viewport height (since hero is 80vh)
+		// Move it by 100vh to ensure it's completely out of view
+		const moveDistance = -(window.innerHeight * 0.225); // Move by full viewport height
+		
+		console.log('Hero move distance:', moveDistance, 'vh');
+		
+		// Move up animation with ease-out - responsive when scrolling back
+		gsap.to(heroContentWrapper, {
+			y: moveDistance,
+			ease: easeOut,
+			scrollTrigger: {
+				trigger: '.hero-section',
+				start: 'top top',
+				end: () => `+=${videoSection.offsetTop}`, // Completes when video section top is reached
+				scrub: 0.3, // Lower value = faster response, closer to 300ms feel
+				markers: false
+			}
+		});
+
+		// Opacity fade with ease-out
+		gsap.to(heroContentWrapper, {
+			opacity: 0,
+			ease: easeOut,
+			scrollTrigger: {
+				trigger: '.hero-section',
+				start: 'center top', // Starts later - when center of hero hits top
+				end: () => `+=${videoSection.offsetTop}`, // Match the movement end
+				scrub: 0.3, // Match the fast response
+				markers: false
+			}
+		});
+	}
+
+	// GSAP Snap Scrolling for Video Section
+	if (scrollContainer && videoSection) {
+		// Use ScrollTrigger.scrollerProxy for custom scroll container
+		ScrollTrigger.scrollerProxy(scrollContainer, {
+			scrollTop(value) {
+				if (arguments.length) {
+					scrollContainer.scrollTop = value;
+				}
+				return scrollContainer.scrollTop;
+			},
+			getBoundingClientRect() {
+				return {
+					top: 0,
+					left: 0,
+					width: window.innerWidth,
+					height: window.innerHeight
+				};
+			}
+		});
+
+		// Create snap point at video section
+		ScrollTrigger.create({
+			trigger: '.video-section',
+			scroller: scrollContainer,
+			start: 'top 60%',
+			end: 'top 40%',
+			onEnter: () => {
+				gsap.to(scrollContainer, {
+					scrollTop: videoSection.offsetTop,
+					duration: 0.8,
+					ease: 'power2.inOut',
+					overwrite: true
+				});
+			},
+			onEnterBack: () => {
+				gsap.to(scrollContainer, {
+					scrollTop: videoSection.offsetTop - window.innerHeight,
+					duration: 0.8,
+					ease: 'power2.inOut',
+					overwrite: true
+				});
+			},
+			markers: false
+		});
+		
+		// Refresh ScrollTrigger after setup
+		ScrollTrigger.refresh();
+	}
 
 	// Initialize Smooothy Carousel
 	const wrapper = document.getElementById('smoothy-carousel') as HTMLElement;
@@ -249,7 +355,7 @@ const styleframeUrls = [
 		const carousel = new Smooothy(wrapper, {
 			infinite: true,
 			snap: false,
-			dragSensitivity: 0.009,
+			dragSensitivity: 0.019,
 			lerpFactor: 0.35,
 			scrollInput: true,
 			onUpdate: (core) => {
@@ -279,35 +385,69 @@ const styleframeUrls = [
 		tick();
 
 		console.log('Smooothy initialized:', carousel);
+
+		// Lightbox functionality
+		const lightboxModal = document.getElementById('lightbox-modal');
+		const lightboxImage = document.getElementById('lightbox-image');
+		const lightboxClose = document.getElementById('lightbox-close');
+		let isDragging = false;
+		let dragStartX = 0;
+
+		// Track drag state to differentiate between click and drag
+		wrapper.addEventListener('mousedown', (e) => {
+			isDragging = false;
+			dragStartX = e.clientX;
+		});
+
+		wrapper.addEventListener('mousemove', (e) => {
+			if (Math.abs(e.clientX - dragStartX) > 5) {
+				isDragging = true;
+			}
+		});
+
+		// Click to open lightbox (only if not dragging)
+		wrapper.addEventListener('click', (e) => {
+			if (isDragging) return; // Don't open if user was dragging
+
+			const carouselInner = e.target.closest('.carousel-item-inner');
+			if (carouselInner) {
+				const imageUrl = carouselInner.getAttribute('data-image-url');
+				if (imageUrl && lightboxImage && lightboxModal) {
+					lightboxImage.src = imageUrl;
+					lightboxModal.classList.add('active');
+					document.body.style.overflow = 'hidden'; // Prevent background scroll
+				}
+			}
+		});
+
+		// Close lightbox
+		if (lightboxClose && lightboxModal) {
+			lightboxClose.addEventListener('click', (e) => {
+				e.stopPropagation(); // Prevent event from bubbling
+				lightboxModal.classList.remove('active');
+				document.body.style.overflow = ''; // Restore scroll
+			});
+
+			// Close on background click
+			lightboxModal.addEventListener('click', (e) => {
+				if (e.target === lightboxModal) {
+					lightboxModal.classList.remove('active');
+					document.body.style.overflow = '';
+				}
+			});
+
+			// Close on Escape key
+			document.addEventListener('keydown', (e) => {
+				if (e.key === 'Escape' && lightboxModal.classList.contains('active')) {
+					lightboxModal.classList.remove('active');
+					document.body.style.overflow = '';
+				}
+			});
+		}
 	} else {
 		console.error('Carousel wrapper not found');
 	}
 
-	// Hide hero card when video section is snapped into view
-	const heroCard = document.getElementById('hero-card');
-	const heroSection = document.querySelector('.hero-section');
-	const videoSection = document.querySelector('.video-section');
-	const scrollContainer = document.querySelector('.scroll-container');
-	const mainHeader = document.getElementById('main-header');
-  
-	if (scrollContainer && heroCard && heroSection && videoSection && mainHeader) {
-	  scrollContainer.addEventListener('scroll', () => {
-		const heroRect = heroSection.getBoundingClientRect();
-		const videoRect = videoSection.getBoundingClientRect();
-		
-		// If video section is at the top of viewport (snapped), hide hero card and header
-		if (videoRect.top <= 10) {
-		  heroCard.style.opacity = '0';
-		  heroCard.style.pointerEvents = 'none';
-		  mainHeader.style.transform = 'translateY(-100%)';
-		} else {
-		  heroCard.style.opacity = '1';
-		  heroCard.style.pointerEvents = 'auto';
-		  mainHeader.style.transform = 'translateY(0)';
-		}
-	  });
-	}
-	  
 		// Video Player Controls
 		const video = document.getElementById('video-player') as HTMLVideoElement;
 		const playButton = document.getElementById('play-button');

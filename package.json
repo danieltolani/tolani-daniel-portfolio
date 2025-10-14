@@ -13,6 +13,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "astro": "^5.14.4",
+    "gsap": "^3.13.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "smooothy": "^0.0.26"
