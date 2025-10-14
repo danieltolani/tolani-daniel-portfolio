@@ -681,10 +681,10 @@ input[type="range"]::-moz-range-thumb:hover {
 
 .process-description p {
 	font-family: 'Suisse Intl', sans-serif;
-	font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+	font-size: clamp(0.875rem, 1.058vw, 1.125rem);
 	font-weight: normal;
 	color: #000000;
-	line-height: 2.5rem;
+	line-height: 2rem;
 	margin: 0 0 0 15%;
 	max-width: 75%;
 }
@@ -737,6 +737,7 @@ input[type="range"]::-moz-range-thumb:hover {
 	width: 95%; /* Increased from 80% to 95% - closer to edges */
 	display: grid;
 	grid-template-columns: 1.8fr 0.8fr 0.8fr; /* Adjusted proportions to prevent overlap */
+	grid-template-rows: auto auto auto; /* 3 rows */
 	gap: clamp(1rem, 0.5vw, 2rem); /* Reset gap to normal size */
 	/* Add vertical padding only */
 	padding: clamp(2rem, 5vw, 4rem) 0;
@@ -777,6 +778,108 @@ input[type="range"]::-moz-range-thumb:hover {
 .mobile-sketch-2 {
 	grid-column: 3;
 	grid-row: 1;
+}
+
+/* Row 2: Text Blocks - Equal Width */
+.text-block-1 {
+	grid-column: 1 / 2; /* Span first 2 columns */
+	grid-row: 2;
+	height: fit-content; /* Wrap around content */
+	background-color: #E5E3DC; /* Light beige background */
+	border: 1px solid #ACAAA3; /* Light gray border */
+	padding: 20px 20px 20px 20px; /* 20px top and bottom padding */
+	display: flex;
+	align-items: center;
+}
+
+.text-content p {
+	font-family: 'Suisse Intl', sans-serif;
+	font-size: 1rem;
+	font-weight: normal;
+	color: #000000;
+	line-height: 1.6625rem;
+	margin: 0;
+}
+
+.text-block-2 {
+	grid-column: 2 / 4; /* Span from column 2 to 4 (end) */
+	grid-row: 2;
+	min-height: 200px;
+}
+
+/* Row 3: Full Width Text Block */
+.text-block-full {
+	grid-column: 1 / 4; /* Span all 3 columns for available space */
+	grid-row: 3;
+	background-color: #E5E3DC; /* Light beige background */
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding:  20px 45px 20px 15px;
+	width: fit-content; /* Hug content width */
+	max-width: 100%; /* Don't exceed container */
+	transform: translateY(clamp(1.5rem, 3vw, 2.5rem)); /* Move down within SVG space */
+}
+
+/* Challenge Section */
+.challenge-section {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	width: 100%;
+}
+
+.challenge-badge {
+	background-color: #000000;
+	width: 85px;
+	height: 75px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 7px;
+	flex-shrink: 0;
+}
+
+.challenge-label {
+	font-family: 'Neue Pixel Round', monospace;
+	font-size: 11.627px;
+	color: #ACAAA3;
+	margin: 0;
+	text-transform: uppercase;
+}
+
+.challenge-number {
+	font-family: 'Suisse Int\'l', sans-serif;
+	font-size: 28.729px;
+	font-weight: bold;
+	color: #ACAAA3;
+	margin: 0;
+	line-height: 0.9;
+}
+
+.challenge-title {
+	font-family: 'Suisse Int\'l', sans-serif;
+	font-size: clamp(2.5rem, 8vw, 3.5rem);
+	font-weight: bold;
+	color: #141417;
+	letter-spacing: -0.02em;
+	margin: 0;
+	text-transform: uppercase;
+	flex-shrink: 0;
+	display: flow-root;
+}
+
+.challenge-title::before {
+	content: "";
+	display: table;
+	margin-bottom: calc(-0.5lh + 0.39em);
+}
+
+.challenge-title::after {
+	content: "";
+	display: table;
+	margin-bottom: calc(-0.5lh + 0.336em);
 }
 
 /* Responsive Design */
