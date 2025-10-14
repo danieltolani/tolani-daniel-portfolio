@@ -43,7 +43,7 @@ html {
     align-items: center;
 
     .header-logo {
-        font-size: 0.75rem;
+        font-size: 0.875rem;
         font-weight: 500;
         color: white;
     }
@@ -52,7 +52,7 @@ html {
 .nav {
     display: flex;
     gap: 3rem;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     font-weight: 500;
     color: white;
 }
@@ -137,8 +137,10 @@ html {
                 cursor: grab;
                 touch-action: pan-y;
                 display: flex;
-                gap: 0; /* No gap - spacing controlled by items */
+                gap: 10px; /* No gap - spacing controlled by items */
                 width: 100%;
+                user-select: none;
+                -webkit-user-select: none;
                 
                 &:active {
                     cursor: grabbing;
@@ -171,6 +173,7 @@ html {
                 align-items: center;
                 justify-content: center;
 
+
                 &:hover {
                     filter: brightness(1.1);
                 }
@@ -178,9 +181,16 @@ html {
 
             .carousel-number {
                 font-family: 'Suisse Int\'l', sans-serif;
-                font-size: 48px;
-                font-weight: bold;
+                font-size: 0.75rem;
+                font-weight: 400;
                 color: white;
+                position: absolute;
+                bottom: 12px;
+                left: 16px;
+                z-index: 10;
+                pointer-events: none;
+                user-select: none;
+                mix-blend-mode: difference;
             }
 
             .carousel-image {
@@ -188,6 +198,12 @@ html {
                 height: 100%;
                 object-fit: cover;
                 display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                user-select: none;
+                -webkit-user-drag: none;
             }
 
         }
@@ -215,7 +231,7 @@ html {
 
                 .metadata-value {
                     font-family: 'Suisse Int\'l Book', sans-serif;
-                    font-size: 0.75rem;
+                    font-size: 0.875rem;
                     font-weight: normal;
                     color: var(--color-text-primary);
                 }

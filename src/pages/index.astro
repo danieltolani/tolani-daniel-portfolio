@@ -59,7 +59,7 @@ const styleframeUrls = [
 	<div class="page-container scroll-container">
 		<!-- Header Navigation -->
 		<header class="header" id="main-header">
-			<div class="header-logo">
+				<div class="header-logo">
 				<p>DNX.HOME</p>
 			</div>
 			<nav class="nav">
@@ -73,56 +73,57 @@ const styleframeUrls = [
 		<main class="hero-section snap-section">
 			<div class="hero-content-wrapper">
 				<div class="hero-content" id="hero-card">
-					<!-- Project Title & Description -->
-					<div class="hero-desc">
-						<div class="hero-text">
-							<h1 class="hero-title">
-								FARAM<span class="special-o">O</span>VE
-							</h1>
-							<p class="hero-description">
-								When home delivery became a necessity after
+						<!-- Project Title & Description -->
+						<div class="hero-desc">
+							<div class="hero-text">
+								<h1 class="hero-title">
+									FARAM<span class="special-o">O</span>VE
+								</h1>
+								<p class="hero-description">
+									When home delivery became a necessity after
 								COVID-19, Faramove wanted to reassure customers
 								that a smarter solution was coming. I crafted a
 								teaser video that introduced the mobile app and
 								built anticipation for its launch.
-							</p>
-						</div>
+								</p>
+							</div>
 
-					<!-- Thumbnail Carousel -->
+							<!-- Thumbnail Carousel -->
 					<div class="carousel-wrapper" id="smoothy-carousel">
-						{[...Array(23)].map((_, index) => (
+						{styleframeUrls.map((url, index) => (
 							<div class="carousel-item">
 								<div class="carousel-item-inner">
-									<span class="carousel-number">{index + 1}</span>
+									<img src={url} alt={`Styleframe ${index}`} class="carousel-image" />
+									<span class="carousel-number">STY-{index}</span>
 								</div>
 							</div>
 						))}
-					</div>
-					</div>
+							</div>
+						</div>
 
-					<!-- Project Metadata -->
-					<div class="project-metadata">
-						<div class="metadata-item">
-							<span class="metadata-label">YEAR</span>
-							<span class="metadata-value">2023</span>
-						</div>
-						<div class="metadata-item">
-							<span class="metadata-label">ROLE</span>
-							<span class="metadata-value"
-								>Sound & Motion Designer</span
-							>
-						</div>
-						<div class="metadata-item">
-							<span class="metadata-label">TOOLS</span>
-							<span class="metadata-value"
-								>Figma Adobe AE, PR & Illustrator</span
-							>
-						</div>
-						<div class="metadata-item">
-							<span class="metadata-label">TYPE</span>
+						<!-- Project Metadata -->
+						<div class="project-metadata">
+							<div class="metadata-item">
+								<span class="metadata-label">YEAR</span>
+								<span class="metadata-value">2023</span>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">ROLE</span>
+								<span class="metadata-value"
+									>Sound & Motion Designer</span
+								>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">TOOLS</span>
+								<span class="metadata-value"
+									>Figma Adobe AE, PR & Illustrator</span
+								>
+							</div>
+							<div class="metadata-item">
+								<span class="metadata-label">TYPE</span>
 							<span class="metadata-value">Launch Teaser</span>
 						</div>
-					</div>
+						</div>
 				</div>
 			</div>
 		</main>
@@ -154,13 +155,13 @@ const styleframeUrls = [
 					  alt=""
 					  src="/assets/ellipse-619.svg"
 					/>
-				  </div>
+				</div>
 				  <div class="play-button-circle play-button-circle-2">
 					<img
 					  alt=""
 					  src="/assets/ellipse-620.svg"
 					/>
-				  </div>
+			</div>
 				  <p class="play-button-text">PLAY</p>
 				</div>
 			  </button>
@@ -188,7 +189,7 @@ const styleframeUrls = [
 				  />
 				  <span id="duration" class="video-controls-time">0:00</span>
 				</div>
-	  
+
 				<button
 				  id="mute-button"
 				  aria-label="Mute/Unmute"
@@ -206,10 +207,10 @@ const styleframeUrls = [
 					<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
 				  </svg>
 				</button>
-			  </div>
 			</div>
-		  </section>
-	  
+		</div>
+	</section>
+
 		  <!-- VIDEO MODAL -->
 		  <div id="video-modal" class="video-modal">
 			<div class="video-modal-content">
@@ -230,8 +231,8 @@ const styleframeUrls = [
 				<source id="modal-video-source" src="" type="video/mp4" />
 				Your browser does not support the video tag.
 			  </video>
+				</div>
 			</div>
-		  </div>
 		</div>
 	  </Layout>
 	  
@@ -248,15 +249,15 @@ const styleframeUrls = [
 		const carousel = new Smooothy(wrapper, {
 			infinite: true,
 			snap: false,
-			dragSensitivity: 0.005,
+			dragSensitivity: 0.009,
 			lerpFactor: 0.35,
 			scrollInput: true,
 			onUpdate: (core) => {
-				// Apply parallax to inner elements
+				// Apply parallax to border layer for depth effect
 				items.forEach((item, index) => {
 					const inner = item.querySelector('.carousel-item-inner') as HTMLElement;
 					if (inner && core.parallaxValues && core.parallaxValues[index] !== undefined) {
-						const parallax = core.parallaxValues[index] * 30;
+						const parallax = core.parallaxValues[index] * 4; // Subtle parallax
 						inner.style.transform = `translateX(${parallax}px)`;
 					}
 				});
@@ -264,7 +265,7 @@ const styleframeUrls = [
 		});
 
 		// Animation loop with auto-scroll marquee
-		let autoScrollSpeed = -0.008; // Negative = scroll left, Positive = scroll right
+		let autoScrollSpeed = -0.002; // Negative = scroll left, Positive = scroll right
 		
 		function tick() {
 			// Update carousel on each frame
@@ -525,5 +526,5 @@ const styleframeUrls = [
 		  if (marqueeContent) {
 			marqueeContent.style.animationPlayState = 'running';
 		  }
-		});
-	  </script>
+	});
+</script>
