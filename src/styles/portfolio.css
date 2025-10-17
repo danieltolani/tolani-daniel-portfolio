@@ -1269,7 +1269,6 @@ input[type="range"]::-moz-range-thumb:hover {
     inset: 0;
     background: #2f3134;
     opacity: 1;
-    /* Remove old clip-path and transition */
     
     /* Center debug numbers */
     display: flex;
@@ -1281,22 +1280,57 @@ input[type="range"]::-moz-range-thumb:hover {
     color: rgba(255, 255, 255, 0.3);
 }
 
-/* Add wipe-out animation with view timelines */
+/* Different colors for each slot (for debugging slide effect) */
+/* Stack order reversed: each new card slides ON TOP of the previous */
+.preview-slot[data-slot="1"] {
+    background: #3d4149;
+    z-index: 1; /* Bottom layer - shows first, then gets covered */
+    transform: translateY(0) !important; /* Override default - visible from start */
+}
+
+.preview-slot[data-slot="2"] {
+    background: #4a5058;
+    z-index: 2; /* Middle layer - slides up on top of slot 1 */
+    transform: translateY(100%); /* Hide below by default */
+}
+
+.preview-slot[data-slot="3"] {
+    background: #5a616b;
+    z-index: 3; /* Top layer - slides up on top of slot 2 */
+    transform: translateY(100%); /* Hide below by default */
+}
+
+/* Force initial hidden state - overrides animation until ready */
+.preview-slot.initial-hidden {
+    transform: translateY(100%) !important;
+}
+
+/* Slide-in animation with view timelines */
 @supports (animation-timeline: view()) {
-    @keyframes wipe-out {
-        0%   { clip-path: inset(0 0 0% 0); }   /* fully visible */
-        100% { clip-path: inset(0 0 100% 0); } /* clipped from bottom up */
+    @keyframes slide-in-up {
+        from { transform: translateY(100%); }   /* Start below the frame */
+        to { transform: translateY(0); }      /* Slide up to cover previous */
     }
     
-    .preview-slot {
-        animation: wipe-out 1s linear both;
-        animation-range: entry 0% contain 0%;
+    /* Slot 2 slides in when section 1 (second text-block) enters */
+    .preview-slot[data-slot="2"] { 
+        animation: slide-in-up linear;
+        animation-fill-mode: both;
+        animation-timeline: --section-1;
+        animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
+        /* Initial state before animation */
+        transform: translateY(100%);
     }
     
-    /* Each preview-slot wipes based on the NEXT text-block's scroll progress */
-    .preview-slot[data-slot="1"] { animation-timeline: --section-1; }
-    .preview-slot[data-slot="2"] { animation-timeline: --section-2; }
-    .preview-slot[data-slot="3"] { animation-timeline: none; } /* last stays visible */
+    /* Slot 3 slides in when section 2 (third text-block) enters */
+    .preview-slot[data-slot="3"] { 
+        animation: slide-in-up linear;
+        animation-fill-mode: both;
+        animation-timeline: --section-2;
+        animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
+        /* Initial state before animation */
+        transform: translateY(100%);
+    }
 }
 
 @supports not (animation-timeline: view()) {
@@ -1353,3 +1387,218 @@ input[type="range"]::-moz-range-thumb:hover {
     line-height: 1.5;
     margin: 0;
 }
+
+
+.project-showcase-section {
+background-color: #141417;
+  padding: 7.5rem 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-shrink: column;
+}
+
+.project-showcase-container{
+    width: 85%;
+    max-width: 1512px;
+
+.project-showcase-top-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+/* Ensure all items inside top grid are perfect squares */
+.project-showcase-top-grid > .project-showcase-placeholder { aspect-ratio: 1 / 1; }
+
+/* Make the description block occupy the last square slot visually */
+.project-showcase-description-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    background: transparent; /* override placeholder background */
+}
+.project-showcase-description-block .project-showcase-description {
+    margin: 0;
+}
+}
+
+
+.project-showcase-header {
+    grid-column: 1 / span 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.1875rem;
+    margin-top: 4.875rem;
+    max-width: 435.32px;
+}
+
+.project-showcase-description {
+    font-family: 'Suisse Intl', sans-serif;
+    font-size: clamp(0.875rem, 1.058vw, 1.125rem);
+    font-weight: normal;
+    line-height: 2rem;
+    align-self: start;
+    color: #FFFFFF;
+}
+
+.project-showcase-placeholder {
+    background: #d9d9d9;
+}
+
+.project-showcase-placeholder.large-left,
+.project-showcase-placeholder.small-right { background: #d9d9d9; }
+
+.project-showcase-bottom-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 7.5rem;
+}
+
+/* Let grid define sizing. Use aspect-ratio for responsive height without fixed px */
+.project-showcase-bottom-grid > .project-showcase-placeholder { background: #d9d9d9; }
+
+.project-showcase-placeholder.bottom-left { grid-column: 1 / span 6; }
+
+.project-showcase-placeholder.bottom-right { grid-column: 7 / span 6; }
+
+.project-showcase-placeholder.bottom-full {
+    grid-column: 1 / -1;
+}
+
+/* Responsive layout for bottom grid */
+@media (max-width: 900px) {
+    .project-showcase-top-grid { grid-template-columns: 1fr; }
+    .project-showcase-bottom-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================
+   CREDITS SECTION
+   ============================================ */
+
+.credits-section {
+    background: #e5e3dc;
+    padding: 7.5rem 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.credits-container {
+    width: 85%;
+    max-width: 1186px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.credits-title {
+    font-family: 'Suisse Intl', sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #f72f2f;
+    text-transform: uppercase;
+    line-height: 1.114;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+}
+
+.credits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.733rem;
+    position: relative;
+}
+
+.credits-placeholder {
+    background: #bbbfc3;
+    aspect-ratio: 1 / 1;
+}
+
+.credits-text-block {
+    position: absolute;
+    display: flex;
+    gap: 0.875rem;
+    line-height: 2;
+    z-index: 1;
+}
+
+.credits-text-top {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -180%);
+}
+
+.credits-text-bottom {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 80%);
+}
+
+.credits-labels {
+    text-align: right;
+    font-family: 'Suisse Intl', sans-serif;
+    font-weight: 300;
+    color: #6b6a68;
+}
+
+.credits-values {
+    font-family: 'Suisse Intl', sans-serif;
+    font-weight: 400;
+    color: #000000;
+}
+
+.credits-labels p,
+.credits-values p {
+    margin: 0;
+}
+
+/* Responsive layout */
+@media (max-width: 900px) {
+    .credits-grid {
+        grid-template-columns: repeat(2, 1fr);
+        --credits-gap: 0.733rem;
+        row-gap: var(--credits-gap); /* keep gaps between placeholders */
+    }
+    
+    .credits-text-block {
+        position: static;
+        transform: none;
+        grid-column: 1 / -1; /* span full width row to stack */
+        justify-self: center; /* center horizontally in grid */
+        align-self: auto; /* reset alignment; we'll control spacing via margins */
+        justify-content: center; /* center internal columns */
+        margin: 0; /* remove default margins to control spacing precisely */
+
+    }
+
+    /* Force text blocks to appear before placeholders when grid wraps */
+    .credits-text-top { grid-row: 1; margin-bottom: calc(-1 * var(--credits-gap) - 2px); } /* over-cancel any rounding gap */
+    .credits-text-bottom { grid-row: 2; margin-bottom: 4.5rem; } /* push placeholders down */
+
+    /* Hide the phantom placeholders used for desktop layout */
+    .credits-grid .credits-placeholder:nth-child(2),
+    .credits-grid .credits-placeholder:nth-child(3),
+    .credits-grid .credits-placeholder:nth-child(6),
+    .credits-grid .credits-placeholder:nth-child(7) {
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+    .credits-grid {
+        grid-template-columns: 1fr;
+    }
+    /* ensure no gap even on single column */
+    .credits-text-top { margin-bottom: -2px; }
+}
+
+/* Desktop layout: make the two middle top cells transparent to match Figma */
+
+    .credits-grid .credits-placeholder:nth-child(2),
+    .credits-grid .credits-placeholder:nth-child(3),
+    .credits-grid .credits-placeholder:nth-child(6),
+    .credits-grid .credits-placeholder:nth-child(7) {
+        background: transparent;
+    }
