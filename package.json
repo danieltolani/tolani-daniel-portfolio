@@ -17,5 +17,9 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "smooothy": "^0.0.26"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "typescript": "^5.9.3"
   }
 }
