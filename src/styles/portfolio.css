@@ -1230,7 +1230,9 @@ input[type="range"]::-moz-range-thumb:hover {
 .styleframes-text {
     margin-left: auto;
     max-width: 420px;
-    position: relative; /* For absolute positioning of wrappers */
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Remove gap - wrappers control spacing */
     margin-top: 0;
     padding-bottom: 0;
     scroll-snap-type: y proximity; /* Snap when scroll stops */
@@ -1238,28 +1240,19 @@ input[type="range"]::-moz-range-thumb:hover {
 
 /* Text block wrappers (variable height with overlap) */
 .text-block-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100vh; /* Fixed height for consistent overlap */
+    height: 100vh; /* Fixed height for consistent stacking */
     display: flex;
     flex-direction: column;
     scroll-snap-align: start;
     scroll-snap-stop: normal; /* Allow smooth scrolling through */
+    
+    /* Negative margin creates 78% overlap (22% visible when next enters) */
+    margin-bottom: -78vh;
 }
 
-/* Position each wrapper with 22% overlap (78% overlap) */
-.text-block-wrapper[data-wrapper="0"] {
-    top: 0vh;
-}
-
-.text-block-wrapper[data-wrapper="1"] {
-    top: 22vh; /* 22% visible when first is 78% scrolled */
-}
-
-.text-block-wrapper[data-wrapper="2"] {
-    top: 44vh; /* 22% visible when second is 78% scrolled */
+/* Last wrapper has no negative margin */
+.text-block-wrapper:last-child {
+    margin-bottom: 0;
 }
 
 .styleframes-sync {
@@ -1268,7 +1261,7 @@ input[type="range"]::-moz-range-thumb:hover {
     gap: clamp(1.5rem, 3vw, 3rem);
     align-items: start;
     margin-top: clamp(2rem, 4vw, 3rem);
-    min-height: 300vh; /* Increased to accommodate absolute positioned wrappers */
+    min-height: 144vh; /* 100vh + 22vh + 22vh for 3 wrappers with 78vh overlap */
     
     /* Define timeline scope for all text sections */
     timeline-scope: --section-0, --section-1, --section-2;
