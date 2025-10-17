@@ -1507,7 +1507,8 @@ background-color: #141417;
 .credits-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0.733rem;
+    --credits-gap: 0.733rem;
+    gap: var(--credits-gap);
     position: relative;
 }
 
@@ -1602,3 +1603,17 @@ background-color: #141417;
     .credits-grid .credits-placeholder:nth-child(7) {
         background: transparent;
     }
+
+/* Desktop-only alignment: hug the grid seam */
+@media (min-width: 901px) {
+    .credits-text-top {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -100%);
+    }
+    .credits-text-bottom {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, 0);
+    }
+}
