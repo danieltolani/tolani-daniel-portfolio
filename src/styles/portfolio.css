@@ -797,7 +797,7 @@ input[type="range"]::-moz-range-thumb:hover {
     font-weight: bold;
     color: #F72F2F;
     letter-spacing: -0.02em;
-    line-height: 1.114;
+    line-height: 0;
     margin: 0 0 0 15%;
     text-transform: uppercase;
     max-width: 65%;
@@ -1079,7 +1079,7 @@ input[type="range"]::-moz-range-thumb:hover {
     grid-template-columns: 1fr; /* Stack: preview on top, thumbs below */
     grid-template-rows: auto auto;
     gap: 0.4375rem;
-    margin-bottom: 5rem;
+    margin-bottom: 12rem;
 }
 
 /* Large Preview */
@@ -1230,11 +1230,29 @@ input[type="range"]::-moz-range-thumb:hover {
 .styleframes-text {
     margin-left: auto;
     max-width: 420px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 100vh; /* Space each text-block by ~full viewport height for natural scrolling */
+    display: flex;
+    flex-direction: column;
+    gap: 0; /* Remove gap - wrappers control spacing */
     margin-top: 0;
-    padding-bottom: 100vh; /* Extra space at bottom for last section */
+    padding-bottom: 0;
+    scroll-snap-type: y proximity; /* Snap when scroll stops */
+}
+
+/* Text block wrappers (variable height with overlap) */
+.text-block-wrapper {
+    min-height: 100vh; /* Start with full viewport height */
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal; /* Allow smooth scrolling through */
+    
+    /* Negative margin creates 78% overlap (22% visible when next enters) */
+    margin-bottom: -78vh;
+}
+
+/* Last wrapper has no negative margin */
+.text-block-wrapper:last-child {
+    margin-bottom: 0;
 }
 
 .styleframes-sync {
@@ -1243,7 +1261,7 @@ input[type="range"]::-moz-range-thumb:hover {
     gap: clamp(1.5rem, 3vw, 3rem);
     align-items: start;
     margin-top: clamp(2rem, 4vw, 3rem);
-    min-height: 300vh; /* Ensure enough scroll space for all text blocks */
+    min-height: 180vh; /* Reduced since negative margins compress vertical space */
     
     /* Define timeline scope for all text sections */
     timeline-scope: --section-0, --section-1, --section-2;
@@ -1301,17 +1319,19 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .styleframes-text .text-block {
-    min-height: 60vh; /* Match reveal-stage height for good sync */
-    opacity: 1; /* Always visible, no fade */
+    padding-top: 0; /* Align with .reveal-stage top (0 offset since wrapper handles alignment) */
+    opacity: 1;
     transform: none;
-    
-    /* Each text-block defines its own view timeline */
-    view-timeline-axis: block;
 }
 
-.styleframes-text .text-block[data-section="0"] { view-timeline-name: --section-0; }
-.styleframes-text .text-block[data-section="1"] { view-timeline-name: --section-1; }
-.styleframes-text .text-block[data-section="2"] { view-timeline-name: --section-2; }
+/* Update view timeline assignment to wrappers */
+.text-block-wrapper[data-wrapper="0"] { view-timeline-name: --section-0; }
+.text-block-wrapper[data-wrapper="1"] { view-timeline-name: --section-1; }
+.text-block-wrapper[data-wrapper="2"] { view-timeline-name: --section-2; }
+
+.text-block-wrapper {
+    view-timeline-axis: block;
+}
 
 .text-block h3 {
     font-family: 'Suisse Intl', sans-serif;

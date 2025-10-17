@@ -416,42 +416,48 @@ const styleframeSet = styleframeUrls;
 				
 				<!-- Right: Scrolling text blocks -->
 				<div class="styleframes-text">
-					<div class="text-block" data-section="0">
-						<h3>make a u-turn</h3>
-						<p>
-							This project only had the 4-major features of the app as
-							the script, meant for me to work with. The first
-							assumption was thinking what needed to be done was
-							showing off the mobile app interfaces but then this is a
-							teaser. This wouldn't be the first of its kind to come
-							into the market. It needed a second or two of "Please do
-							not skip me."
-						</p>
+					<div class="text-block-wrapper" data-wrapper="0">
+						<div class="text-block" data-section="0">
+							<h3>make a u-turn</h3>
+							<p>
+								This project only had the 4-major features of the app as
+								the script, meant for me to work with. The first
+								assumption was thinking what needed to be done was
+								showing off the mobile app interfaces but then this is a
+								teaser. This wouldn't be the first of its kind to come
+								into the market. It needed a second or two of "Please do
+								not skip me."
+							</p>
+						</div>
 					</div>
-					<div class="text-block" data-section="1">
-						<h3>pique interest</h3>
-						<p>
-							Shortly before this project, I had worked on a looping
-							loader animation for the mobile app. The idea came to me
-							to reuse the looping motion as the opener and look for a
-							way to make the first 3 seconds remarkable. Since the
-							logo already looked nice, I needed to only do some more
-							transformations for the rest of the video to pick up
-							from. This would make the dump the idea of showing off
-							the interfaces and depend solely on graphic elements to
-							tell the story.
-						</p>
+					<div class="text-block-wrapper" data-wrapper="1">
+						<div class="text-block" data-section="1">
+							<h3>pique interest</h3>
+							<p>
+								Shortly before this project, I had worked on a looping
+								loader animation for the mobile app. The idea came to me
+								to reuse the looping motion as the opener and look for a
+								way to make the first 3 seconds remarkable. Since the
+								logo already looked nice, I needed to only do some more
+								transformations for the rest of the video to pick up
+								from. This would make the dump the idea of showing off
+								the interfaces and depend solely on graphic elements to
+								tell the story.
+							</p>
+						</div>
 					</div>
-					<div class="text-block" data-section="2">
-						<h3>pixellated noise</h3>
-						<p>
-							The flow for the rest of the video came naturally. I
-							wanted a way to represent speed but without using motion
-							blurs. The fast moving lines from 00:33secs combines
-							random wiggle expressions and glitches simply by
-							applying a wiggle expression on the trim path and gap
-							property of a stroke.
-						</p>
+					<div class="text-block-wrapper" data-wrapper="2">
+						<div class="text-block" data-section="2">
+							<h3>pixellated noise</h3>
+							<p>
+								The flow for the rest of the video came naturally. I
+								wanted a way to represent speed but without using motion
+								blurs. The fast moving lines from 00:33secs combines
+								random wiggle expressions and glitches simply by
+								applying a wiggle expression on the trim path and gap
+								property of a stroke.
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -1486,30 +1492,30 @@ const styleframeSet = styleframeUrls;
 		tickThumbs();
 	}
 
-	// ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
-	const revealStageEl = document.querySelector('.reveal-stage') as HTMLElement;
-	const textBlocksEls = document.querySelectorAll('.styleframes-text .text-block') as NodeListOf<HTMLElement>;
+// ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
+const revealStageEl = document.querySelector('.reveal-stage') as HTMLElement;
+const textBlocksEls = document.querySelectorAll('.text-block-wrapper') as NodeListOf<HTMLElement>;
 
-	if (revealStageEl && textBlocksEls.length > 0) {
-		// Calculate and apply view-timeline-inset dynamically based on reveal-stage position
-		function calculateTimelineInset() {
-			const rect = revealStageEl.getBoundingClientRect();
-			const vh = window.innerHeight;
-			
-			const topPercent = (rect.top / vh) * 100;
-			const bottomPercent = ((vh - rect.bottom) / vh) * 100;
-			
-			const insetValue = `${topPercent.toFixed(2)}% ${bottomPercent.toFixed(2)}%`;
-			
-			// Apply to each text-block
-			textBlocksEls.forEach((block) => {
-				(block.style as any).viewTimelineInset = insetValue;
-			});
-		}
-		
-		calculateTimelineInset();
-		window.addEventListener('resize', calculateTimelineInset);
-	}
+if (revealStageEl && textBlocksEls.length > 0) {
+    // Calculate and apply view-timeline-inset dynamically based on reveal-stage position
+    function calculateTimelineInset() {
+        const rect = revealStageEl.getBoundingClientRect();
+        const vh = window.innerHeight;
+        
+        const topPercent = (rect.top / vh) * 100;
+        const bottomPercent = ((vh - rect.bottom) / vh) * 100;
+        
+        const insetValue = `${topPercent.toFixed(2)}% ${bottomPercent.toFixed(2)}%`;
+        
+        // Apply to each wrapper
+        textBlocksEls.forEach((wrapper) => {
+            (wrapper.style as any).viewTimelineInset = insetValue;
+        });
+    }
+    
+    calculateTimelineInset();
+    window.addEventListener('resize', calculateTimelineInset);
+}
 
 	// ==================== STYLEFRAMES SYNCED SCROLL ====================
 	// OLD CODE - Removed this entire section since CSS view timelines handle the sync automatically
