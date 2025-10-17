@@ -415,8 +415,8 @@ const styleframeSet = styleframeUrls;
 				</div>
 				
 				<!-- Right: Scrolling text blocks -->
-				<div class="styleframes-text">
-					<div class="text-block-wrapper" data-wrapper="0">
+				 <div class="styleframes-text-wrapper">
+					<div class="styleframes-text">
 						<div class="text-block" data-section="0">
 							<h3>make a u-turn</h3>
 							<p>
@@ -429,8 +429,6 @@ const styleframeSet = styleframeUrls;
 								not skip me."
 							</p>
 						</div>
-					</div>
-					<div class="text-block-wrapper" data-wrapper="1">
 						<div class="text-block" data-section="1">
 							<h3>pique interest</h3>
 							<p>
@@ -445,8 +443,6 @@ const styleframeSet = styleframeUrls;
 								tell the story.
 							</p>
 						</div>
-					</div>
-					<div class="text-block-wrapper" data-wrapper="2">
 						<div class="text-block" data-section="2">
 							<h3>pixellated noise</h3>
 							<p>
@@ -459,7 +455,8 @@ const styleframeSet = styleframeUrls;
 							</p>
 						</div>
 					</div>
-				</div>
+				 </div>
+				
 			</div>
 	</section>
 	  </Layout>
@@ -1492,30 +1489,51 @@ const styleframeSet = styleframeUrls;
 		tickThumbs();
 	}
 
-// ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
-const revealStageEl = document.querySelector('.reveal-stage') as HTMLElement;
-const textBlocksEls = document.querySelectorAll('.text-block-wrapper') as NodeListOf<HTMLElement>;
+	// ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
+	const revealStageEl = document.querySelector('.reveal-stage') as HTMLElement;
+	const textBlocksEls = document.querySelectorAll('.styleframes-text .text-block') as NodeListOf<HTMLElement>;
 
-if (revealStageEl && textBlocksEls.length > 0) {
-    // Calculate and apply view-timeline-inset dynamically based on reveal-stage position
-    function calculateTimelineInset() {
-        const rect = revealStageEl.getBoundingClientRect();
-        const vh = window.innerHeight;
-        
-        const topPercent = (rect.top / vh) * 100;
-        const bottomPercent = ((vh - rect.bottom) / vh) * 100;
-        
-        const insetValue = `${topPercent.toFixed(2)}% ${bottomPercent.toFixed(2)}%`;
-        
-        // Apply to each wrapper
-        textBlocksEls.forEach((wrapper) => {
-            (wrapper.style as any).viewTimelineInset = insetValue;
-        });
-    }
-    
-    calculateTimelineInset();
-    window.addEventListener('resize', calculateTimelineInset);
-}
+	if (revealStageEl && textBlocksEls.length > 0) {
+		// Calculate and apply view-timeline-inset dynamically based on reveal-stage position
+		function calculateTimelineInset() {
+			const rect = revealStageEl.getBoundingClientRect();
+			const vh = window.innerHeight;
+			
+			const topPercent = (rect.top / vh) * 100;
+			const bottomPercent = ((vh - rect.bottom) / vh) * 100;
+			
+			const insetValue = `${topPercent.toFixed(2)}% ${bottomPercent.toFixed(2)}%`;
+			
+			// Apply to each text-block
+			textBlocksEls.forEach((block) => {
+				(block.style as any).viewTimelineInset = insetValue;
+			});
+		}
+		
+		calculateTimelineInset();
+		window.addEventListener('resize', calculateTimelineInset);
+	}
+
+	// ==================== TEXT BLOCKS PARALLAX ANIMATION ====================
+	// Animate each .text-block to move upward smoothly as they enter viewport (skip first one)
+	if (textBlocksEls.length > 0) {
+		textBlocksEls.forEach((textBlock, index) => {
+			// Skip the first text block (index 0)
+			if (index === 0) return;
+			
+			gsap.from(textBlock, {
+				y: 200, // Start 200px below their natural position
+				opacity: 0, // Start invisible
+				scrollTrigger: {
+					trigger: textBlock,
+					start: "top bottom-=100", // Start animation when top of block is 100px from bottom of viewport
+					end: "top center", // End when top of block reaches center of viewport
+					scrub: 1, // Smooth animation tied to scroll (1 second delay for smoothness)
+					markers: false,
+				},
+			});
+		});
+	}
 
 	// ==================== STYLEFRAMES SYNCED SCROLL ====================
 	// OLD CODE - Removed this entire section since CSS view timelines handle the sync automatically

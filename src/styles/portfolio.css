@@ -797,7 +797,7 @@ input[type="range"]::-moz-range-thumb:hover {
     font-weight: bold;
     color: #F72F2F;
     letter-spacing: -0.02em;
-    line-height: 0;
+    line-height: 1.114;
     margin: 0 0 0 15%;
     text-transform: uppercase;
     max-width: 65%;
@@ -1079,7 +1079,7 @@ input[type="range"]::-moz-range-thumb:hover {
     grid-template-columns: 1fr; /* Stack: preview on top, thumbs below */
     grid-template-rows: auto auto;
     gap: 0.4375rem;
-    margin-bottom: 12rem;
+    margin-bottom: 5rem;
 }
 
 /* Large Preview */
@@ -1229,30 +1229,13 @@ input[type="range"]::-moz-range-thumb:hover {
 /* Text Content Blocks */
 .styleframes-text {
     margin-left: auto;
+    position: sticky !important;
     max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 0; /* Remove gap - wrappers control spacing */
-    margin-top: 0;
-    padding-bottom: 0;
-    scroll-snap-type: y proximity; /* Snap when scroll stops */
-}
-
-/* Text block wrappers (variable height with overlap) */
-.text-block-wrapper {
-    height: 100vh; /* Fixed height for consistent stacking */
-    display: flex;
-    flex-direction: column;
-    scroll-snap-align: start;
-    scroll-snap-stop: normal; /* Allow smooth scrolling through */
-    
-    /* Negative margin creates 78% overlap (22% visible when next enters) */
-    margin-bottom: -78vh;
-}
-
-/* Last wrapper has no negative margin */
-.text-block-wrapper:last-child {
-    margin-bottom: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30vh; /* Reduced gap for overlapping text-block transitions */
+    margin-top: 8rem;
+    padding-bottom: 100vh; /* Extra space at bottom for last section */
 }
 
 .styleframes-sync {
@@ -1261,7 +1244,7 @@ input[type="range"]::-moz-range-thumb:hover {
     gap: clamp(1.5rem, 3vw, 3rem);
     align-items: start;
     margin-top: clamp(2rem, 4vw, 3rem);
-    min-height: 144vh; /* 100vh + 22vh + 22vh for 3 wrappers with 78vh overlap */
+    min-height: 300vh; /* Ensure enough scroll space for all text blocks */
     
     /* Define timeline scope for all text sections */
     timeline-scope: --section-0, --section-1, --section-2;
@@ -1287,6 +1270,15 @@ input[type="range"]::-moz-range-thumb:hover {
     background: #2f3134;
     opacity: 1;
     /* Remove old clip-path and transition */
+    
+    /* Center debug numbers */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    font-family: 'Suisse Intl', sans-serif;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* Add wipe-out animation with view timelines */
@@ -1319,18 +1311,29 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .styleframes-text .text-block {
-    padding-top: 0; /* Align with .reveal-stage top (0 offset since wrapper handles alignment) */
-    opacity: 1;
-    transform: none;
+    /* GSAP will control opacity and transform */
+    
+    /* Each text-block defines its own view timeline */
+    view-timeline-axis: block;
 }
 
-/* Update view timeline assignment to wrappers */
-.text-block-wrapper[data-wrapper="0"] { view-timeline-name: --section-0; }
-.text-block-wrapper[data-wrapper="1"] { view-timeline-name: --section-1; }
-.text-block-wrapper[data-wrapper="2"] { view-timeline-name: --section-2; }
+.styleframes-text .text-block[data-section="0"] { view-timeline-name: --section-0; }
+.styleframes-text .text-block[data-section="1"] { view-timeline-name: --section-1; }
+.styleframes-text .text-block[data-section="2"] { view-timeline-name: --section-2; }
 
-.text-block-wrapper {
-    view-timeline-axis: block;
+/* Fade out text blocks as they exit (except the last one) */
+@supports (animation-timeline: view()) {
+    @keyframes fade-out-exit {
+        0%   { opacity: 1; }   /* fully visible */
+        100% { opacity: 0; }   /* fade to transparent */
+    }
+    
+    /* Apply fade-out to all text-blocks except the last one */
+    .styleframes-text .text-block:not(:last-child) {
+        animation: fade-out-exit linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%; /* Only fade during the exit phase */
+    }
 }
 
 .text-block h3 {
