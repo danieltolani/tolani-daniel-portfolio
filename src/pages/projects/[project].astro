@@ -1,0 +1,1287 @@
+---
+import { CldImage } from "astro-cloudinary";
+import data from "../../assets/data.json";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import "../../styles/portfolio.css";
+
+export function getStaticPaths() {
+    return data.map((item) => ({
+        params: { project: item.project },
+    }));
+}
+
+const { project } = Astro.params;
+
+const projectData = data.find((item) => item.project === project);
+
+// Create dynamic styleframe set based on project data
+const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
+---
+
+<Layout>
+    <div class="page-container scroll-container">
+        <!-- Header Navigation -->
+        <Header />
+
+        <!-- Hero Section -->
+        <main class="hero-section snap-section">
+            <div class="hero-content-wrapper">
+                <div class="hero-content" id="hero-card">
+                    <!-- Project Title & Description -->
+                    <div class="hero-desc">
+                        <div class="hero-text">
+                            <h1 class="hero-title">
+                                <div set:html={projectData?.title} />
+                            </h1>
+                            <p class="hero-description">
+                                {projectData?.description1}
+                            </p>
+                        </div>
+
+                         <!-- Thumbnail Carousel -->
+                         <div class="carousel-wrapper swiper" id="hero-carousel">
+                             <div class="swiper-wrapper">
+                                 {
+                                     (projectData?.styleframes || []).map(
+                                         (item, index) => (
+                                             <div class="swiper-slide carousel-item">
+                                                 <div
+                                                     class="carousel-item-inner"
+                                                     data-image-url={
+                                                         styleframeSet[index]
+                                                     }
+                                                     data-image-index={index}
+                                                 >
+                                                     <CldImage
+                                                         class="carousel-image2"
+                                                         src={item.src}
+                                                         alt="Styleframe ${index}"
+                                                     />
+                                                     <span class="carousel-number">
+                                                         STY-{index + 1}
+                                                     </span>
+                                                 </div>
+                                             </div>
+                                         ),
+                                     )
+                                 }
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- Click & Drag Cursor Helper -->
+                    <div class="click-drag-helper" id="click-drag-helper">
+                        <div class="helper-icon"></div>
+                        <span class="helper-text">CLICK & DRAG</span>
+                    </div>
+
+                    <!-- Lightbox Modal for Expanded Images -->
+                    <div id="lightbox-modal" class="lightbox-modal">
+                        <button
+                            id="lightbox-close"
+                            class="lightbox-close"
+                            aria-label="Close"
+                        >
+                            CLOSE
+                        </button>
+                        <div class="lightbox-content">
+                            <img
+                                id="lightbox-image"
+                                class="lightbox-image"
+                                src=""
+                                alt="Expanded styleframe"
+                            />
+                        </div>
+                    </div>
+
+                    <!-- Project Metadata -->
+                    <div class="project-metadata">
+                        <div class="metadata-item">
+                            <span class="metadata-label">YEAR</span>
+                            <span class="metadata-value">2023</span>
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">ROLE</span>
+                            <span class="metadata-value"
+                                >Creative Direction, Motion Design</span
+                            >
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">TOOLS</span>
+                            <span class="metadata-value"
+                                >Figma, Adobe AE, PR & Illustrator</span
+                            >
+                        </div>
+                        <div class="metadata-item">
+                            <span class="metadata-label">TYPE</span>
+                            <span class="metadata-value">Launch Teaser</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIDEO SECTION -->
+        <section class="snap-section video-section">
+            <div class="video-embed-wrapper">
+                <iframe
+                    src="https://player.vimeo.com/video/809298150?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=0&loop=1&title=0&byline=0&portrait=0&transparent=0"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    style="position:absolute;top:0;left:0;width:100%;height:100%;"
+                    title="Faramove Launch"
+                    allowfullscreen></iframe>
+            </div>
+        </section>
+        <script src="https://player.vimeo.com/api/player.js"></script>
+
+        <script>
+            // Hide Vimeo side dock elements
+            function hideVimeoSideDock() {
+                const iframe = document.querySelector(
+                    ".video-embed-wrapper iframe",
+                ) as HTMLIFrameElement;
+                if (iframe) {
+                    iframe.addEventListener("load", () => {
+                        try {
+                            const iframeDoc =
+                                iframe.contentDocument ||
+                                iframe.contentWindow?.document;
+                            if (iframeDoc) {
+                                // Create and inject CSS to hide side dock elements
+                                const style = iframeDoc.createElement("style");
+                                style.textContent = `
+								.SideDock_module_sidedockInner__eeb5e08f,
+								[class*="SideDock_module_sidedockInner"],
+								[class*="sidedockInner"] {
+									display: none !important;
+									visibility: hidden !important;
+									opacity: 0 !important;
+								}
+							`;
+                                iframeDoc.head.appendChild(style);
+                            }
+                        } catch (e) {
+                            // Cross-origin restrictions - use overlay instead
+                            console.log(
+                                "Using CSS overlay to hide side dock elements",
+                            );
+                        }
+                    });
+                }
+            }
+
+            // Run when DOM is ready
+            document.addEventListener("DOMContentLoaded", hideVimeoSideDock);
+        </script>
+
+        <!-- VIDEO MODAL -->
+        <div id="video-modal" class="video-modal">
+            <div class="video-modal-content">
+                <!-- Close Button -->
+                <button
+                    id="modal-close"
+                    class="modal-close"
+                    aria-label="Close modal"
+                >
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+
+                <!-- Modal Video Player -->
+                <video
+                    id="modal-video-player"
+                    class="modal-video-player"
+                    controls
+                    autoplay
+                >
+                    <source id="modal-video-source" src="" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROCESS SECTION -->
+    <section class="process-section">
+        <div class="process-container">
+            <!-- Header -->
+            <div class="process-header">
+                <h2 class="process-title">A PROCESS WAS FOUND</h2>
+                <div class="process-description">
+                    <p>
+                        In the cold breathe of new year goals<span>
+                            (2023)</span
+                        ><span>, </span><span class="book-text"
+                            >DESIGN FOR MOTION
+                        </span><span>by </span><span class="pixel-text"
+                            >Austin Shaw</span
+                        > was the first book on my read list. Learning<span>
+                            to practice free-writin</span
+                        >g,<span>
+                            where I would pour out all I understood about a
+                            subject or project. There was no prefect fit for
+                            this process than a project where I had no script,
+                            no voice over and no brief</span
+                        >.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Decorative Lines with Image Containers -->
+            <div class="decorative-lines">
+                <svg
+                    class="grid-lines-svg"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 1512 400"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <!-- Lines will be generated by JavaScript -->
+                </svg>
+
+                <!-- Image Container Overlay -->
+                <div class="sketch-container-wrapper">
+                    <div class="sketch-container-grid">
+                        <!-- Row 1: Main Sketch Containers -->
+                        <div
+                            class="sketch-container main-sketch"
+                            data-grid-column="1"
+                            data-grid-row="1"
+                        >
+                            <!-- Image will be placed here later -->
+                        </div>
+
+                        <div
+                            class="sketch-container mobile-sketch-1"
+                            data-grid-column="2"
+                            data-grid-row="1"
+                        >
+                            <!-- Image will be placed here later -->
+                        </div>
+
+                        <div
+                            class="sketch-container mobile-sketch-2"
+                            data-grid-column="3"
+                            data-grid-row="1"
+                        >
+                            <!-- Image will be placed here later -->
+                        </div>
+
+                        <!-- Row 2: Text Blocks - Equal Width -->
+                        <div class="sketch-container text-block-1">
+                            <div class="text-content">
+                                <p>
+                                    The first step was to write, write some more
+                                    and continue to write - This went on for
+                                    about 45mins where I would aim at getting
+                                    all the words, synonyms, concept, ideas or
+                                    anything at all of what I understood about
+                                    the problem I was trying to solve and
+                                    communicated. <strong
+                                        >Logistics - that is fast.</strong
+                                    >
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="sketch-container text-block-2">
+                            <!-- Text content will go here -->
+                        </div>
+
+                        <!-- Row 3: Full Width Text Block -->
+                        <div class="sketch-container text-block-full">
+                            <!-- Challenge Section -->
+                            <div class="challenge-section">
+                                <div class="challenge-badge">
+                                    <p class="challenge-label">challenge</p>
+                                    <p class="challenge-number">ONE</p>
+                                </div>
+                                <h2 class="challenge-title">the sketch.</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STYLEFRAMES DETAIL SECTION -->
+    <section class="styleframes-section">
+        <div class="styleframes-container">
+            <div class="styleframes-content">
+                <!-- Large Preview with Counter -->
+                <div class="styleframes-preview">
+                    <img
+                        id="current-styleframe"
+                        src={styleframeSet[0]}
+                        alt="Current styleframe"
+                        class="preview-image"
+                    />
+                    <div class="styleframe-counter">
+                        <div class="counter-number current">1</div>
+                        <span class="counter-of">OF</span>
+                        <div class="counter-number total">
+                            {(projectData?.styleframes || []).length}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: masked vertical rail (placeholders for now) -->
+                <div class="styleframes-thumbs">
+                     <div class="thumbs-rail swiper" id="thumbs-rail">
+                         <div class="swiper-wrapper">
+                             {
+                                 (projectData?.styleframes || []).map((item, index) => (
+                                     <div class="swiper-slide thumb-slot" data-index={index}>
+                                         <CldImage
+                                             src={item.src}
+                                             alt={`Styleframe ${index + 1}`}
+                                             class="thumb-image"
+                                         />
+                                     </div>
+                                 ))
+                             }
+                         </div>
+                     </div>
+                </div>
+            </div>
+
+            <!-- Synced reveal stage + Text Blocks -->
+            <div class="styleframes-sync">
+                <div class="left-stack">
+                    <h2 class="styleframes-title">Design.</h2>
+                    <div class="reveal-stage">
+                        <div class="preview-slot" data-slot="1">1</div>
+                        <div class="preview-slot" data-slot="2">2</div>
+                        <div class="preview-slot" data-slot="3">3</div>
+                    </div>
+                </div>
+
+                <!-- Right: Scrolling text blocks -->
+                <div class="styleframes-text-wrapper">
+                    <div class="styleframes-text">
+                        <div class="text-block" data-section="0">
+                            <h3>make a u-turn</h3>
+                            <p>
+                                This project only had the 4-major features of
+                                the app as the script, meant for me to work
+                                with. The first assumption was thinking what
+                                needed to be done was showing off the mobile app
+                                interfaces but then this is a teaser. This
+                                wouldn't be the first of its kind to come into
+                                the market. It needed a second or two of "Please
+                                do not skip me."
+                            </p>
+                        </div>
+                        <div class="text-block" data-section="1">
+                            <h3>pique interest</h3>
+                            <p>
+                                Shortly before this project, I had worked on a
+                                looping loader animation for the mobile app. The
+                                idea came to me to reuse the looping motion as
+                                the opener and look for a way to make the first
+                                3 seconds remarkable. Since the logo already
+                                looked nice, I needed to only do some more
+                                transformations for the rest of the video to
+                                pick up from. This would make the dump the idea
+                                of showing off the interfaces and depend solely
+                                on graphic elements to tell the story.
+                            </p>
+                        </div>
+                        <div class="text-block" data-section="2">
+                            <h3>pixellated noise</h3>
+                            <p>
+                                The flow for the rest of the video came
+                                naturally. I wanted a way to represent speed but
+                                without using motion blurs. The fast moving
+                                lines from 00:33secs combines random wiggle
+                                expressions and glitches simply by applying a
+                                wiggle expression on the trim path and gap
+                                property of a stroke.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHALLENGE SECTION -->
+        <section class="process-section">
+            <div class="process-container">
+                <!-- Header -->
+                <div class="process-header">
+                    <h2 class="process-title">2D but make it look 3d</h2>
+                    <div class="process-description">
+                        <p>
+                            Wrapping up the design phase and <strong>NOT</strong
+                            > worrying about my animation capabilities as though
+                            I had another animator on standby was one of the reasons
+                            this project came to life.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Decorative Lines with Image Containers -->
+                <div class="decorative-lines">
+                    <svg
+                        class="grid-lines-svg"
+                        preserveAspectRatio="none"
+                        viewBox="0 0 1512 400"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <!-- Lines will be generated by JavaScript -->
+                    </svg>
+
+                    <!-- Image Container Overlay -->
+                    <div class="sketch-container-wrapper">
+                        <div class="sketch-container-grid">
+                            <!-- Row 1: Main Sketch Containers -->
+                            <div
+                                class="sketch-container main-sketch"
+                                data-grid-column="1"
+                                data-grid-row="1"
+                            >
+                                <!-- Image will be placed here later -->
+                            </div>
+
+                            <div
+                                class="sketch-container mobile-sketch-1"
+                                data-grid-column="2"
+                                data-grid-row="1"
+                            >
+                                <!-- Image will be placed here later -->
+                            </div>
+
+                            <div
+                                class="sketch-container mobile-sketch-2"
+                                data-grid-column="3"
+                                data-grid-row="1"
+                            >
+                                <!-- Image will be placed here later -->
+                            </div>
+
+                            <!-- Row 2: Text Blocks - Equal Width -->
+                            <div class="sketch-container text-block-1">
+                                <div class="text-content">
+                                    <p>
+                                        There are several ways to rig a fake 3D
+                                        box in aftereffects. You could I wanted
+                                        one that will allow me the freedom of
+                                        having the shapes as flat 2D if I wanted
+                                        to un-wrap it. This is because this
+                                        where I had texts and I needed change
+                                        its content later on.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="sketch-container text-block-2">
+                                <!-- Text content will go here -->
+                            </div>
+
+                            <!-- Row 3: Full Width Text Block -->
+                            <div class="sketch-container text-block-full">
+                                <!-- Challenge Section -->
+                                <div class="challenge-section">
+                                    <div class="challenge-badge">
+                                        <p class="challenge-label">challenge</p>
+                                        <p class="challenge-number">TWO</p>
+                                    </div>
+                                    <h2 class="challenge-title">the rigs.</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPEED LINES SECTION -->
+        <section class="project-showcase-section">
+            <div class="project-showcase-container">
+                <!-- Top Grid: wraps the two top placeholders -->
+                <div class="project-showcase-top-grid">
+                    <div class="project-showcase-placeholder"></div>
+                    <div class="project-showcase-placeholder"></div>
+                    <div class="project-showcase-placeholder"></div>
+                    <div class="project-showcase-placeholder"></div>
+                    <div class="project-showcase-placeholder"></div>
+                    <div
+                        class="project-showcase-placeholder project-showcase-description-block"
+                    >
+                        <p class="project-showcase-description">
+                            This project only had the 4-major features of the
+                            app as the script, meant for me to work with. The
+                            first assumption was thinking what needed to be done
+                            was showing off the mobile app interfaces but then
+                            this is a teaser. This wouldn't be the first of its
+                            kind to come into the market. It needed a second or
+                            two of "Please do not skip me."
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Bottom Grid with 3 Image Placeholders -->
+                <div class="project-showcase-bottom-grid">
+                    <div class="project-showcase-placeholder bottom-left"></div>
+                    <div class="project-showcase-placeholder bottom-right">
+                    </div>
+                    <div class="project-showcase-placeholder bottom-full"></div>
+                </div>
+
+                <!-- Move description to the end of the top grid section -->
+            </div>
+        </section>
+
+        <!-- CREDITS SECTION -->
+        <section class="credits-section">
+            <div class="credits-container">
+                <div class="credits-grid">
+                    <!-- 8 placeholder squares -->
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+                    <div class="credits-placeholder"></div>
+
+                    <!-- First text block (top-middle) -->
+                    <div class="credits-text-block credits-text-top">
+                        <div class="credits-labels">
+                            <p>Client</p>
+                            <p>Sound Design</p>
+                            <p>Motion Design</p>
+                        </div>
+                        <div class="credits-values">
+                            <p>Project Name</p>
+                            <p>Your Name</p>
+                            <p>Your Name</p>
+                        </div>
+                    </div>
+
+                    <!-- Second text block (bottom-middle) -->
+                    <div class="credits-text-block credits-text-bottom">
+                        <div class="credits-labels">
+                            <p>Script</p>
+                            <p>Director</p>
+                            <p>Creative Direction</p>
+                        </div>
+                        <div class="credits-values">
+                            <p>Contributor Name</p>
+                            <p>Contributor Name</p>
+                            <p>Your Name</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <script>
+        // @ts-check
+        import Swiper from 'swiper';
+        import { Autoplay, FreeMode } from 'swiper/modules';
+        import 'swiper/css';
+        import { gsap } from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+        // Register GSAP plugins
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Navigation active state management
+        const navLinks = document.querySelectorAll(".nav a");
+        const headerLogo = document.querySelector(
+            ".header-logo",
+        ) as HTMLElement;
+        const allNavElements = [...navLinks, headerLogo];
+
+        // Set header logo as active by default (home/landing page)
+        if (headerLogo) {
+            headerLogo.classList.add("active");
+        }
+
+        navLinks.forEach((link) => {
+            link.addEventListener("click", () => {
+                // Remove active class from all nav elements
+                allNavElements.forEach((element) => {
+                    if (element) element.classList.remove("active");
+                });
+                // Add active class to clicked link
+                link.classList.add("active");
+                // Update URL to show the clicked link's href
+                const href = link.getAttribute("href");
+                if (href) {
+                    window.history.pushState(null, "", href);
+                }
+            });
+        });
+
+        // Add click handler for header logo
+        if (headerLogo) {
+            headerLogo.addEventListener("click", (e) => {
+                e.preventDefault(); // Prevent default anchor behavior
+                // Remove active class from all nav elements
+                allNavElements.forEach((element) => {
+                    if (element) element.classList.remove("active");
+                });
+                // Add active class to header logo
+                headerLogo.classList.add("active");
+                // Update URL to show home route
+                window.history.pushState(null, "", "#");
+                // Scroll to top of page
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        }
+
+        // GSAP Parallax Effect - Hero Content Wrapper
+        const heroContentWrapper = document.querySelector(
+            ".hero-content-wrapper",
+        );
+        const videoSection = document.querySelector(".video-section");
+        const scrollContainer = document.querySelector(".scroll-container");
+
+        if (heroContentWrapper && videoSection) {
+            // Ease-out for fast start, slow end when scrolling back
+            const easeOut = "power2.out"; // Fast start, slow end - perfect for scroll back
+
+            // Calculate distance based on viewport height (since hero is 80vh)
+            // Move it by 100vh to ensure it's completely out of view
+            const moveDistance = -(window.innerHeight * 0.15); // Move by full viewport height
+
+            console.log("Hero move distance:", moveDistance, "vh");
+
+            // Move up animation with ease-out and depth effect - responsive when scrolling back
+            gsap.to(heroContentWrapper, {
+                y: moveDistance,
+                scale: 0.85, // Slight scale down for depth as it moves away
+                ease: easeOut,
+                scrollTrigger: {
+                    trigger: ".video-section",
+                    start: "top bottom-=300", // Start even earlier (200px before main sketch)
+                    end: "center center", // End when center of process section hits center of viewport (halfway through)
+                    scrub: 0.2, // Faster response for quicker return when scrolling back
+                    markers: false,
+                },
+            });
+
+            // Enhanced fade out with custom ease
+            gsap.to(heroContentWrapper, {
+                opacity: 0,
+                ease: "power3.out", // More dramatic ease curve
+                scrollTrigger: {
+                    trigger: ".hero-section",
+                    start: "center top", // Starts later - when center of hero hits top
+                    end: () => `+=${(videoSection as HTMLElement).offsetTop}`, // Match the movement end
+                    scrub: 0, // Slightly slower for smoother fade
+                    markers: false,
+                },
+            });
+        }
+
+        // GSAP Snap Scrolling for Video Section
+        if (scrollContainer && videoSection) {
+            // Use ScrollTrigger.scrollerProxy for custom scroll container
+            ScrollTrigger.scrollerProxy(scrollContainer, {
+                scrollTop(value?: number) {
+                    if (arguments.length && value !== undefined) {
+                        scrollContainer.scrollTop = value;
+                    }
+                    return scrollContainer.scrollTop;
+                },
+                getBoundingClientRect() {
+                    return {
+                        top: 0,
+                        left: 0,
+                        width: window.innerWidth,
+                        height: window.innerHeight,
+                    };
+                },
+            });
+
+            // Create snap point at video section
+            ScrollTrigger.create({
+                trigger: ".video-section",
+                scroller: scrollContainer,
+                start: "top 60%",
+                end: "top 40%",
+                onEnter: () => {
+                    gsap.to(scrollContainer, {
+                        scrollTop: (videoSection as HTMLElement).offsetTop,
+                        duration: 0.8,
+                        ease: "power2.inOut",
+                        overwrite: true,
+                    });
+                },
+                onEnterBack: () => {
+                    gsap.to(scrollContainer, {
+                        scrollTop:
+                            (videoSection as HTMLElement).offsetTop -
+                            window.innerHeight,
+                        duration: 0.8,
+                        ease: "power2.inOut",
+                        overwrite: true,
+                    });
+                },
+                markers: false,
+            });
+
+            // Refresh ScrollTrigger after setup
+            ScrollTrigger.refresh();
+        }
+
+        // Process sections parallax animations - loop through all sections
+        const processSections = document.querySelectorAll(".process-section");
+
+        processSections.forEach((section) => {
+            // Main Sketch parallax animation
+            const mainSketch = section.querySelector(".main-sketch");
+
+            if (mainSketch) {
+                gsap.from(mainSketch, {
+                    y: -350, // Move down 350px as you scroll
+                    scrollTrigger: {
+                        trigger: section, // Trigger when this specific process section enters viewport
+                        start: "top bottom", // Start when top of process section hits bottom of viewport
+                        end: "center center", // End when center of process section hits center of viewport (halfway through)
+                        scrub: 1, // Smooth parallax effect tied to scroll
+                        markers: false,
+                    },
+                });
+            }
+
+            // Mobile Sketch containers - reverse movement with offset
+            const mobileSketch1 = section.querySelector(".mobile-sketch-1");
+            const mobileSketch2 = section.querySelector(".mobile-sketch-2");
+
+            if (mobileSketch1) {
+                gsap.from(mobileSketch1, {
+                    y: 350, // Start below and move up (reverse of main sketch)
+                    scrollTrigger: {
+                        trigger: section, // Trigger when this specific process section enters viewport
+                        start: "top bottom-=100", // Start earlier (100px before main sketch)
+                        end: "center center", // End when center of process section hits center of viewport (halfway through)
+                        scrub: 1, // Smooth parallax effect tied to scroll
+                        markers: false,
+                    },
+                });
+            }
+
+            if (mobileSketch2) {
+                gsap.from(mobileSketch2, {
+                    y: 350, // Start below and move up (reverse of main sketch)
+                    scrollTrigger: {
+                        trigger: section, // Trigger when this specific process section enters viewport
+                        start: "top bottom-=500", // Start even earlier (200px before main sketch)
+                        end: "center center", // End when center of process section hits center of viewport (halfway through)
+                        scrub: 1, // Smooth parallax effect tied to scroll
+                        markers: false,
+                    },
+                });
+            }
+        });
+
+        // Initialize Swiper Hero Carousel
+        const heroCarousel = document.getElementById("hero-carousel") as HTMLElement;
+        
+        if (heroCarousel) {
+            const swiper = new Swiper('#hero-carousel', {
+                modules: [Autoplay],
+                loop: true,
+                freeMode: false, // Disable freeMode for smoother interaction
+                speed: 300, // Faster transition speed
+                autoplay: {
+                    delay: 0,
+                    disableOnInteraction: false,
+                    reverseDirection: true,
+                    pauseOnMouseEnter: false,
+                    stopOnLastSlide: false,
+                },
+                slidesPerView: 'auto',
+                spaceBetween: 10,
+                grabCursor: true,
+                allowTouchMove: true,
+                resistanceRatio: 0,
+                // Remove parallax for smoother performance
+            });
+
+            console.log("Swiper hero carousel initialized:", swiper);
+        } else {
+            console.error("Carousel wrapper not found");
+        }
+
+        // Gallery Modal Functionality
+        const modal = document.getElementById("video-modal");
+        const modalVideo = document.getElementById(
+            "modal-video-player",
+        ) as HTMLVideoElement;
+        const modalVideoSource = document.getElementById(
+            "modal-video-source",
+        ) as HTMLSourceElement;
+        const modalClose = document.getElementById("modal-close");
+        const galleryItems = document.querySelectorAll(".gallery-item");
+
+        // Open modal with video
+        function openModal(videoUrl: string) {
+            if (modal && modalVideo && modalVideoSource) {
+                modalVideoSource.src = videoUrl;
+                modalVideo.load();
+                modal.classList.add("active");
+                document.body.style.overflow = "hidden"; // Prevent background scrolling
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            if (modal && modalVideo) {
+                modal.classList.remove("active");
+                modalVideo.pause();
+                modalVideo.currentTime = 0;
+                document.body.style.overflow = ""; // Re-enable scrolling
+            }
+        }
+
+        // Add click handlers to gallery items
+        galleryItems.forEach((item) => {
+            item.addEventListener("click", () => {
+                const videoUrl = item.getAttribute("data-video");
+                if (videoUrl) {
+                    openModal(videoUrl);
+                }
+            });
+        });
+
+        // Close modal on close button click
+        modalClose?.addEventListener("click", closeModal);
+
+        // Close modal on outside click
+        modal?.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on Escape key
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal?.classList.contains("active")) {
+                closeModal();
+            }
+        });
+
+        // Pause marquee on hover
+        const marqueeContent = document.querySelector(
+            ".marquee-content",
+        ) as HTMLElement;
+        const marqueeContainer = document.querySelector(".marquee-container");
+
+        marqueeContainer?.addEventListener("mouseenter", () => {
+            if (marqueeContent) {
+                marqueeContent.style.animationPlayState = "paused";
+            }
+        });
+
+        marqueeContainer?.addEventListener("mouseleave", () => {
+            if (marqueeContent) {
+                marqueeContent.style.animationPlayState = "running";
+            }
+        });
+
+        // SVG Grid Lines Generator
+        function generateGridLines() {
+            const svgs = document.querySelectorAll(
+                ".grid-lines-svg",
+            ) as NodeListOf<SVGElement>;
+            if (!svgs || svgs.length === 0) return;
+
+            // Generate lines for each SVG element
+            svgs.forEach((svg) => {
+                const container = svg.parentElement;
+                if (!container) return;
+
+                // Configuration
+                const config = {
+                    lineSpacing: 22, // Spacing between lines in pixels
+                    topSegmentStart: 0.24, // 333.508 / 1395 ≈ 0.24
+                    topSegmentEnd: 0.434, // 605.368 / 1395 ≈ 0.434
+                    middleSegmentEnd: 0.706, // 985.368 / 1395 ≈ 0.706
+                    bottomSegmentEnd: 0.901, // 1257.23 / 1395 ≈ 0.901
+                    thickStrokeWidth: 9,
+                    thinStrokeWidth: 1,
+                    strokeColor: "#ACAAA3",
+                    startOffset: 5, // Minimal offset to prevent cut-off
+                };
+
+                // Clear existing lines
+                svg.innerHTML = "";
+
+                // Calculate container width and number of lines
+                const containerWidth = container.offsetWidth;
+
+                // Use full container width for viewBox
+                svg.setAttribute("viewBox", `0 0 ${containerWidth} 400`);
+
+                // Calculate available width for lines (account for left/right padding of overlay grid)
+                let horizontalPadding = 0;
+                const overlayGridForPadding = container.querySelector(
+                    ".sketch-container-grid",
+                ) as HTMLElement | null;
+                if (overlayGridForPadding) {
+                    const cs2 = getComputedStyle(overlayGridForPadding);
+                    const padLeft = parseFloat(cs2.paddingLeft || "0");
+                    const padRight = parseFloat(cs2.paddingRight || "0");
+                    horizontalPadding = padLeft + padRight;
+                }
+                const availableWidth =
+                    containerWidth - horizontalPadding - config.startOffset * 2;
+
+                // Keep constant spacing but distribute leftover equally on both sides
+                const spacing = config.lineSpacing;
+                const numLines = Math.floor(availableWidth / spacing) + 1; // number of lines so last index fits in width
+                const spanWidth = (numLines - 1) * spacing; // distance from first to last line
+                const sideRemainder = Math.max(availableWidth - spanWidth, 0);
+                const sidePadding = sideRemainder / 2; // equal gap on left and right inside overlay padding
+
+                // Start position: left overlay padding + inner offset + equalized side padding
+                const leftOverlayPadding = overlayGridForPadding
+                    ? parseFloat(
+                          getComputedStyle(overlayGridForPadding).paddingLeft ||
+                              "0",
+                      )
+                    : 0;
+                const adjustedStartOffset =
+                    leftOverlayPadding + config.startOffset + sidePadding;
+
+                // Get the actual SVG height from viewBox or container
+                const svgHeight = (svg as any).viewBox.baseVal.height || 400;
+
+                // Read top/bottom padding from the overlay grid so thick segments can form a border
+                let topPaddingPx = 0;
+                let bottomPaddingPx = 0;
+                const overlayGrid = container.querySelector(
+                    ".sketch-container-grid",
+                ) as HTMLElement | null;
+                if (overlayGrid) {
+                    const cs = getComputedStyle(overlayGrid);
+                    topPaddingPx = parseFloat(cs.paddingTop || "0");
+                    bottomPaddingPx = parseFloat(cs.paddingBottom || "0");
+                }
+
+                // Generate lines
+                for (let i = 0; i < numLines; i++) {
+                    const x = adjustedStartOffset + i * spacing;
+                    const groupIndex = Math.floor(i / 5); // Group every 5 lines for future animation
+
+                    // Create group for this line (for future animation control)
+                    const group = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "g",
+                    );
+                    group.classList.add("grid-line-group");
+                    group.setAttribute("data-group", groupIndex.toString());
+                    group.setAttribute("data-line", i.toString());
+
+                    // Top segment (thick stroke) - from very top to the start of the middle (acts like border)
+                    const topLine = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "path",
+                    );
+                    topLine.setAttribute("d", `M${x} ${topPaddingPx}V0`);
+                    topLine.setAttribute("stroke", config.strokeColor);
+                    topLine.setAttribute(
+                        "stroke-width",
+                        config.thickStrokeWidth.toString(),
+                    );
+                    topLine.classList.add("grid-line-top");
+                    group.appendChild(topLine);
+
+                    // Middle segment (thin stroke) - spans the grid area between paddings
+                    const middleLine = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "path",
+                    );
+                    middleLine.setAttribute(
+                        "d",
+                        `M${x} ${topPaddingPx}V${svgHeight - bottomPaddingPx}`,
+                    );
+                    middleLine.setAttribute("stroke", config.strokeColor);
+                    middleLine.setAttribute(
+                        "stroke-width",
+                        config.thinStrokeWidth.toString(),
+                    );
+                    middleLine.classList.add("grid-line-middle");
+                    group.appendChild(middleLine);
+
+                    // Bottom segment (thick stroke) - from end of middle to very bottom (acts like border)
+                    const bottomLine = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "path",
+                    );
+                    bottomLine.setAttribute(
+                        "d",
+                        `M${x} ${svgHeight}V${svgHeight - bottomPaddingPx}`,
+                    );
+                    bottomLine.setAttribute("stroke", config.strokeColor);
+                    bottomLine.setAttribute(
+                        "stroke-width",
+                        config.thickStrokeWidth.toString(),
+                    );
+                    bottomLine.classList.add("grid-line-bottom");
+                    group.appendChild(bottomLine);
+
+                    svg.appendChild(group);
+                }
+            }); // End forEach loop for each SVG
+        }
+
+        // Update SVG height based on container grid height
+        function updateSVGHeight() {
+            const processSections =
+                document.querySelectorAll(".process-section");
+
+            processSections.forEach((section) => {
+                const svg = section.querySelector(
+                    ".grid-lines-svg",
+                ) as SVGElement;
+                const containerWrapper = section.querySelector(
+                    ".sketch-container-wrapper",
+                ) as HTMLElement;
+                const decorativeLines = section.querySelector(
+                    ".decorative-lines",
+                ) as HTMLElement;
+
+                if (!svg || !containerWrapper || !decorativeLines) return;
+
+                // Get the actual height of the container wrapper
+                const gridHeight = containerWrapper.offsetHeight;
+
+                // Update decorative-lines container height
+                decorativeLines.style.height = `${gridHeight}px`;
+
+                // Get current viewBox
+                const viewBox = svg.getAttribute("viewBox");
+                if (!viewBox) return;
+
+                const [x, y, width] = viewBox.split(" ").map(Number);
+
+                // Update viewBox height to match grid height
+                svg.setAttribute("viewBox", `${x} ${y} ${width} ${gridHeight}`);
+            });
+
+            // Regenerate lines with new height for all sections
+            generateGridLines();
+        }
+
+        // Call after grid generation and on resize
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                generateGridLines();
+                updateSVGHeight();
+            }, 100);
+        });
+
+        // Also try to initialize immediately if DOM is already loaded
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", () => {
+                setTimeout(() => {
+                    generateGridLines();
+                    updateSVGHeight();
+                }, 100);
+            });
+        } else {
+            setTimeout(() => {
+                generateGridLines();
+                updateSVGHeight();
+            }, 100);
+        }
+
+        // Update on resize
+        let resizeTimeout: ReturnType<typeof setTimeout>;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                updateSVGHeight();
+            }, 250);
+        });
+
+        // ==================== STYLEFRAMES THUMBS (HORIZONTAL RAIL) ====================
+        const thumbsRail = document.getElementById(
+            "thumbs-rail",
+        ) as HTMLElement;
+
+        if (thumbsRail) {
+            console.log("Thumbs rail found:", thumbsRail);
+            // Add a centered debug focus rectangle overlay (width ~= one thumb)
+            const thumbsWrapper = thumbsRail.parentElement as HTMLElement;
+            const debugFocusArea = document.createElement("div");
+            debugFocusArea.style.cssText = `
+			position: absolute;
+			top: 0;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 180px;
+			height: 100%;
+			border: 2px solid red;
+			box-sizing: border-box;
+			pointer-events: none;
+			z-index: 10;
+			background: rgba(255, 0, 0, 0.08);
+		`;
+            thumbsWrapper?.appendChild(debugFocusArea);
+
+             // Initialize Swiper for thumbs rail
+             const thumbsCarousel = new Swiper(thumbsRail, {
+                 modules: [FreeMode],
+                 freeMode: true,
+                 slidesPerView: 'auto',
+                 spaceBetween: 4,
+                 grabCursor: true,
+                 allowTouchMove: true,
+                 scrollbar: false,
+                 navigation: false,
+                 pagination: false,
+             });
+
+             const thumbSlots = thumbsRail.querySelectorAll(".thumb-slot");
+             
+             // Simple active detection based on scroll position
+             function updateActiveThumb() {
+                 const focusRect = debugFocusArea.getBoundingClientRect();
+                 const focusLeft = focusRect.left;
+                 const focusRight = focusRect.right;
+                 
+                 thumbSlots.forEach((slot) => {
+                     const rect = slot.getBoundingClientRect();
+                     const centerX = (rect.left + rect.right) / 2;
+                     if (centerX >= focusLeft && centerX <= focusRight) {
+                         slot.classList.add("active");
+                     } else {
+                         slot.classList.remove("active");
+                     }
+                 });
+             }
+
+             // Update active state on scroll
+             thumbsCarousel.on('scroll', updateActiveThumb);
+             
+             // Initial update
+             updateActiveThumb();
+        } else {
+            console.error("Thumbs rail not found in DOM");
+        }
+
+        // ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
+        const revealStageEl = document.querySelector(
+            ".reveal-stage",
+        ) as HTMLElement;
+        const textBlocksEls = document.querySelectorAll(
+            ".styleframes-text .text-block",
+        ) as NodeListOf<HTMLElement>;
+
+        // Check browser support for view timelines
+        const supportsViewTimeline = CSS.supports(
+            "animation-timeline",
+            "view()",
+        );
+        console.log("Browser supports view timelines:", supportsViewTimeline);
+
+        // Force initial states of preview slots
+        const slot1 = document.querySelector(
+            '.preview-slot[data-slot="1"]',
+        ) as HTMLElement;
+        const slot2 = document.querySelector(
+            '.preview-slot[data-slot="2"]',
+        ) as HTMLElement;
+        const slot3 = document.querySelector(
+            '.preview-slot[data-slot="3"]',
+        ) as HTMLElement;
+
+        if (slot1 && slot2 && slot3) {
+            // Force initial positions with inline styles (higher specificity)
+            slot1.style.setProperty("transform", "translateY(0)", "important");
+            slot2.style.setProperty(
+                "transform",
+                "translateY(100%)",
+                "important",
+            );
+            slot3.style.setProperty(
+                "transform",
+                "translateY(100%)",
+                "important",
+            );
+
+            console.log("Initial slot transforms set:", {
+                slot1: window.getComputedStyle(slot1).transform,
+                slot2: window.getComputedStyle(slot2).transform,
+                slot3: window.getComputedStyle(slot3).transform,
+            });
+
+            // After a brief delay, remove important and let CSS animations take over
+            setTimeout(() => {
+                if (supportsViewTimeline) {
+                    slot1.style.removeProperty("transform");
+                    slot2.style.removeProperty("transform");
+                    slot3.style.removeProperty("transform");
+                    console.log(
+                        "Inline styles removed, CSS animations taking over",
+                    );
+                }
+            }, 500);
+        }
+
+        if (revealStageEl && textBlocksEls.length > 0) {
+            // Use FIXED inset based on known sticky position instead of dynamic calculation
+            // The reveal-stage is sticky at top: 12vh, height: 60vh
+            // So: top inset = 12vh, bottom inset = 100vh - 12vh - 60vh = 28vh
+            const fixedInsetValue = "12% 28%"; // Simplified percentages
+
+            console.log("Using fixed view timeline inset:", fixedInsetValue);
+
+            // Apply fixed inset to each text-block
+            textBlocksEls.forEach((block) => {
+                (block.style as any).viewTimelineAxis = "block";
+                (block.style as any).viewTimelineInset = fixedInsetValue;
+            });
+
+            // Force a reflow to ensure timelines are registered
+            void revealStageEl.offsetHeight;
+
+            console.log("View timelines initialized with fixed inset");
+        }
+
+        // ==================== TEXT BLOCKS PARALLAX ANIMATION ====================
+        // TEMPORARILY DISABLED - GSAP transform interferes with view timeline calculations
+        // Animate each .text-block to move upward smoothly as they enter viewport (skip first one)
+        // if (textBlocksEls.length > 0) {
+        // 	textBlocksEls.forEach((textBlock, index) => {
+        // 		// Skip the first text block (index 0)
+        // 		if (index === 0) return;
+
+        // 		gsap.from(textBlock, {
+        // 			y: 200, // Start 200px below their natural position
+        // 			opacity: 0, // Start invisible
+        // 			scrollTrigger: {
+        // 				trigger: textBlock,
+        // 				start: "top bottom-=100", // Start animation when top of block is 100px from bottom of viewport
+        // 				end: "top center", // End when top of block reaches center of viewport
+        // 				scrub: 1, // Smooth animation tied to scroll (1 second delay for smoothness)
+        // 				markers: false,
+        // 			},
+        // 		});
+        // 	});
+        // }
+
+        // ==================== STYLEFRAMES SYNCED SCROLL ====================
+        // OLD CODE - Removed this entire section since CSS view timelines handle the sync automatically
+        // The old ScrollTrigger implementation with onEnter/onEnterBack and manual class toggling
+        // has been replaced with CSS view timelines for automatic sync between scroll position
+        // and styleframe animations.
+    </script></Layout
+>

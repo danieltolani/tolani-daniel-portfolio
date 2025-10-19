@@ -226,9 +226,6 @@ body {
                 position: relative;
                 cursor: grab;
                 touch-action: pan-y;
-                display: flex;
-                gap: 10px;
-                /* No gap - spacing controlled by items */
                 width: 100%;
                 user-select: none;
                 -webkit-user-select: none;
@@ -240,14 +237,16 @@ body {
                 &:focus {
                     outline: none;
                 }
+
+                &.helper-active {
+                    cursor: none !important;
+                }
             }
 
             .carousel-item {
-                flex-shrink: 0;
                 width: 215.554px;
                 height: 124.893px;
                 position: relative;
-                margin: 0;
                 padding: 0;
             }
 
@@ -264,7 +263,13 @@ body {
                 align-items: center;
                 justify-content: center;
                 cursor: pointer;
-
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -webkit-user-drag: none;
+                -webkit-touch-callout: none;
+                -webkit-tap-highlight-color: transparent;
 
                 &:hover {
                     filter: brightness(1.1);
@@ -285,7 +290,8 @@ body {
                 mix-blend-mode: difference;
             }
 
-            .carousel-image {
+            .carousel-image,
+            .carousel-image2 {
                 width: 100%;
                 height: 100%;
                 object-fit: cover;
@@ -296,6 +302,46 @@ body {
                 pointer-events: none;
                 user-select: none;
                 -webkit-user-drag: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                -webkit-user-select: none;
+                -webkit-touch-callout: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            /* Click & Drag Cursor Helper */
+            .click-drag-helper {
+                position: fixed;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                pointer-events: none;
+                z-index: 1000;
+                background-color: #222325;
+                padding: 8px 12px;
+                border-radius: 4px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transform: translate(0, 0);
+                transition: opacity 0.2s ease;
+                will-change: transform, opacity;
+            }
+
+            .helper-icon {
+                width: 8px;
+                height: 8px;
+                background-color: #F72F2F;
+                flex-shrink: 0;
+            }
+
+            .helper-text {
+                font-family: var(--font-mono);
+                font-size: 16px;
+                color: white;
+                text-transform: uppercase;
+                white-space: nowrap;
+                line-height: 1;
             }
 
             /* Lightbox Modal */
@@ -473,231 +519,50 @@ body {
     height: 100vh;
     overflow: hidden;
     margin-top: -10vh;
-}
-
-.video-container {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #000;
 }
 
-.video-wrapper {
+.video-embed-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-    /* Clip extended video edges */
+    max-width: 100%;
 }
 
-.video-player {
-    position: absolute;
-    inset: 0;
+.video-embed-wrapper iframe {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Thumbnail/poster scaling for full coverage */
-.video-player[data-state="thumbnail"] {
-    inset: -10%;
-    /* Extend further beyond container to prevent gaps */
-    width: 120%;
-    /* Scale up more to ensure full coverage on smaller screens */
-    height: 120%;
-    /* Scale up more to ensure full coverage on smaller screens */
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
-}
-
-.video-blur-layer {
-    position: absolute;
-    inset: 0;
-    backdrop-filter: blur(2.41px);
-    pointer-events: none;
-    z-index: 1;
-    transition: opacity 500ms ease;
-}
-
-.video-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(20, 20, 23, 0.35);
-    transition: opacity 500ms ease;
-    z-index: 2;
-    /* Above blur layer */
-}
-
-/* ==================== PLAY BUTTON ==================== */
-.play-button {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    transition: all 300ms ease;
-    z-index: 10;
-    background: none;
-    border: none;
-    padding: 0;
-}
-
-.play-button:hover {
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.play-button-wrapper {
+/* Hide Vimeo UI elements while keeping control bar */
+.video-embed-wrapper {
     position: relative;
-    width: 132.191px;
-    height: 132.191px;
 }
 
-.play-button-circle {
+/* Hide Vimeo side dock elements (Like, Watch Later, Share buttons) */
+.video-embed-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Target the specific Vimeo side dock class - styles applied via JavaScript */
+
+/* CSS injection to hide side dock elements */
+.video-embed-wrapper::after {
+    content: "";
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.play-button-circle-1 {
-    transform: rotate(59.492deg);
-}
-
-.play-button-circle-2 {
-    transform: rotate(165deg);
-}
-
-.play-button-circle img {
-    display: block;
-    width: 132.191px;
-    height: 132.191px;
-}
-
-.play-button-text {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Suisse Intl', sans-serif;
-    font-weight: 500;
-    font-size: 16px;
-    color: white;
-    text-transform: uppercase;
-    pointer-events: none;
-    margin: 0;
-    white-space: nowrap;
-}
-
-.circle {
-    --circle-size: 132.191px;
-    position: absolute;
-    height: var(--circle-size);
-    width: var(--circle-size);
-    border: 1px solid white;
-    border-radius: 100%;
     top: 0;
-    left: 0;
-    pointer-events: none;
-}
-
-/* ==================== VIDEO CONTROLS ==================== */
-.video-controls {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    padding: 12px 24px;
-    opacity: 0;
-    transition: opacity 300ms ease;
+    right: 0;
+    width: 80px;
+    height: 100%;
+    background: transparent;
     z-index: 10;
-}
-
-.video-controls button {
-    color: white;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: color 200ms ease;
-}
-
-.video-controls button:hover {
-    color: #d1d5db;
-}
-
-.video-controls svg {
-    width: 24px;
-    height: 24px;
-}
-
-.video-controls-progress {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 200px;
-}
-
-.video-controls-time {
-    color: white;
-    font-size: 14px;
-    font-family: 'Suisse Intl', sans-serif;
-    font-weight: 500;
-}
-
-.video-progress-bar {
-    flex: 1;
-    height: 4px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 9999px;
-    appearance: none;
-    cursor: pointer;
-}
-
-/* Video Progress Bar Styling */
-input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-}
-
-input[type="range"]::-moz-range-thumb {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    border: none;
-    transition: transform 0.2s;
-}
-
-input[type="range"]::-moz-range-thumb:hover {
-    transform: scale(1.2);
+    pointer-events: auto;
 }
 
 /* ==================== VIDEO MODAL ==================== */
@@ -823,8 +688,50 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .pixel-text {
-    font-family: 'Neue Pixel Round', monospace;
-    color: #F72F2F;
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    z-index: 1;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    color: var(--color-text);
+    opacity: 0.7;
+    line-height: 1;
+    transition: color 0.3s ease;
+    mix-blend-mode: difference;
+}
+
+.pixel-text::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: var(--color-text);
+    z-index: -1;
+    transition: width 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pixel-text:hover::after {
+    width: 100%;
+}
+
+.pixel-text:hover {
+    color: #222220;
+    mix-blend-mode: difference;
+    opacity: 1;
+}
+
+.pixel-text.active {
+    opacity: 1;
+    color: #222220;
+    mix-blend-mode: difference;
+}
+
+.pixel-text.active::after {
+    width: 100%;
 }
 
 /* Decorative Lines with Dynamic Height */
@@ -1145,11 +1052,8 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .thumbs-rail {
-    display: flex;
-    flex-direction: row; /* horizontal */
-    gap: 4px;
-    padding: 0;
-    flex: 0 0 auto;
+    width: 100%;
+    height: 100%;
     cursor: grab;
     user-select: none;
 }
@@ -1159,15 +1063,29 @@ input[type="range"]::-moz-range-thumb:hover {
  }
  
 .thumb-slot {
-    width: 180px; /* match column width */
-    height: 104px; /* match focus height for visibility */
     flex-shrink: 0;
     border-radius: 6px;
     background: #2f3134;
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
     position: relative;
     overflow: hidden;
+    max-width: 215px;
 }
+
+.thumb-image {
+    width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Remove Swiper's default ::after pseudo-elements */
+ .thumb-slot::after {
+    display: none !important;
+}
+
+.thumb-slot.swiper-slide-active::after {
+    display: none !important;
+} 
 
 .thumbnail-overlay,
 .thumb-dim {
