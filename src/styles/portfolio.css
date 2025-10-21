@@ -213,182 +213,6 @@ body {
           margin-top: 1.25rem;
         }
       }
-
-      /* Carousel Container - Constrains width */
-      .carousel-container {
-        width: 100%;
-        max-width: 1512px;
-        margin: 0 auto;
-        overflow: hidden;
-      }
-
-      /* Carousel Wrapper - Smooothy */
-      .carousel-wrapper {
-        background-color: var(--color-bg-darker);
-        padding: 15px 14px;
-        overflow: hidden;
-        position: relative;
-        cursor: grab;
-        touch-action: pan-y;
-        width: 100%;
-        user-select: none;
-        -webkit-user-select: none;
-        display: flex; /* Required for Smooothy */
-
-        &:active {
-          cursor: grabbing;
-        }
-
-        &:focus {
-          outline: none;
-        }
-
-        &.helper-active {
-          cursor: none !important;
-        }
-      }
-
-      .carousel-wrapper[data-slider] > * {
-        flex-shrink: 0; /* Required for Smooothy */
-      }
-
-      .carousel-item {
-        width: 215px;
-        height: 124px;
-        position: relative;
-        padding: 0;
-        padding-right: 10px; /* Gap between carousel items using padding */
-        flex-shrink: 0; /* Ensure consistent sizing */
-        box-sizing: border-box; /* Include padding in width calculation */
-      }
-
-      .carousel-item-inner {
-        width: 100%;
-        height: 100%;
-        border-radius: 0.625rem;
-        overflow: hidden;
-        background: #222325;
-        position: relative;
-        will-change: transform;
-        transition: filter var(--transition-speed) ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-drag: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-
-        &:hover {
-          filter: brightness(1.1);
-        }
-      }
-
-      .carousel-number {
-        font-family: "Suisse Int'l", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 400;
-        color: white;
-        position: absolute;
-        bottom: 12px;
-        left: 16px;
-        z-index: 10;
-        pointer-events: none;
-        user-select: none;
-        mix-blend-mode: difference;
-      }
-
-      .carousel-image,
-      .carousel-image2 {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        pointer-events: none;
-        user-select: none;
-        -webkit-user-drag: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .helper-icon {
-        width: 8px;
-        height: 8px;
-        background-color: #f72f2f;
-        flex-shrink: 0;
-      }
-
-      .helper-text {
-        font-family: var(--font-mono);
-        font-size: 16px;
-        color: white;
-        text-transform: uppercase;
-        white-space: nowrap;
-        line-height: 1;
-      }
-
-      /* Lightbox Modal */
-      .lightbox-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(0, 0, 0, 0.95);
-        z-index: 9999;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: opacity 300ms ease;
-
-        &.active {
-          display: flex;
-          opacity: 1;
-        }
-      }
-
-      .lightbox-content {
-        position: relative;
-        max-width: 90vw;
-        max-height: 90vh;
-      }
-
-      .lightbox-image {
-        max-width: 90vw;
-        max-height: 90vh;
-        object-fit: contain;
-        border-radius: 0.625rem;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        display: block;
-      }
-
-      .lightbox-close {
-        /* position: relative;
-                top: 0;
-                left: 0; */
-        background: #141417;
-        border: none;
-        cursor: pointer;
-        color: white;
-        z-index: 10000;
-        pointer-events: pointer;
-        outline: none;
-
-        &:focus {
-          outline: none;
-        }
-      }
     }
 
     /* Project Metadata pinned to bottom of hero-content */
@@ -421,6 +245,192 @@ body {
       }
     }
   }
+}
+/* Carousel Container - Constrains width */
+.carousel-container {
+  width: 100%;
+  max-width: 1512px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Styleframes Carousel - Smaller version */
+.styleframes-carousel {
+  max-width: 100%; /* Smaller max width */
+  margin-top: 0.5rem;
+}
+
+/* Styleframes carousel wrapper - reduced padding */
+.styleframes-carousel .carousel-wrapper {
+  padding: 10px 14px; /* Reduced top/bottom padding from 15px to 10px */
+}
+
+.styleframes-carousel .carousel-item {
+  width: 120px !important; /* Smaller item width */
+  height: 70px !important; /* Smaller item height */
+}
+
+.styleframes-carousel .carousel-item .carousel-item-inner {
+  border-radius: 0.375rem !important; /* Smaller border radius */
+}
+
+/* Styleframes carousel image styling - inherits from main carousel */
+
+.styleframes-carousel .carousel-number {
+  font-size: 0.75rem !important; /* Smaller font size */
+  padding: 2px 6px !important; /* Smaller padding */
+}
+
+/* Fixed detection rectangle for styleframes preview */
+.styleframes-carousel .fixed-detection-rect {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150px; /* Width of detection area */
+  height: 100%;
+  border: 1px solid #ffffff; /* Visible for debugging */
+  background: rgba(0, 30, 255, 0.1);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Ensure carousel container has relative positioning for absolute child */
+.styleframes-carousel {
+  position: relative;
+}
+
+/* Preview image styling */
+.styleframes-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Carousel Wrapper - Smooothy */
+.carousel-wrapper {
+  background-color: var(--color-bg-darker);
+  padding: 15px 14px;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  touch-action: pan-y;
+  width: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex; /* Required for Smooothy */
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.helper-active {
+    cursor: none !important;
+  }
+}
+
+.carousel-wrapper[data-slider] > * {
+  flex-shrink: 0; /* Required for Smooothy */
+}
+
+/* Ensure all carousel items also show grab cursor */
+.carousel-wrapper * {
+  cursor: grab !important;
+}
+
+.carousel-wrapper:active * {
+  cursor: grabbing !important;
+}
+
+/* Override any pointer cursors on carousel elements */
+.carousel-wrapper .carousel-item,
+.carousel-wrapper .carousel-item-inner,
+.carousel-wrapper .carousel-image,
+.carousel-wrapper .carousel-image2,
+.carousel-wrapper .carousel-number {
+  cursor: grab !important;
+}
+
+.carousel-wrapper:active .carousel-item,
+.carousel-wrapper:active .carousel-item-inner,
+.carousel-wrapper:active .carousel-image,
+.carousel-wrapper:active .carousel-image2,
+.carousel-wrapper:active .carousel-number {
+  cursor: grabbing !important;
+}
+
+.carousel-item {
+  width: 215px;
+  height: 124px;
+  position: relative;
+  padding: 0;
+  padding-right: 10px; /* Gap between carousel items using padding */
+  flex-shrink: 0; /* Ensure consistent sizing */
+  box-sizing: border-box; /* Include padding in width calculation */
+
+  .carousel-item-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.625rem;
+    overflow: hidden;
+    background: #222325;
+    position: relative;
+    will-change: transform;
+    transition: filter var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:hover {
+      filter: brightness(1.1);
+    }
+  }
+}
+
+.carousel-number {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: white;
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: difference;
+}
+
+.carousel-image,
+.carousel-image2 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Smooothy carousel handles animation via JS */
@@ -788,7 +798,7 @@ body {
 	grid-row: 1;
 	aspect-ratio: 675 / 404;
 	min-height: 300px; */
-    border: 1px solid #ACAAA3;
+  border: 1px solid #acaaa3;
 
   > img {
     width: 100%;
@@ -969,669 +979,518 @@ body {
   background-color: #141417;
   padding: 7.5rem 0;
   position: relative;
-}
 
-.styleframes-container {
-  width: 85%;
-  max-width: 1512px;
-  margin: 0 auto;
-}
-
-.styleframes-content {
-  display: grid;
-  grid-template-columns: 1fr; /* Stack: preview on top, thumbs below */
-  grid-template-rows: auto auto;
-  gap: 0.4375rem;
-  margin-bottom: 5rem;
-}
-
-/* Large Preview */
-.styleframes-preview {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: #222325;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.preview-image {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-}
-
-/* Counter Badge */
-.styleframe-counter {
-  position: absolute;
-  bottom: 32px;
-  left: 32px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background-color: #282828;
-  padding: 3px;
-  border-radius: 67px;
-  z-index: 10;
-}
-
-.counter-number {
-  background-color: #373737;
-  width: 24px;
-  height: 21px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 67px;
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  color: white;
-  text-transform: uppercase;
-}
-
-.counter-of {
-  font-family: "Inter", sans-serif;
-  font-size: 12px;
-  color: white;
-  text-transform: uppercase;
-  padding: 0 4px;
-}
-
-.styleframes-thumbs {
-  position: relative;
-  width: 100%; /* Full width under the preview */
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  /* Remove fixed aspect ratio so it can stretch full width */
-}
-
-.thumbs-rail {
-  width: 100%;
-  height: 100%;
-  cursor: grab;
-  user-select: none;
-  display: flex; /* Required for Smooothy */
-}
-
-/* Thumbs Container - Constrains width */
-.thumbs-container {
-  width: 100%;
-  max-width: 1512px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.thumbs-rail[data-slider] > * {
-  flex-shrink: 0; /* Required for Smooothy */
-}
-
-.thumbs-rail:active {
-  cursor: grabbing;
-}
-
-.thumb-slot {
-  flex-shrink: 0;
-  border-radius: 6px;
-  background: #2f3134;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  position: relative;
-  overflow: hidden;
-  max-width: 215px;
-  width: 215px; /* Fixed width for consistent spacing */
-  padding-right: 4px; /* Gap between thumb slots using padding */
-  box-sizing: border-box; /* Include padding in width calculation */
-  /* Prevent dragging and selection of the slot itself */
-  user-select: none;
-  -webkit-user-drag: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.thumb-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: filter 0.3s ease;
-  /* Prevent image dragging and selection */
-  pointer-events: none;
-  user-select: none;
-  -webkit-user-drag: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  -webkit-user-select: none;
-  -webkit-touch-callout: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Inactive thumb image - dimmed */
-.thumb-slot.inactive .thumb-image {
-  filter: brightness(0.3);
-}
-
-/* Active thumb image - bright */
-.thumb-slot.active .thumb-image {
-  filter: brightness(1);
-}
-
-/* Debugger slot styling */
-.debugger-slot {
-  border: 2px solid red !important;
-  background: rgba(255, 0, 0, 0.08) !important;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.debugger-content {
-  width: 100%;
-  height: 100%;
-  background: transparent;
-}
-
-/* Fixed debugger on far left */
-.fixed-debugger {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 180px;
-  height: 100%;
-  border: 2px solid red;
-  background: rgba(255, 0, 0, 0.08);
-  pointer-events: none;
-  z-index: 10;
-  box-sizing: border-box;
-}
-
-/* Remove any default pseudo-elements */
-.thumb-slot::after {
-  display: none !important;
-}
-
-.thumbnail-overlay,
-.thumb-dim {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  transition: opacity 300ms ease;
-  z-index: 1;
-}
-
-.thumb.is-active .thumb-dim {
-  opacity: 0;
-}
-
-/* Dim overlay for non-active slots; removed when .active */
-.thumb-slot::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  transition: opacity 200ms ease;
-}
-
-.thumb-slot.active::after {
-  opacity: 0;
-}
-
-.thumbs-focus-frame {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
-  height: 104px;
-  box-sizing: border-box;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.vertical-carousel-item.active .thumbnail-overlay {
-  opacity: 0;
-}
-
-/* Focus Frame - Static overlay */
-.styleframes-focus-frame {
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: calc(100% - 28px);
-  height: 103.95px;
-  box-shadow: inset 0 0 0 2px #ffffff;
-  box-sizing: border-box;
-  pointer-events: none;
-  z-index: 10;
-}
-
-/* Text Content Blocks */
-.styleframes-text {
-  margin-left: auto;
-  position: sticky !important;
-  max-width: 420px;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 30vh; /* Reduced gap for overlapping text-block transitions */
-  margin-top: 8rem;
-  padding-bottom: 100vh; /* Extra space at bottom for last section */
-}
-
-.styleframes-sync {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: clamp(1.5rem, 3vw, 3rem);
-  align-items: start;
-  margin-top: clamp(2rem, 4vw, 3rem);
-  min-height: 300vh; /* Ensure enough scroll space for all text blocks */
-
-  /* Define timeline scope for all text sections */
-  timeline-scope: --section-0, --section-1, --section-2;
-}
-
-.left-stack {
-  position: sticky;
-  top: 12vh;
-  align-self: start;
-}
-
-.reveal-stage {
-  height: 60vh;
-  border-radius: 10px;
-  background: #222325;
-  overflow: hidden;
-  position: relative;
-}
-
-.preview-slot {
-  position: absolute;
-  inset: 0;
-  background: #2f3134;
-  opacity: 1;
-
-  /* Center debug numbers */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 6rem;
-  font-family: "Suisse Intl", sans-serif;
-  font-weight: bold;
-  color: rgba(255, 255, 255, 0.3);
-}
-
-/* Different colors for each slot (for debugging slide effect) */
-/* Stack order reversed: each new card slides ON TOP of the previous */
-.preview-slot[data-slot="1"] {
-  background: #3d4149;
-  z-index: 1; /* Bottom layer - shows first, then gets covered */
-  transform: translateY(
-    0
-  ) !important; /* Override default - visible from start */
-}
-
-.preview-slot[data-slot="2"] {
-  background: #4a5058;
-  z-index: 2; /* Middle layer - slides up on top of slot 1 */
-  transform: translateY(100%); /* Hide below by default */
-}
-
-.preview-slot[data-slot="3"] {
-  background: #5a616b;
-  z-index: 3; /* Top layer - slides up on top of slot 2 */
-  transform: translateY(100%); /* Hide below by default */
-}
-
-/* Force initial hidden state - overrides animation until ready */
-.preview-slot.initial-hidden {
-  transform: translateY(100%) !important;
-}
-
-/* Slide-in animation with view timelines */
-@supports (animation-timeline: view()) {
-  @keyframes slide-in-up {
-    from {
-      transform: translateY(100%);
-    } /* Start below the frame */
-    to {
-      transform: translateY(0);
-    } /* Slide up to cover previous */
+  .styleframes-container {
+    width: 85%;
+    max-width: 1512px;
+    margin: 0 auto;
   }
 
-  /* Slot 2 slides in when section 1 (second text-block) enters */
-  .preview-slot[data-slot="2"] {
-    animation: slide-in-up linear;
-    animation-fill-mode: both;
-    animation-timeline: --section-1;
-    animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
-    /* Initial state before animation */
-    transform: translateY(100%);
+  .styleframes-slide-container {
+    width: 100%;
+    max-width: 1512px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid blue;
   }
 
-  /* Slot 3 slides in when section 2 (third text-block) enters */
-  .preview-slot[data-slot="3"] {
-    animation: slide-in-up linear;
-    animation-fill-mode: both;
-    animation-timeline: --section-2;
-    animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
-    /* Initial state before animation */
-    transform: translateY(100%);
-  }
-}
-
-@supports not (animation-timeline: view()) {
-  /* Fallback: simple fade for browsers without view timeline support */
-  .preview-slot {
-    opacity: 0.3;
-    transition: opacity 400ms ease;
-  }
-  .preview-slot.is-visible {
-    opacity: 1;
-  }
-}
-
-.styleframes-text .text-block {
-  /* GSAP will control opacity and transform */
-
-  /* Each text-block defines its own view timeline */
-  view-timeline-axis: block;
-}
-
-.styleframes-text .text-block[data-section="0"] {
-  view-timeline-name: --section-0;
-}
-.styleframes-text .text-block[data-section="1"] {
-  view-timeline-name: --section-1;
-}
-.styleframes-text .text-block[data-section="2"] {
-  view-timeline-name: --section-2;
-}
-
-/* Fade out text blocks as they exit (except the last one) */
-@supports (animation-timeline: view()) {
-  @keyframes fade-out-exit {
-    0% {
-      opacity: 1;
-    } /* fully visible */
-    100% {
-      opacity: 0;
-    } /* fade to transparent */
-  }
-
-  /* Apply fade-out to all text-blocks except the last one */
-  .styleframes-text .text-block:not(:last-child) {
-    animation: fade-out-exit linear both;
-    animation-timeline: view();
-    animation-range: exit 0% exit 100%; /* Only fade during the exit phase */
-  }
-}
-
-.text-block h3 {
-  font-family: "Suisse Intl", sans-serif;
-  font-size: 1rem;
-  font-weight: normal;
-  color: #ffffff;
-  text-transform: uppercase;
-  margin: 0 0 1.5rem 0;
-}
-
-.text-block p {
-  font-family: "Suisse Intl", sans-serif;
-  font-size: 1rem;
-  font-weight: normal;
-  color: #acaaa3;
-  line-height: 1.5;
-  margin: 0;
-}
-
-.project-showcase-section {
-  background-color: #141417;
-  padding: 7.5rem 0;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  flex-shrink: column;
-}
-
-.project-showcase-container {
-  width: 85%;
-  max-width: 1512px;
-
-  .project-showcase-top-grid {
+  .styleframes-content {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.75rem;
+    grid-template-columns: 1fr; /* Stack: preview on top, thumbs below */
+    grid-template-rows: auto auto;
   }
 
-  /* Ensure all items inside top grid are perfect squares */
-  .project-showcase-top-grid > .project-showcase-placeholder {
-    aspect-ratio: 1 / 1;
+  /* Large Preview */
+  .styleframes-preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #222325;
+    overflow: hidden;
   }
 
-  /* Make the description block occupy the last square slot visually */
-  .project-showcase-description-block {
+  .preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  /* Counter Badge */
+  .styleframe-counter {
+    position: absolute;
+    bottom: 32px;
+    left: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: #282828;
+    padding: 3px;
+    border-radius: 67px;
+    z-index: 10;
+  }
+
+  .counter-number {
+    background-color: #373737;
+    width: 24px;
+    height: 21px;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: clamp(1.25rem, 2.5vw, 2rem);
-    background: transparent; /* override placeholder background */
+    border-radius: 67px;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    color: white;
+    text-transform: uppercase;
   }
-  .project-showcase-description-block .project-showcase-description {
+
+  .counter-of {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    color: white;
+    text-transform: uppercase;
+    padding: 0 4px;
+  }
+
+  /* Focus Frame - Static overlay */
+  .styleframes-focus-frame {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: calc(100% - 28px);
+    height: 103.95px;
+    box-shadow: inset 0 0 0 2px #ffffff;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Text Content Blocks */
+  .styleframes-text {
+    margin-left: auto;
+    position: sticky !important;
+    max-width: 420px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30vh; /* Reduced gap for overlapping text-block transitions */
+    margin-top: 8rem;
+    padding-bottom: 100vh; /* Extra space at bottom for last section */
+  }
+
+  .styleframes-sync {
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: clamp(1.5rem, 3vw, 3rem);
+    align-items: start;
+    margin-top: clamp(2rem, 4vw, 3rem);
+    min-height: 300vh; /* Ensure enough scroll space for all text blocks */
+
+    /* Define timeline scope for all text sections */
+    timeline-scope: --section-0, --section-1, --section-2;
+  }
+
+  .left-stack {
+    position: sticky;
+    top: 12vh;
+    align-self: start;
+  }
+
+  .reveal-stage {
+    height: 60vh;
+    border-radius: 10px;
+    background: #222325;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .preview-slot {
+    position: absolute;
+    inset: 0;
+    background: #2f3134;
+    opacity: 1;
+
+    /* Center debug numbers */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    font-family: "Suisse Intl", sans-serif;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  /* Different colors for each slot (for debugging slide effect) */
+  /* Stack order reversed: each new card slides ON TOP of the previous */
+  .preview-slot[data-slot="1"] {
+    background: #3d4149;
+    z-index: 1; /* Bottom layer - shows first, then gets covered */
+    transform: translateY(
+      0
+    ) !important; /* Override default - visible from start */
+  }
+
+  .preview-slot[data-slot="2"] {
+    background: #4a5058;
+    z-index: 2; /* Middle layer - slides up on top of slot 1 */
+    transform: translateY(100%); /* Hide below by default */
+  }
+
+  .preview-slot[data-slot="3"] {
+    background: #5a616b;
+    z-index: 3; /* Top layer - slides up on top of slot 2 */
+    transform: translateY(100%); /* Hide below by default */
+  }
+
+  /* Force initial hidden state - overrides animation until ready */
+  .preview-slot.initial-hidden {
+    transform: translateY(100%) !important;
+  }
+
+  /* Slide-in animation with view timelines */
+  @supports (animation-timeline: view()) {
+    @keyframes slide-in-up {
+      from {
+        transform: translateY(100%);
+      } /* Start below the frame */
+      to {
+        transform: translateY(0);
+      } /* Slide up to cover previous */
+    }
+
+    /* Slot 2 slides in when section 1 (second text-block) enters */
+    .preview-slot[data-slot="2"] {
+      animation: slide-in-up linear;
+      animation-fill-mode: both;
+      animation-timeline: --section-1;
+      animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
+      /* Initial state before animation */
+      transform: translateY(100%);
+    }
+
+    /* Slot 3 slides in when section 2 (third text-block) enters */
+    .preview-slot[data-slot="3"] {
+      animation: slide-in-up linear;
+      animation-fill-mode: both;
+      animation-timeline: --section-2;
+      animation-range: entry 0% contain 50%; /* Start on entry, complete halfway through contain */
+      /* Initial state before animation */
+      transform: translateY(100%);
+    }
+  }
+
+  @supports not (animation-timeline: view()) {
+    /* Fallback: simple fade for browsers without view timeline support */
+    .preview-slot {
+      opacity: 0.3;
+      transition: opacity 400ms ease;
+    }
+    .preview-slot.is-visible {
+      opacity: 1;
+    }
+  }
+
+  .styleframes-text .text-block {
+    /* GSAP will control opacity and transform */
+
+    /* Each text-block defines its own view timeline */
+    view-timeline-axis: block;
+  }
+
+  .styleframes-text .text-block[data-section="0"] {
+    view-timeline-name: --section-0;
+  }
+  .styleframes-text .text-block[data-section="1"] {
+    view-timeline-name: --section-1;
+  }
+  .styleframes-text .text-block[data-section="2"] {
+    view-timeline-name: --section-2;
+  }
+
+  /* Fade out text blocks as they exit (except the last one) */
+  @supports (animation-timeline: view()) {
+    @keyframes fade-out-exit {
+      0% {
+        opacity: 1;
+      } /* fully visible */
+      100% {
+        opacity: 0;
+      } /* fade to transparent */
+    }
+
+    /* Apply fade-out to all text-blocks except the last one */
+    .styleframes-text .text-block:not(:last-child) {
+      animation: fade-out-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%; /* Only fade during the exit phase */
+    }
+  }
+
+  .text-block h3 {
+    font-family: "Suisse Intl", sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #ffffff;
+    text-transform: uppercase;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .text-block p {
+    font-family: "Suisse Intl", sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #acaaa3;
+    line-height: 1.5;
     margin: 0;
   }
-}
 
-.project-showcase-header {
-  grid-column: 1 / span 5;
-  display: flex;
-  flex-direction: column;
-  gap: 2.1875rem;
-  margin-top: 4.875rem;
-  max-width: 435.32px;
-}
-
-.project-showcase-description {
-  font-family: "Suisse Intl", sans-serif;
-  font-size: clamp(0.875rem, 1.058vw, 1.125rem);
-  font-weight: normal;
-  line-height: 2rem;
-  align-self: start;
-  color: #ffffff;
-}
-
-.project-showcase-placeholder {
-  background: #d9d9d9;
-}
-
-.project-showcase-placeholder.large-left,
-.project-showcase-placeholder.small-right {
-  background: #d9d9d9;
-}
-
-.project-showcase-bottom-grid {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 0.75rem;
-  margin-top: 7.5rem;
-}
-
-/* Let grid define sizing. Use aspect-ratio for responsive height without fixed px */
-.project-showcase-bottom-grid > .project-showcase-placeholder {
-  background: #d9d9d9;
-}
-
-.project-showcase-placeholder.bottom-left {
-  grid-column: 1 / span 6;
-}
-
-.project-showcase-placeholder.bottom-right {
-  grid-column: 7 / span 6;
-}
-
-.project-showcase-placeholder.bottom-full {
-  grid-column: 1 / -1;
-}
-
-/* Responsive layout for bottom grid */
-@media (max-width: 900px) {
-  .project-showcase-top-grid {
-    grid-template-columns: 1fr;
+  .project-showcase-section {
+    background-color: #141417;
+    padding: 7.5rem 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-shrink: column;
   }
+
+  .project-showcase-container {
+    width: 85%;
+    max-width: 1512px;
+
+    .project-showcase-top-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.75rem;
+    }
+
+    /* Ensure all items inside top grid are perfect squares */
+    .project-showcase-top-grid > .project-showcase-placeholder {
+      aspect-ratio: 1 / 1;
+    }
+
+    /* Make the description block occupy the last square slot visually */
+    .project-showcase-description-block {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(1.25rem, 2.5vw, 2rem);
+      background: transparent; /* override placeholder background */
+    }
+    .project-showcase-description-block .project-showcase-description {
+      margin: 0;
+    }
+  }
+
+  .project-showcase-header {
+    grid-column: 1 / span 5;
+    display: flex;
+    flex-direction: column;
+    gap: 2.1875rem;
+    margin-top: 4.875rem;
+    max-width: 435.32px;
+  }
+
+  .project-showcase-description {
+    font-family: "Suisse Intl", sans-serif;
+    font-size: clamp(0.875rem, 1.058vw, 1.125rem);
+    font-weight: normal;
+    line-height: 2rem;
+    align-self: start;
+    color: #ffffff;
+  }
+
+  .project-showcase-placeholder {
+    background: #d9d9d9;
+  }
+
+  .project-showcase-placeholder.large-left,
+  .project-showcase-placeholder.small-right {
+    background: #d9d9d9;
+  }
+
   .project-showcase-bottom-grid {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 7.5rem;
   }
-}
 
-/* ============================================
+  /* Let grid define sizing. Use aspect-ratio for responsive height without fixed px */
+  .project-showcase-bottom-grid > .project-showcase-placeholder {
+    background: #d9d9d9;
+  }
+
+  .project-showcase-placeholder.bottom-left {
+    grid-column: 1 / span 6;
+  }
+
+  .project-showcase-placeholder.bottom-right {
+    grid-column: 7 / span 6;
+  }
+
+  .project-showcase-placeholder.bottom-full {
+    grid-column: 1 / -1;
+  }
+
+  /* Responsive layout for bottom grid */
+  @media (max-width: 900px) {
+    .project-showcase-top-grid {
+      grid-template-columns: 1fr;
+    }
+    .project-showcase-bottom-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================
    CREDITS SECTION
    ============================================ */
 
-.credits-section {
-  background: #e5e3dc;
-  padding: 7.5rem 0;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  min-height: 100vh;
-  align-items: center;
-}
+  .credits-section {
+    background: #e5e3dc;
+    padding: 7.5rem 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+  }
 
-.credits-container {
-  width: 85%;
-  max-width: 1186px;
-  margin: 0 auto;
-  position: relative;
-}
+  .credits-container {
+    width: 85%;
+    max-width: 1186px;
+    margin: 0 auto;
+    position: relative;
+  }
 
-.credits-title {
-  font-family: "Suisse Intl", sans-serif;
-  font-weight: bold;
-  font-size: 2rem;
-  color: #f72f2f;
-  text-transform: uppercase;
-  line-height: 1.114;
-  margin: 0 0 1.5rem 0;
-  text-align: center;
-}
+  .credits-title {
+    font-family: "Suisse Intl", sans-serif;
+    font-weight: bold;
+    font-size: 2rem;
+    color: #f72f2f;
+    text-transform: uppercase;
+    line-height: 1.114;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
+  }
 
-.credits-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  --credits-gap: 0.733rem;
-  gap: var(--credits-gap);
-  position: relative;
-}
-
-.credits-placeholder {
-  background: #bbbfc3;
-  aspect-ratio: 1 / 1;
-}
-
-.credits-text-block {
-  position: absolute;
-  display: flex;
-  gap: 0.875rem;
-  line-height: 2;
-  z-index: 1;
-}
-
-.credits-text-top {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -180%);
-}
-
-.credits-text-bottom {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 80%);
-}
-
-.credits-labels {
-  text-align: right;
-  font-family: "Suisse Intl", sans-serif;
-  font-weight: 300;
-  color: #6b6a68;
-}
-
-.credits-values {
-  font-family: "Suisse Intl", sans-serif;
-  font-weight: 400;
-  color: #000000;
-}
-
-.credits-labels p,
-.credits-values p {
-  margin: 0;
-}
-
-/* Responsive layout */
-@media (max-width: 900px) {
   .credits-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     --credits-gap: 0.733rem;
-    row-gap: var(--credits-gap); /* keep gaps between placeholders */
+    gap: var(--credits-gap);
+    position: relative;
+  }
+
+  .credits-placeholder {
+    background: #bbbfc3;
+    aspect-ratio: 1 / 1;
   }
 
   .credits-text-block {
-    position: static;
-    transform: none;
-    grid-column: 1 / -1; /* span full width row to stack */
-    justify-self: center; /* center horizontally in grid */
-    align-self: auto; /* reset alignment; we'll control spacing via margins */
-    justify-content: center; /* center internal columns */
-    margin: 0; /* remove default margins to control spacing precisely */
+    position: absolute;
+    display: flex;
+    gap: 0.875rem;
+    line-height: 2;
+    z-index: 1;
   }
 
-  /* Force text blocks to appear before placeholders when grid wraps */
   .credits-text-top {
-    grid-row: 1;
-    margin-bottom: calc(-1 * var(--credits-gap) - 2px);
-  } /* over-cancel any rounding gap */
-  .credits-text-bottom {
-    grid-row: 2;
-    margin-bottom: 4.5rem;
-  } /* push placeholders down */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -180%);
+  }
 
-  /* Hide the phantom placeholders used for desktop layout */
+  .credits-text-bottom {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 80%);
+  }
+
+  .credits-labels {
+    text-align: right;
+    font-family: "Suisse Intl", sans-serif;
+    font-weight: 300;
+    color: #6b6a68;
+  }
+
+  .credits-values {
+    font-family: "Suisse Intl", sans-serif;
+    font-weight: 400;
+    color: #000000;
+  }
+
+  .credits-labels p,
+  .credits-values p {
+    margin: 0;
+  }
+
+  /* Responsive layout */
+  @media (max-width: 900px) {
+    .credits-grid {
+      grid-template-columns: repeat(2, 1fr);
+      --credits-gap: 0.733rem;
+      row-gap: var(--credits-gap); /* keep gaps between placeholders */
+    }
+
+    .credits-text-block {
+      position: static;
+      transform: none;
+      grid-column: 1 / -1; /* span full width row to stack */
+      justify-self: center; /* center horizontally in grid */
+      align-self: auto; /* reset alignment; we'll control spacing via margins */
+      justify-content: center; /* center internal columns */
+      margin: 0; /* remove default margins to control spacing precisely */
+    }
+
+    /* Force text blocks to appear before placeholders when grid wraps */
+    .credits-text-top {
+      grid-row: 1;
+      margin-bottom: calc(-1 * var(--credits-gap) - 2px);
+    } /* over-cancel any rounding gap */
+    .credits-text-bottom {
+      grid-row: 2;
+      margin-bottom: 4.5rem;
+    } /* push placeholders down */
+
+    /* Hide the phantom placeholders used for desktop layout */
+    .credits-grid .credits-placeholder:nth-child(2),
+    .credits-grid .credits-placeholder:nth-child(3),
+    .credits-grid .credits-placeholder:nth-child(6),
+    .credits-grid .credits-placeholder:nth-child(7) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .credits-grid {
+      grid-template-columns: 1fr;
+    }
+    /* ensure no gap even on single column */
+    .credits-text-top {
+      margin-bottom: -2px;
+    }
+  }
+
+  /* Desktop layout: make the two middle top cells transparent to match Figma */
+
   .credits-grid .credits-placeholder:nth-child(2),
   .credits-grid .credits-placeholder:nth-child(3),
   .credits-grid .credits-placeholder:nth-child(6),
   .credits-grid .credits-placeholder:nth-child(7) {
-    display: none;
+    background: transparent;
   }
-}
 
-@media (max-width: 600px) {
-  .credits-grid {
-    grid-template-columns: 1fr;
-  }
-  /* ensure no gap even on single column */
-  .credits-text-top {
-    margin-bottom: -2px;
-  }
-}
-
-/* Desktop layout: make the two middle top cells transparent to match Figma */
-
-.credits-grid .credits-placeholder:nth-child(2),
-.credits-grid .credits-placeholder:nth-child(3),
-.credits-grid .credits-placeholder:nth-child(6),
-.credits-grid .credits-placeholder:nth-child(7) {
-  background: transparent;
-}
-
-/* Desktop-only alignment: hug the grid seam */
-@media (min-width: 901px) {
-  .credits-text-top {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -100%);
-  }
-  .credits-text-bottom {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, 0);
+  /* Desktop-only alignment: hug the grid seam */
+  @media (min-width: 901px) {
+    .credits-text-top {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -100%);
+    }
+    .credits-text-bottom {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
   }
 }
