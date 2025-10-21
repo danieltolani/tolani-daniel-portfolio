@@ -39,59 +39,34 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                             </p>
                         </div>
 
-                         <!-- Thumbnail Carousel -->
-                         <div class="carousel-wrapper swiper" id="hero-carousel">
-                             <div class="swiper-wrapper">
-                                 {
-                                     (projectData?.styleframes || []).map(
-                                         (item, index) => (
-                                             <div class="swiper-slide carousel-item">
-                                                 <div
-                                                     class="carousel-item-inner"
-                                                     data-image-url={
-                                                         styleframeSet[index]
-                                                     }
-                                                     data-image-index={index}
-                                                 >
-                                                     <CldImage
-                                                         class="carousel-image2"
-                                                         src={item.src}
-                                                         alt="Styleframe ${index}"
-                                                     />
-                                                     <span class="carousel-number">
-                                                         STY-{index + 1}
-                                                     </span>
-                                                 </div>
-                                             </div>
-                                         ),
-                                     )
-                                 }
-                             </div>
-                         </div>
-                    </div>
-
-                    <!-- Click & Drag Cursor Helper -->
-                    <div class="click-drag-helper" id="click-drag-helper">
-                        <div class="helper-icon"></div>
-                        <span class="helper-text">CLICK & DRAG</span>
-                    </div>
-
-                    <!-- Lightbox Modal for Expanded Images -->
-                    <div id="lightbox-modal" class="lightbox-modal">
-                        <button
-                            id="lightbox-close"
-                            class="lightbox-close"
-                            aria-label="Close"
-                        >
-                            CLOSE
-                        </button>
-                        <div class="lightbox-content">
-                            <img
-                                id="lightbox-image"
-                                class="lightbox-image"
-                                src=""
-                                alt="Expanded styleframe"
-                            />
+                        <!-- Thumbnail Carousel -->
+                        <div class="carousel-container">
+                            <div class="carousel-wrapper" id="hero-carousel" data-slider>
+                                {
+                                    (projectData?.styleframes || []).map(
+                                        (item, index) => (
+                                            <div class="carousel-item">
+                                                <div
+                                                    class="carousel-item-inner"
+                                                    data-image-url={
+                                                        styleframeSet[index]
+                                                    }
+                                                    data-image-index={index}
+                                                >
+                                                    <CldImage
+                                                        class="carousel-image2"
+                                                        src={item.src}
+                                                        alt="Styleframe ${index}"
+                                                    />
+                                                    <span class="carousel-number">
+                                                        STY-{index + 1}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        ),
+                                    )
+                                }
+                            </div>
                         </div>
                     </div>
 
@@ -210,28 +185,13 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
     </div>
 
     <!-- PROCESS SECTION -->
-    <section class="process-section">
+    <section class="process-section design-process-section">
         <div class="process-container">
             <!-- Header -->
             <div class="process-header">
-                <h2 class="process-title">A PROCESS WAS FOUND</h2>
+                <h2 class="process-title" set:html={projectData?.["process-title"] || "Add Title"}></h2>
                 <div class="process-description">
-                    <p>
-                        In the cold breathe of new year goals<span>
-                            (2023)</span
-                        ><span>, </span><span class="book-text"
-                            >DESIGN FOR MOTION
-                        </span><span>by </span><span class="pixel-text"
-                            >Austin Shaw</span
-                        > was the first book on my read list. Learning<span>
-                            to practice free-writin</span
-                        >g,<span>
-                            where I would pour out all I understood about a
-                            subject or project. There was no prefect fit for
-                            this process than a project where I had no script,
-                            no voice over and no brief</span
-                        >.
-                    </p>
+                    <p set:html={projectData?.["process-par"] || "Add process description"}></p>
                 </div>
             </div>
 
@@ -255,7 +215,11 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                             data-grid-column="1"
                             data-grid-row="1"
                         >
-                            <!-- Image will be placed here later -->
+                            <CldImage
+                                src={projectData?.sketches?.[0]?.src || ""}
+                                alt={projectData?.sketches?.[0]?.alt || "Main sketch"}
+                                class="sketch-image"
+                            />
                         </div>
 
                         <div
@@ -263,7 +227,11 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                             data-grid-column="2"
                             data-grid-row="1"
                         >
-                            <!-- Image will be placed here later -->
+                            <CldImage
+                                src={projectData?.sketches?.[1]?.src || ""}
+                                alt={projectData?.sketches?.[1]?.alt || "Mobile sketch 1"}
+                                class="sketch-image"
+                            />
                         </div>
 
                         <div
@@ -271,28 +239,26 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                             data-grid-column="3"
                             data-grid-row="1"
                         >
-                            <!-- Image will be placed here later -->
+                            <CldImage
+                                src={projectData?.sketches?.[2]?.src || ""}
+                                alt={projectData?.sketches?.[2]?.alt || "Mobile sketch 2"}
+                                class="sketch-image"
+                            />
                         </div>
 
                         <!-- Row 2: Text Blocks - Equal Width -->
                         <div class="sketch-container text-block-1">
                             <div class="text-content">
-                                <p>
-                                    The first step was to write, write some more
-                                    and continue to write - This went on for
-                                    about 45mins where I would aim at getting
-                                    all the words, synonyms, concept, ideas or
-                                    anything at all of what I understood about
-                                    the problem I was trying to solve and
-                                    communicated. <strong
-                                        >Logistics - that is fast.</strong
-                                    >
-                                </p>
+                                <p set:html={projectData?.["text-block-1-par"] || "Add text block 1 content"}></p>
                             </div>
                         </div>
 
                         <div class="sketch-container text-block-2">
                             <!-- Text content will go here -->
+                            <div class="text-content">
+                                <p set:html={projectData?.["text-block-2-par"] || "Add text block 2 content"}>
+                                </p>
+                            </div>
                         </div>
 
                         <!-- Row 3: Full Width Text Block -->
@@ -303,7 +269,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                                     <p class="challenge-label">challenge</p>
                                     <p class="challenge-number">ONE</p>
                                 </div>
-                                <h2 class="challenge-title">the sketch.</h2>
+                                <h2 class="challenge-title" set:html={projectData?.["challenge-title"] || "Add challenge title"}></h2>
                             </div>
                         </div>
                     </div>
@@ -317,7 +283,10 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
         <div class="styleframes-container">
             <div class="styleframes-content">
                 <!-- Large Preview with Counter -->
-                <div class="styleframes-preview">
+                <div
+                    class="styleframes-preview"
+                    data-styleframes={JSON.stringify(styleframeSet)}
+                >
                     <img
                         id="current-styleframe"
                         src={styleframeSet[0]}
@@ -333,23 +302,31 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                     </div>
                 </div>
 
-                <!-- Right: masked vertical rail (placeholders for now) -->
+                <!-- bottom rail: masked vertical rail (placeholders for now) -->
                 <div class="styleframes-thumbs">
-                     <div class="thumbs-rail swiper" id="thumbs-rail">
-                         <div class="swiper-wrapper">
-                             {
-                                 (projectData?.styleframes || []).map((item, index) => (
-                                     <div class="swiper-slide thumb-slot" data-index={index}>
-                                         <CldImage
-                                             src={item.src}
-                                             alt={`Styleframe ${index + 1}`}
-                                             class="thumb-image"
-                                         />
-                                     </div>
-                                 ))
-                             }
-                         </div>
-                     </div>
+                    <div class="thumbs-container">
+                        <div class="thumbs-rail" id="thumbs-rail" data-slider>
+                        <!-- Fixed Debugger on Far Left -->
+                        <div class="fixed-debugger" id="fixed-debugger"></div>
+                        
+                        {
+                            (projectData?.styleframes || []).map(
+                                (item, index) => (
+                                    <div
+                                        class="thumb-slot"
+                                        data-index={index}
+                                    >
+                                        <CldImage
+                                            src={item.src}
+                                            alt={`Styleframe ${index + 1}`}
+                                            class="thumb-image"
+                                        />
+                                    </div>
+                                ),
+                            )
+                        }
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -411,186 +388,185 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- CHALLENGE SECTION -->
-        <section class="process-section">
-            <div class="process-container">
-                <!-- Header -->
-                <div class="process-header">
-                    <h2 class="process-title">2D but make it look 3d</h2>
-                    <div class="process-description">
-                        <p>
-                            Wrapping up the design phase and <strong>NOT</strong
-                            > worrying about my animation capabilities as though
-                            I had another animator on standby was one of the reasons
-                            this project came to life.
-                        </p>
-                    </div>
+    <!-- CHALLENGE SECTION -->
+    <section class="process-section motion-process-section">
+        <div class="process-container">
+            <!-- Header -->
+            <div class="process-header">
+                <h2 class="process-title">2D but make it look 3d</h2>
+                <div class="process-description">
+                    <p>
+                        Wrapping up the design phase and <strong>NOT</strong> worrying
+                        about my animation capabilities as though I had another animator
+                        on standby was one of the reasons this project came to life.
+                    </p>
                 </div>
+            </div>
 
-                <!-- Decorative Lines with Image Containers -->
-                <div class="decorative-lines">
-                    <svg
-                        class="grid-lines-svg"
-                        preserveAspectRatio="none"
-                        viewBox="0 0 1512 400"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <!-- Lines will be generated by JavaScript -->
-                    </svg>
+            <!-- Decorative Lines with Image Containers -->
+            <div class="decorative-lines">
+                <svg
+                    class="grid-lines-svg"
+                    preserveAspectRatio="none"
+                    viewBox="0 0 1512 400"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <!-- Lines will be generated by JavaScript -->
+                </svg>
 
-                    <!-- Image Container Overlay -->
-                    <div class="sketch-container-wrapper">
-                        <div class="sketch-container-grid">
-                            <!-- Row 1: Main Sketch Containers -->
-                            <div
-                                class="sketch-container main-sketch"
-                                data-grid-column="1"
-                                data-grid-row="1"
-                            >
-                                <!-- Image will be placed here later -->
+                <!-- Image Container Overlay -->
+                <div class="sketch-container-wrapper">
+                    <div class="sketch-container-grid">
+                        <!-- Row 1: Main Sketch Containers -->
+                        <div
+                            class="sketch-container main-sketch"
+                            data-grid-column="1"
+                            data-grid-row="1"
+                        >
+                            <CldImage
+                                src={projectData?.sketches?.[0]?.src || ""}
+                                alt={projectData?.sketches?.[0]?.alt || "Main sketch"}
+                                class="sketch-image"
+                            />
+                        </div>
+
+                        <div
+                            class="sketch-container mobile-sketch-1"
+                            data-grid-column="2"
+                            data-grid-row="1"
+                        >
+                            <!-- Image will be placed here later -->
+                        </div>
+
+                        <div
+                            class="sketch-container mobile-sketch-2"
+                            data-grid-column="3"
+                            data-grid-row="1"
+                        >
+                            <!-- Image will be placed here later -->
+                        </div>
+
+                        <!-- Row 2: Text Blocks - Equal Width -->
+                        <div class="sketch-container text-block-1">
+                            <div class="text-content">
+                                <p>
+                                    There are several ways to rig a fake 3D box
+                                    in aftereffects. You could I wanted one that
+                                    will allow me the freedom of having the
+                                    shapes as flat 2D if I wanted to un-wrap it.
+                                    This is because this where I had texts and I
+                                    needed change its content later on.
+                                </p>
                             </div>
+                        </div>
 
-                            <div
-                                class="sketch-container mobile-sketch-1"
-                                data-grid-column="2"
-                                data-grid-row="1"
-                            >
-                                <!-- Image will be placed here later -->
-                            </div>
+                        <div class="sketch-container text-block-2">
+                            <!-- Text content will go here -->
+                        </div>
 
-                            <div
-                                class="sketch-container mobile-sketch-2"
-                                data-grid-column="3"
-                                data-grid-row="1"
-                            >
-                                <!-- Image will be placed here later -->
-                            </div>
-
-                            <!-- Row 2: Text Blocks - Equal Width -->
-                            <div class="sketch-container text-block-1">
-                                <div class="text-content">
-                                    <p>
-                                        There are several ways to rig a fake 3D
-                                        box in aftereffects. You could I wanted
-                                        one that will allow me the freedom of
-                                        having the shapes as flat 2D if I wanted
-                                        to un-wrap it. This is because this
-                                        where I had texts and I needed change
-                                        its content later on.
-                                    </p>
+                        <!-- Row 3: Full Width Text Block -->
+                        <div class="sketch-container text-block-full">
+                            <!-- Challenge Section -->
+                            <div class="challenge-section">
+                                <div class="challenge-badge">
+                                    <p class="challenge-label">challenge</p>
+                                    <p class="challenge-number">TWO</p>
                                 </div>
-                            </div>
-
-                            <div class="sketch-container text-block-2">
-                                <!-- Text content will go here -->
-                            </div>
-
-                            <!-- Row 3: Full Width Text Block -->
-                            <div class="sketch-container text-block-full">
-                                <!-- Challenge Section -->
-                                <div class="challenge-section">
-                                    <div class="challenge-badge">
-                                        <p class="challenge-label">challenge</p>
-                                        <p class="challenge-number">TWO</p>
-                                    </div>
-                                    <h2 class="challenge-title">the rigs.</h2>
-                                </div>
+                                <h2 class="challenge-title">the rigs.</h2>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- SPEED LINES SECTION -->
-        <section class="project-showcase-section">
-            <div class="project-showcase-container">
-                <!-- Top Grid: wraps the two top placeholders -->
-                <div class="project-showcase-top-grid">
-                    <div class="project-showcase-placeholder"></div>
-                    <div class="project-showcase-placeholder"></div>
-                    <div class="project-showcase-placeholder"></div>
-                    <div class="project-showcase-placeholder"></div>
-                    <div class="project-showcase-placeholder"></div>
-                    <div
-                        class="project-showcase-placeholder project-showcase-description-block"
-                    >
-                        <p class="project-showcase-description">
-                            This project only had the 4-major features of the
-                            app as the script, meant for me to work with. The
-                            first assumption was thinking what needed to be done
-                            was showing off the mobile app interfaces but then
-                            this is a teaser. This wouldn't be the first of its
-                            kind to come into the market. It needed a second or
-                            two of "Please do not skip me."
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Bottom Grid with 3 Image Placeholders -->
-                <div class="project-showcase-bottom-grid">
-                    <div class="project-showcase-placeholder bottom-left"></div>
-                    <div class="project-showcase-placeholder bottom-right">
-                    </div>
-                    <div class="project-showcase-placeholder bottom-full"></div>
-                </div>
-
-                <!-- Move description to the end of the top grid section -->
-            </div>
-        </section>
-
-        <!-- CREDITS SECTION -->
-        <section class="credits-section">
-            <div class="credits-container">
-                <div class="credits-grid">
-                    <!-- 8 placeholder squares -->
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-                    <div class="credits-placeholder"></div>
-
-                    <!-- First text block (top-middle) -->
-                    <div class="credits-text-block credits-text-top">
-                        <div class="credits-labels">
-                            <p>Client</p>
-                            <p>Sound Design</p>
-                            <p>Motion Design</p>
-                        </div>
-                        <div class="credits-values">
-                            <p>Project Name</p>
-                            <p>Your Name</p>
-                            <p>Your Name</p>
-                        </div>
-                    </div>
-
-                    <!-- Second text block (bottom-middle) -->
-                    <div class="credits-text-block credits-text-bottom">
-                        <div class="credits-labels">
-                            <p>Script</p>
-                            <p>Director</p>
-                            <p>Creative Direction</p>
-                        </div>
-                        <div class="credits-values">
-                            <p>Contributor Name</p>
-                            <p>Contributor Name</p>
-                            <p>Your Name</p>
-                        </div>
-                    </div>
+    <!-- SPEED LINES SECTION -->
+    <section class="project-showcase-section">
+        <div class="project-showcase-container">
+            <!-- Top Grid: wraps the two top placeholders -->
+            <div class="project-showcase-top-grid">
+                <div class="project-showcase-placeholder"></div>
+                <div class="project-showcase-placeholder"></div>
+                <div class="project-showcase-placeholder"></div>
+                <div class="project-showcase-placeholder"></div>
+                <div class="project-showcase-placeholder"></div>
+                <div
+                    class="project-showcase-placeholder project-showcase-description-block"
+                >
+                    <p class="project-showcase-description">
+                        This project only had the 4-major features of the app as
+                        the script, meant for me to work with. The first
+                        assumption was thinking what needed to be done was
+                        showing off the mobile app interfaces but then this is a
+                        teaser. This wouldn't be the first of its kind to come
+                        into the market. It needed a second or two of "Please do
+                        not skip me."
+                    </p>
                 </div>
             </div>
-        </section>
+
+            <!-- Bottom Grid with 3 Image Placeholders -->
+            <div class="project-showcase-bottom-grid">
+                <div class="project-showcase-placeholder bottom-left"></div>
+                <div class="project-showcase-placeholder bottom-right"></div>
+                <div class="project-showcase-placeholder bottom-full"></div>
+            </div>
+
+            <!-- Move description to the end of the top grid section -->
+        </div>
+    </section>
+
+    <!-- CREDITS SECTION -->
+    <section class="credits-section">
+        <div class="credits-container">
+            <div class="credits-grid">
+                <!-- 8 placeholder squares -->
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+                <div class="credits-placeholder"></div>
+
+                <!-- First text block (top-middle) -->
+                <div class="credits-text-block credits-text-top">
+                    <div class="credits-labels">
+                        <p>Client</p>
+                        <p>Sound Design</p>
+                        <p>Motion Design</p>
+                    </div>
+                    <div class="credits-values">
+                        <p>Project Name</p>
+                        <p>Your Name</p>
+                        <p>Your Name</p>
+                    </div>
+                </div>
+
+                <!-- Second text block (bottom-middle) -->
+                <div class="credits-text-block credits-text-bottom">
+                    <div class="credits-labels">
+                        <p>Script</p>
+                        <p>Director</p>
+                        <p>Creative Direction</p>
+                    </div>
+                    <div class="credits-values">
+                        <p>Contributor Name</p>
+                        <p>Contributor Name</p>
+                        <p>Your Name</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script>
         // @ts-check
-        import Swiper from 'swiper';
-        import { Autoplay, FreeMode } from 'swiper/modules';
-        import 'swiper/css';
+        import Smooothy from "smooothy";
         import { gsap } from "gsap";
         import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -790,33 +766,9 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
         });
 
         // Initialize Swiper Hero Carousel
-        const heroCarousel = document.getElementById("hero-carousel") as HTMLElement;
-        
-        if (heroCarousel) {
-            const swiper = new Swiper('#hero-carousel', {
-                modules: [Autoplay],
-                loop: true,
-                freeMode: false, // Disable freeMode for smoother interaction
-                speed: 300, // Faster transition speed
-                autoplay: {
-                    delay: 0,
-                    disableOnInteraction: false,
-                    reverseDirection: true,
-                    pauseOnMouseEnter: false,
-                    stopOnLastSlide: false,
-                },
-                slidesPerView: 'auto',
-                spaceBetween: 10,
-                grabCursor: true,
-                allowTouchMove: true,
-                resistanceRatio: 0,
-                // Remove parallax for smoother performance
-            });
-
-            console.log("Swiper hero carousel initialized:", swiper);
-        } else {
-            console.error("Carousel wrapper not found");
-        }
+        const heroCarousel = document.getElementById(
+            "hero-carousel",
+        ) as HTMLElement;
 
         // Gallery Modal Functionality
         const modal = document.getElementById("video-modal");
@@ -1108,71 +1060,168 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
                 updateSVGHeight();
+                // Force Smooothy to recalculate viewport on resize with 1512px constraint
+                if (typeof heroCarouselInstance !== 'undefined') {
+                    heroCarouselInstance.resize();
+                    // Force viewport constraint after resize
+                    if (heroCarouselInstance.viewport && heroCarouselInstance.viewport.wrapperWidth > 1512) {
+                        heroCarouselInstance.viewport.wrapperWidth = 1512;
+                    }
+                }
+                if (typeof thumbsCarousel !== 'undefined') {
+                    thumbsCarousel.resize();
+                    // Force viewport constraint after resize
+                    if (thumbsCarousel.viewport  > 1512) {
+                        console.log("THIS IS A BIG SCREEN");
+                        thumbsCarousel.viewport.wrapperWidth = 1512;
+                    }
+                }
             }, 250);
         });
 
-        // ==================== STYLEFRAMES THUMBS (HORIZONTAL RAIL) ====================
-        const thumbsRail = document.getElementById(
-            "thumbs-rail",
-        ) as HTMLElement;
+        // ==================== HERO CAROUSEL WITH SMOOOTHY ====================
+        const heroCarouselElement = document.getElementById("hero-carousel") as HTMLElement;
+        let heroCarouselInstance: any;
+        
+        if (heroCarouselElement) {
+            console.log("Hero carousel found:", heroCarouselElement);
+
+            // Initialize Smooothy for hero carousel
+            heroCarouselInstance = new Smooothy(heroCarouselElement, {
+                infinite: true,
+                snap: false,
+                dragSensitivity: 0.019,
+                lerpFactor: 0.35,
+                scrollInput: true,
+                onUpdate: (instance) => {
+                    // Force viewport to think we're on a 1512px screen
+                    if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
+                        instance.viewport.wrapperWidth = 1512;
+                    }
+                }
+            });
+
+            // Auto-scroll functionality for hero carousel
+            let heroAutoScrollSpeed = -0.003; // Slower speed for hero carousel
+            let heroIsPaused = false;
+
+            // Pause on hover for hero carousel
+            heroCarouselElement.addEventListener('mouseenter', () => {
+                heroIsPaused = true;
+            });
+
+            heroCarouselElement.addEventListener('mouseleave', () => {
+                heroIsPaused = false;
+            });
+
+            // Animation loop for hero carousel auto-scroll using GSAP ticker
+            function updateHero() {
+                if (!heroIsPaused) {
+                    heroCarouselInstance.target += heroAutoScrollSpeed;
+                }
+            }
+
+            // Use GSAP ticker for smooth updates
+            gsap.ticker.add(updateHero);
+            gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
+        } else {
+            console.error("Hero carousel not found in DOM");
+        }
+
+        // ==================== STYLEFRAMES THUMBS WITH SMOOOTHY ====================
+        const thumbsRail = document.getElementById("thumbs-rail") as HTMLElement;
+        let thumbsCarousel: any;
+        
+        // Get styleframeSet from data attribute
+        const previewContainer = document.querySelector(".styleframes-preview") as HTMLElement;
+        const styleframeSet = previewContainer
+            ? JSON.parse(previewContainer.getAttribute("data-styleframes") || "[]")
+            : [];
 
         if (thumbsRail) {
             console.log("Thumbs rail found:", thumbsRail);
-            // Add a centered debug focus rectangle overlay (width ~= one thumb)
-            const thumbsWrapper = thumbsRail.parentElement as HTMLElement;
-            const debugFocusArea = document.createElement("div");
-            debugFocusArea.style.cssText = `
-			position: absolute;
-			top: 0;
-			left: 50%;
-			transform: translateX(-50%);
-			width: 180px;
-			height: 100%;
-			border: 2px solid red;
-			box-sizing: border-box;
-			pointer-events: none;
-			z-index: 10;
-			background: rgba(255, 0, 0, 0.08);
-		`;
-            thumbsWrapper?.appendChild(debugFocusArea);
 
-             // Initialize Swiper for thumbs rail
-             const thumbsCarousel = new Swiper(thumbsRail, {
-                 modules: [FreeMode],
-                 freeMode: true,
-                 slidesPerView: 'auto',
-                 spaceBetween: 4,
-                 grabCursor: true,
-                 allowTouchMove: true,
-                 scrollbar: false,
-                 navigation: false,
-                 pagination: false,
-             });
+            // Initialize Smooothy for thumbs rail
+            thumbsCarousel = new Smooothy(thumbsRail, {
+                infinite: true,
+                snap: false,
+                dragSensitivity: 0.019,
+                lerpFactor: 0.35,
+                scrollInput: true,
+                onUpdate: (instance) => {
+                    // Force viewport to think we're on a 1512px screen
+                    if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
+                        console.log("Forcing viewport to 1512px");
+                        instance.viewport.wrapperWidth = 1512;
+                    }
+                }
+            });
 
-             const thumbSlots = thumbsRail.querySelectorAll(".thumb-slot");
-             
-             // Simple active detection based on scroll position
-             function updateActiveThumb() {
-                 const focusRect = debugFocusArea.getBoundingClientRect();
-                 const focusLeft = focusRect.left;
-                 const focusRight = focusRect.right;
-                 
-                 thumbSlots.forEach((slot) => {
-                     const rect = slot.getBoundingClientRect();
-                     const centerX = (rect.left + rect.right) / 2;
-                     if (centerX >= focusLeft && centerX <= focusRight) {
-                         slot.classList.add("active");
-                     } else {
-                         slot.classList.remove("active");
-                     }
-                 });
-             }
+            // Auto-scroll functionality
+            let autoScrollSpeed = -0.003; // Speed of auto-scroll
+            let isPaused = false;
 
-             // Update active state on scroll
-             thumbsCarousel.on('scroll', updateActiveThumb);
-             
-             // Initial update
-             updateActiveThumb();
+            // Pause on hover
+            thumbsRail.addEventListener('mouseenter', () => {
+                isPaused = true;
+            });
+
+            thumbsRail.addEventListener('mouseleave', () => {
+                isPaused = false;
+            });
+
+            // Animation loop for auto-scroll using GSAP ticker
+            function updateThumbs() {
+                if (!isPaused) {
+                    thumbsCarousel.target += autoScrollSpeed;
+                }
+            }
+
+            // Use GSAP ticker for smooth updates
+            gsap.ticker.add(updateThumbs);
+            gsap.ticker.add(thumbsCarousel.update.bind(thumbsCarousel));
+
+            const thumbSlots = thumbsRail.querySelectorAll(".thumb-slot");
+
+            // Active detection based on intersection with fixed debugger
+            function updateActiveThumb() {
+                const fixedDebugger = document.getElementById("fixed-debugger") as HTMLElement;
+                if (!fixedDebugger) return;
+
+                const debuggerRect = fixedDebugger.getBoundingClientRect();
+                const debuggerLeft = debuggerRect.left;
+                const debuggerRight = debuggerRect.right;
+
+                console.log("Fixed debugger bounds:", debuggerLeft, "to", debuggerRight);
+
+                thumbSlots.forEach((slot, index) => {
+                    const rect = slot.getBoundingClientRect();
+                    const centerX = (rect.left + rect.right) / 2;
+                    const slotIndex = parseInt(slot.getAttribute("data-index") || "0");
+
+                    // Check if thumb intersects with debugger slot
+                    if (centerX >= debuggerLeft && centerX <= debuggerRight) {
+                        // Contact with debugger = ACTIVE
+                        slot.classList.remove("inactive");
+                        slot.classList.add("active");
+                        console.log("✅ Active slot:", slotIndex);
+
+                        // Update preview image
+                        const thumbImage = slot.querySelector(".thumb-image") as HTMLImageElement;
+                        const previewImage = document.getElementById("current-styleframe") as HTMLImageElement;
+                        if (thumbImage && previewImage && thumbImage.src) {
+                            previewImage.src = thumbImage.src;
+                        }
+                    } else {
+                        // No contact with debugger = INACTIVE
+                        slot.classList.remove("active");
+                        slot.classList.add("inactive");
+                    }
+                });
+            }
+
+            // Initial update
+            updateActiveThumb();
         } else {
             console.error("Thumbs rail not found in DOM");
         }
@@ -1255,33 +1304,5 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
 
             console.log("View timelines initialized with fixed inset");
         }
-
-        // ==================== TEXT BLOCKS PARALLAX ANIMATION ====================
-        // TEMPORARILY DISABLED - GSAP transform interferes with view timeline calculations
-        // Animate each .text-block to move upward smoothly as they enter viewport (skip first one)
-        // if (textBlocksEls.length > 0) {
-        // 	textBlocksEls.forEach((textBlock, index) => {
-        // 		// Skip the first text block (index 0)
-        // 		if (index === 0) return;
-
-        // 		gsap.from(textBlock, {
-        // 			y: 200, // Start 200px below their natural position
-        // 			opacity: 0, // Start invisible
-        // 			scrollTrigger: {
-        // 				trigger: textBlock,
-        // 				start: "top bottom-=100", // Start animation when top of block is 100px from bottom of viewport
-        // 				end: "top center", // End when top of block reaches center of viewport
-        // 				scrub: 1, // Smooth animation tied to scroll (1 second delay for smoothness)
-        // 				markers: false,
-        // 			},
-        // 		});
-        // 	});
-        // }
-
-        // ==================== STYLEFRAMES SYNCED SCROLL ====================
-        // OLD CODE - Removed this entire section since CSS view timelines handle the sync automatically
-        // The old ScrollTrigger implementation with onEnter/onEnterBack and manual class toggling
-        // has been replaced with CSS view timelines for automatic sync between scroll position
-        // and styleframe animations.
-    </script></Layout
->
+    </script>
+</Layout>
