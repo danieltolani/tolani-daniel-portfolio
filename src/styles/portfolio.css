@@ -1416,7 +1416,7 @@ body {
   padding: 100px 0 50px;
   position: relative;
   color: white;
-  min-height: 600px;
+  /* min-height: 600px; */
   display: flex;
   align-items: center;
     justify-content: center;
@@ -1430,6 +1430,8 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  min-height: fit-content;
+  row-gap: 100px;
 }
 
 /* 1. WTH! Section (Top Left) */
