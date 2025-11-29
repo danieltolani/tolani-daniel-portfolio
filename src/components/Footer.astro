@@ -1,0 +1,99 @@
+---
+// Footer.astro
+---
+
+<footer class="footer-section">
+  <style>
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .status-blink {
+      animation: blink 1s infinite;
+    }
+  </style>
+  <div class="footer-container">
+    <!-- 1. WTH! Section (Top Left) -->
+    <div class="footer-wth-container">
+      <div class="wth-background"></div>
+      <h1 class="wth-title">wtH!</h1>
+      <p class="wth-description">
+        this website is designed and built by me. I want you to know you (yes. you) are the reason I ever got to to complete it.
+      </p>
+    </div>
+
+    <!-- 2. Availability Message (Top Middle) -->
+    <div class="availability-message">
+      <p>
+        as of today <span class="accent-text" id="live-date">thur. nov 27th 2025</span>, i am available to collaborate on any new projects! infact, <a href="https://wa.me/message/YOUR_LINK_HERE" class="whatsapp-link">wa.me!</a>
+      </p>
+    </div>
+
+    <!-- 4. Available for Work Status (Bottom Left) -->
+    <div class="footer-status">
+      <div class="status-dot">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none">
+          <path class="status-blink" fill="#F72F2F" d="M3.396 7.199V3.277h4.098V7.2H3.396Z"/>
+          <path stroke="#F72F2F" stroke-width="1.305" d="M.652 9.826V.652h9.586v9.174H.652Z"/>
+        </svg>
+      </div>
+      <div class="status-text-group">
+        <p class="status-label">available for work</p>
+        <p class="status-time" id="live-time">16:45 gmt +1</p>
+      </div>
+    </div>
+
+    <!-- 5. Social Links (Bottom Middle) -->
+    <div class="footer-socials">
+      <a href="mailto:hello@danieltolani.com" class="social-link">e.mail</a>
+      <a href="https://x.com/daniel_tolani_" target="_blank" rel="noopener noreferrer" class="social-link">x.media</a>
+      <a href="https://www.linkedin.com/in/daniel-tolani-a3b4781a6/" target="_blank" rel="noopener noreferrer" class="social-link">lkd.formal</a>
+      <a href="https://substack.com/@danieltolani" target="_blank" rel="noopener noreferrer" class="social-link">ss.read</a>
+    </div>
+
+    <!-- 6. Home Link (Bottom Right) -->
+    <a href="/" class="footer-home-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="73" height="60" fill="none"><path fill="#F72F2F" d="M30.732 10v39.295h-8.943v-3.902c-.904 1.518-2.187 2.674-3.849 3.469C16.278 49.62 14.58 50 12.845 50c-3.794 0-6.883-1.373-9.268-4.12C1.192 43.136 0 39.414 0 34.716c0-4.697 1.192-8.4 3.577-11.11 2.385-2.747 5.474-4.12 9.268-4.12 1.735 0 3.433.398 5.095 1.192 1.662.76 2.945 1.898 3.849 3.415V10h8.943Zm-19.62 18.645c-1.23 1.445-1.844 3.469-1.844 6.07 0 2.602.615 4.644 1.843 6.125 1.229 1.482 2.782 2.222 4.661 2.222 1.915 0 3.47-.668 4.662-2.005 1.192-1.373 1.788-3.487 1.788-6.342 0-2.854-.596-4.95-1.788-6.287-1.193-1.337-2.747-2.005-4.662-2.005-1.879 0-3.432.74-4.66 2.222Z"/><path fill="#F72F2F" d="M30.732 18.13H22.84V10h29.843v8.13H40.054v31.165h-9.322V18.13ZM48.888 49.295v-9.647H58.97v9.647H48.89Z"/><path fill="#F72F2F" d="M52.803 49.295v-9.647h10.081v9.647H52.803Z"/></svg>
+    </a>
+  </div>
+</footer>
+
+<script>
+  function updateFooterTime() {
+    const now = new Date();
+    // Calculate GMT+1
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const gmtPlus1 = new Date(utc + (3600000));
+
+    // Format Date: sat. nov 29th 2025
+    const days = ['sun', 'mon', 'tue', 'wed', 'thur', 'fri', 'sat'];
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+    
+    const dayName = days[gmtPlus1.getDay()];
+    const monthName = months[gmtPlus1.getMonth()];
+    const date = gmtPlus1.getDate();
+    const year = gmtPlus1.getFullYear();
+    
+    const getOrdinal = (n: number) => {
+      const s = ["th", "st", "nd", "rd"];
+      const v = n % 100;
+      return n + (s[(v - 20) % 10] || s[v] || s[0]);
+    };
+
+    const dateString = `${dayName}. ${monthName} ${getOrdinal(date)} ${year}`;
+    const dateEl = document.getElementById('live-date');
+    if (dateEl) dateEl.textContent = dateString;
+
+    // Format Time: 16:45 gmt +1
+    const hours = gmtPlus1.getHours().toString().padStart(2, '0');
+    const minutes = gmtPlus1.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes} gmt +1`;
+    
+    const timeEl = document.getElementById('live-time');
+    if (timeEl) timeEl.textContent = timeString;
+  }
+
+  // Update immediately and then every second
+  updateFooterTime();
+  setInterval(updateFooterTime, 1000);
+</script>

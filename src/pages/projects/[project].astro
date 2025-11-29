@@ -3,6 +3,7 @@ import { CldImage } from "astro-cloudinary";
 import data from "../../assets/data.json";
 import Layout from "../../layouts/Layout.astro";
 import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
 import "../../styles/portfolio.css";
 
 export function getStaticPaths() {
@@ -171,18 +172,18 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
     </div>
   </div>
 
-  <!-- PROCESS SECTION -->
-  <section class="process-section design-process-section">
+  <!-- PROCESS BREAKDOWN SECTION -->
+  <section class="process-section design-process-breakdown">
     <div class="process-container">
       <!-- Header -->
       <div class="process-header">
         <h2
           class="process-title"
-          set:html={projectData?.["process-title"] || "Add Title"}
+          set:html={projectData?.["design-process-title"] || "Add Title"}
         />
         <div class="process-description">
           <p
-            set:html={projectData?.["process-par"] || "Add process description"}
+            set:html={projectData?.["design-process-par"] || "Add process description"}
           />
         </div>
       </div>
@@ -208,8 +209,8 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
               data-grid-row="1"
             >
               <CldImage
-                src={projectData?.sketches?.[0]?.src || ""}
-                alt={projectData?.sketches?.[0]?.alt || "Main sketch"}
+                src={projectData?.["design-process-images"]?.[0]?.src || ""}
+                alt={projectData?.["design-process-images"]?.[0]?.alt || "Main sketch"}
                 class="sketch-image"
               />
             </div>
@@ -220,8 +221,8 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
               data-grid-row="1"
             >
               <CldImage
-                src={projectData?.sketches?.[1]?.src || ""}
-                alt={projectData?.sketches?.[1]?.alt || "Mobile sketch 1"}
+                src={projectData?.["design-process-images"]?.[1]?.src || ""}
+                alt={projectData?.["design-process-images"]?.[1]?.alt || "Mobile sketch 1"}
                 class="sketch-image"
               />
             </div>
@@ -232,8 +233,8 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
               data-grid-row="1"
             >
               <CldImage
-                src={projectData?.sketches?.[2]?.src || ""}
-                alt={projectData?.sketches?.[2]?.alt || "Mobile sketch 2"}
+                src={projectData?.["design-process-images"]?.[2]?.src || ""}
+                alt={projectData?.["design-process-images"]?.[2]?.alt || "Mobile sketch 2"}
                 class="sketch-image"
               />
             </div>
@@ -242,7 +243,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
             <div class="sketch-container text-block-1">
               <div class="text-content">
                 <p
-                  set:html={projectData?.["text-block-1-par"] ||
+                  set:html={projectData?.["design-text-block-1"] ||
                     "Add text block 1 content"}
                 />
               </div>
@@ -252,7 +253,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
               <!-- Text content will go here -->
               <div class="text-content">
                 <p
-                  set:html={projectData?.["text-block-2-par"] ||
+                  set:html={projectData?.["design-text-block-2"] ||
                     "Add text block 2 content"}
                 />
               </div>
@@ -268,7 +269,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                 </div>
                 <h2
                   class="challenge-title"
-                  set:html={projectData?.["challenge-title"] ||
+                  set:html={projectData?.["design-challenge-title"] ||
                     "Add challenge title"}
                 />
               </div>
@@ -330,39 +331,64 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
       </div>
     </div>
 
-    <!-- Synced reveal stage + Text Blocks -->
-    <div class="styleframes-sync">
-      <div class="left-stack">
-        <h2 class="styleframes-title">Design.</h2>
-        <div class="reveal-stage">
-          <div class="preview-slot" data-slot="1">1</div>
+    <!-- Styleframes Breakdown Section -->
+    <div class="styleframes-breakdown">
+      <!-- Top: Flex with images (left) and text (right) -->
+      <div class="breakdown-top">
+        <div class="breakdown-images">
+          <img
+            src="/png/Faramove-APMF-Style-Frame_B&W.png"
+            alt="Faramove APMF Style Frame B&W"
+            class="breakdown-image"
+          />
+          <img
+            src="/GIF/Farmove-pointer-select.gif"
+            alt="Faramove pointer select animation"
+            class="breakdown-image"
+          />
+          <img
+            src="/png/Faramove-Truck-UI-Style-Frame.png"
+            alt="Faramove Truck UI Style Frame"
+            class="breakdown-image"
+          />
+        </div>
+        <div class="breakdown-text">
+          <h2 class="breakdown-title">{projectData?.["styleframes-breakdown"]?.["top-text"]?.title}</h2>
+          <div class="breakdown-content">
+            {
+              projectData?.["styleframes-breakdown"]?.["top-text"]?.content?.map((paragraph, index) => (
+                <p class="breakdown-paragraph">{paragraph}</p>
+              ))
+            }
+          </div>
         </div>
       </div>
-
-      <!-- Right: Scrolling text blocks -->
-      <div class="styleframes-text-wrapper">
-        <div class="styleframes-text">
-          <div class="text-block" data-section="0">
-            <h3 class="text-block-title">make a u-turn</h3>
-            <p class="text-block-paragraph">
-              This project only had the 4-major features of the app as the
-              script, meant for me to work with. The first assumption was
-              thinking what needed to be done was showing off the mobile app
-              interfaces but then this is a teaser. This wouldn't be the first
-              of its kind to come into the market. It needed a second or two of
-              "Please do not skip me."
-            </p>
+      
+      <!-- Bottom: 2-column grid layout -->
+      <!-- Bottom: Flex Column Layout -->
+      <div class="breakdown-layout">
+        <!-- Row 1: Two images (Matched Height) -->
+        <div class="breakdown-row-top">
+          <div class="breakdown-item-large">
+            <img src="/png/Road_Ariel_STYL-F_Blue.png" alt="Faramove logo" class="breakdown-media" />
           </div>
-          <div class="text-block" data-section="1">
-            <h3 class="text-block-title">pique interest</h3>
-            <p class="text-block-paragraph">
-              Shortly before this project, I had worked on a looping loader
-              animation for the mobile app.  I needed
-              to only do some more transformations for the rest of the video to
-              pick up from. This would make the dump the idea of showing off the
-              interfaces and depend solely on graphic elements to tell the
-              story.
-            </p>
+          <div class="breakdown-item-tall">
+            <img src="/png/aerial-view-road-intersection-roundabout.png" alt="Aerial road view" class="breakdown-media breakdown-media-2" />
+          </div>
+        </div>
+        
+        <!-- Row 2: One full-width image -->
+        <div class="breakdown-item-full">
+          <!-- Placeholder for full-width media -->
+        </div>
+        
+        <!-- Row 3: Two equal side-by-side images -->
+        <div class="breakdown-row-bottom">
+          <div class="breakdown-item-half">
+            <img src="/png/Faramove-AAMF-SF-unused-2.png" alt="Faramove unused style frame 1" class="breakdown-media" />
+          </div>
+          <div class="breakdown-item-half">
+            <img src="/png/Faramove-pointer-SF-unused.png" alt="Faramove unused style frame 2" class="breakdown-media" />
           </div>
         </div>
       </div>
@@ -375,13 +401,9 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
   <div class="process-container">
     <!-- Header -->
     <div class="process-header">
-      <h2 class="process-title">2D but make it look 3d</h2>
+      <h2 class="process-title">{projectData?.["motion-process-title"]}</h2>
       <div class="process-description">
-        <p>
-          Wrapping up the design phase and <strong>NOT</strong> worrying about my
-          animation capabilities as though I had another animator on standby was
-          one of the reasons this project came to life.
-        </p>
+        <p set:html={projectData?.["motion-process-par"] || "Add motion process description"} />
       </div>
     </div>
 
@@ -398,50 +420,59 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
 
       <!-- Image Container Overlay -->
       <div class="sketch-container-wrapper">
-        <div class="sketch-container-grid">
-          <!-- Row 1: Main Sketch Containers -->
+        <div class="sketch-container-grid motion-variant">
+          <!-- Row 1: Process Image Containers -->
           <div
-            class="sketch-container main-sketch"
+            class="sketch-container motion-side-1"
             data-grid-column="1"
             data-grid-row="1"
           >
-            <CldImage
-              src={projectData?.sketches?.[0]?.src || ""}
-              alt={projectData?.sketches?.[0]?.alt || "Main sketch"}
-              class="sketch-image"
-            />
+             <img
+               src="/png/faramove-box-unwrapped.png"
+               alt="Faramove box unwrapped"
+                  class="sketch-image"
+                />
           </div>
 
           <div
-            class="sketch-container mobile-sketch-1"
+            class="sketch-container motion-side-2"
+            data-grid-column="1"
+            data-grid-row="2"
+          >
+             <img
+               src="/GIF/farmove-box-spin-loop.gif"
+               alt="Faramove box spin animation"
+                  class="sketch-image"
+                />
+          </div>
+
+          <div
+            class="sketch-container motion-main"
             data-grid-column="2"
             data-grid-row="1"
           >
-            <!-- Image will be placed here later -->
-          </div>
-
-          <div
-            class="sketch-container mobile-sketch-2"
-            data-grid-column="3"
-            data-grid-row="1"
-          >
-            <!-- Image will be placed here later -->
+             <img
+               src="/GIF/farmove-pointer-parcel-pickup-loop.gif"
+               alt="Faramove parcel pickup animation"
+                  class="sketch-image"
+                />
           </div>
 
           <!-- Row 2: Text Blocks - Equal Width -->
           <div class="sketch-container text-block-1">
-            <div class="text-content">
-              <p>
-                There are several ways to rig a fake 3D box in aftereffects. You
-                could I wanted one that will allow me the freedom of having the
-                shapes as flat 2D if I wanted to un-wrap it. This is because
-                this where I had texts and I needed change its content later on.
-              </p>
-            </div>
-          </div>
+                <div class="text-content">
+              <p
+                set:html={projectData?.["motion-text-block-1"] || "Add motion text 1"}
+              />
+                </div>
+              </div>
 
           <div class="sketch-container text-block-2">
-            <!-- Text content will go here -->
+            <div class="text-content">
+              <p
+                set:html={projectData?.["motion-text-block-2"] || "Add motion text 2"}
+              />
+            </div>
           </div>
 
           <!-- Row 3: Full Width Text Block -->
@@ -458,82 +489,142 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
         </div>
       </div>
     </div>
+
+    <!-- Full-width GIF Banner -->
+    <div class="motion-divider-banner"></div>
+
+    <div class="decorative-lines">
+      <svg
+        class="grid-lines-svg"
+        preserveAspectRatio="none"
+        viewBox="0 0 1512 400"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Lines will be generated by JavaScript -->
+      </svg>
+
+      <!-- Image Container Overlay -->
+      <div class="sketch-container-wrapper">
+        <div class="sketch-container-grid motion-variant">
+          <!-- Row 1: Process Image Containers -->
+          <div
+            class="sketch-container motion-side-1"
+            data-grid-column="1"
+            data-grid-row="1"
+          >
+             <img
+               src="/png/Faramove-cc-bend-it-ss.png"
+               alt="Faramove CC Bend It effect"
+               class="sketch-image"
+             />
   </div>
+
+          <div
+            class="sketch-container motion-side-2"
+            data-grid-column="1"
+            data-grid-row="2"
+          >
+             <img
+               src="/GIF/farmove-arrow-loop-wide.gif"
+               alt="Faramove arrow loop animation"
+               class="sketch-image"
+             />
+            </div>
+
+          <div
+            class="sketch-container motion-main"
+            data-grid-column="2"
+            data-grid-row="1"
+          >
+             <img
+               src="/GIF/farmove-pointer-ariel-loop.gif"
+               alt="Faramove pointer animation"
+               class="sketch-image"
+             />
+        </div>
+        
+          <!-- Row 2: Text Blocks - Equal Width -->
+          <div class="sketch-container text-block-1">
+            <div class="text-content">
+              <p
+                set:html={projectData?.["motion-text-block-3"] || "Add motion text 3"}
+              />
+            </div>
+        </div>
+
+          <div class="sketch-container text-block-2">
+            <div class="text-content">
+              <p
+                set:html={projectData?.["motion-text-block-4"] || "Add motion text 4"}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
 </section>
 
 <!-- SPEED LINES SECTION -->
-<section class="project-showcase-section">
-    <div class="project-showcase-container">
-        <!-- Top Grid: wraps the two top placeholders -->
-        <div class="project-showcase-top-grid">
-            <div class="project-showcase-placeholder"></div>
-            <div class="project-showcase-placeholder"></div>
-            <div class="project-showcase-placeholder"></div>
-            <div class="project-showcase-placeholder"></div>
-            <div class="project-showcase-placeholder"></div>
-            <div class="project-showcase-placeholder project-showcase-description-block">
-                <p class="project-showcase-description">
-                    This project only had the 4-major features of the app as the script, meant for me to work with. The first assumption was thinking what needed to be done was showing off the mobile app interfaces but then this is a teaser. This wouldn't be the first of its kind to come into the market. It needed a second or two of "Please do not skip me."
-                </p>
-            </div>
+<section class="sound-design-section">
+  <div class="sound-design-container">
+    <!-- Top: Full Width Image -->
+    <div class="sound-design-top">
+      <img src="/png/Faramove-Music_PP-Audio-Stacks.png" alt="Faramove Audio Stacks" />
+          </div>
+    
+    <!-- Bottom: Split Layout -->
+    <div class="sound-design-bottom">
+      <!-- Left: Image + Caption -->
+      <div class="sound-bottom-left">
+        <div class="sound-channel-image">
+          <img src="/png/Faramove-Tom&Hat_PP-Audio-Channel.png" alt="Faramove Audio Channel" />
         </div>
-        
-        <!-- Bottom Grid with 3 Image Placeholders -->
-        <div class="project-showcase-bottom-grid">
-            <div class="project-showcase-placeholder bottom-left"></div>
-            <div class="project-showcase-placeholder bottom-right"></div>
-            <div class="project-showcase-placeholder bottom-full"></div>
+        <p class="sound-caption">
+          {projectData?.["sound-design"]?.["audio-caption"] || "Tom_and_Snare_Fill-Mastered.wav"}
+        </p>
         </div>
-
-        <!-- Move description to the end of the top grid section -->
-
+      
+      <!-- Right: Text Content -->
+      <div class="sound-bottom-right">
+        <h2 class="sound-title">{projectData?.["sound-design"]?.title || "noises"}</h2>
+        <p class="sound-description">
+          {projectData?.["sound-design"]?.description || "When you decide to open a teaser with the brand logo sitting on screen for 5 seconds, you need something extra to keep viewers from hitting the skip button: sound. Staying true to my “DO NOTs” and avoiding any heavy UI cues, I pushed this idea through the audio. I chose a sound that felt deliberately unexpected—using a tom and snare to open an app video where clicks, bells, notifications, and swooshes are what you’d normally expect."}
+        </p>
+      </div>
     </div>
+  </div>
 </section>
 
 <!-- CREDITS SECTION -->
 <section class="credits-section">
   <div class="credits-container">
-    <div class="credits-grid">
-      <!-- 8 placeholder squares -->
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-      <div class="credits-placeholder"></div>
-
-      <!-- First text block (top-middle) -->
-      <div class="credits-text-block credits-text-top">
-        <div class="credits-labels">
-          <p>Client</p>
-          <p>Sound Design</p>
-          <p>Motion Design</p>
+    <div class="credits-list">
+      {projectData?.credits?.map((credit) => (
+        <div class="credit-item">
+          <p class="credit-role">{credit.role}</p>
+          <p class="credit-name">{credit.name}</p>
         </div>
-        <div class="credits-values">
-          <p>Project Name</p>
-          <p>Your Name</p>
-          <p>Your Name</p>
-        </div>
-      </div>
-
-      <!-- Second text block (bottom-middle) -->
-      <div class="credits-text-block credits-text-bottom">
-        <div class="credits-labels">
-          <p>Script</p>
-          <p>Director</p>
-          <p>Creative Direction</p>
-        </div>
-        <div class="credits-values">
-          <p>Contributor Name</p>
-          <p>Contributor Name</p>
-          <p>Your Name</p>
+      ))}
+    </div>
+    
+    <div class="credits-header">
+      <h2 class="credits-title">credits</h2>
+      <p class="credits-subtitle">priviledged to work with some of the most talented people existing.</p>
+      
+      <div class="more-cc-link">
+        <a href="#" class="cc-link-text">more cc</a>
+        <div class="cc-arrow">
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 5L11 5M11 5L7 1M11 5L7 9" stroke="#7d8484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
       </div>
     </div>
   </div>
 </section>
+
+<Footer />
 
 <script>
   // @ts-check
@@ -1196,140 +1287,100 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
     console.error("Thumbs rail (second carousel) not found in DOM");
   }
 
-  // Check browser support for view timelines
-  const supportsViewTimeline = CSS.supports("animation-timeline", "view()");
-  const supportsViewTimelineName = CSS.supports("view-timeline-name", "--test");
-  console.log("Browser supports view timelines:", supportsViewTimeline);
-  console.log("Browser supports view-timeline-name:", supportsViewTimelineName);
-  console.log(
-    "Browser supports animation-timeline:",
-    CSS.supports("animation-timeline", "view()")
-  );
+  // ==================== MOTION DIVIDER BANNER LOGIC ====================
+  function initMotionDivider() {
+    const banner = document.querySelector(".motion-divider-banner") as HTMLElement;
+    if (!banner) return;
 
-  // Text block animations - slide up and fade in (skip first block)
-  // Only apply GSAP animations if view timeline is not supported
-  if (!supportsViewTimeline) {
-    const textBlocks = document.querySelectorAll(".styleframes-text .text-block");
-    textBlocks.forEach((block, index) => {
-      if (index > 0) { // Skip first block
-        gsap.from(block, {
-          y: 50, // Start 50px below
-          opacity: 0, // Start transparent
-          duration: 1.2,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: block,
-            start: "top 80%", // Start when top of block hits 80% of viewport
-            end: "top 20%", // End when top of block hits 20% of viewport
-            scrub: 1, // Smooth animation tied to scroll
-            markers: false,
-          },
-        });
-      }
-    });
-    console.log("GSAP text block animations applied (view timeline not supported)");
-  } else {
-    console.log("Skipping GSAP text block animations - using CSS view timelines instead");
-  }
-
-  // ==================== STYLEFRAMES SCROLL SYNC WITH VIEW TIMELINES ====================
-  const revealStageEl = document.querySelector(".reveal-stage") as HTMLElement;
-  const textBlocksEls = document.querySelectorAll(
-    ".styleframes-text .text-block"
-  ) as NodeListOf<HTMLElement>;
-
-  // Force initial states of preview slots
-  // const slot1 = document.querySelector(
-  //   '.preview-slot[data-slot="1"]'
-  // ) as HTMLElement;
-  // const slot2 = document.querySelector(
-  //   '.preview-slot[data-slot="2"]'
-  // ) as HTMLElement;
-  // const slot3 = document.querySelector(
-  //   '.preview-slot[data-slot="3"]'
-  // ) as HTMLElement;
-
-  // if (slot1 && slot2 && slot3) {
-  //   // Force initial positions with inline styles (higher specificity)
-  //   slot1.style.setProperty("transform", "translateY(0)", "important");
-  //   slot2.style.setProperty("transform", "translateY(100%)", "important");
-  //   slot3.style.setProperty("transform", "translateY(100%)", "important");
-
-  //   console.log("Initial slot transforms set:", {
-  //     slot1: window.getComputedStyle(slot1).transform,
-  //     slot2: window.getComputedStyle(slot2).transform,
-  //     slot3: window.getComputedStyle(slot3).transform,
-  //   });
-
-  //   // Let CSS animations take over naturally without JavaScript interference
-  // }
-
-   if (revealStageEl && textBlocksEls.length > 0) {
-     // Calculate dynamic inset based on reveal-stage position
-     const calculateInset = () => {
-       if (!revealStageEl) return "0% 0%";
-       
-       const rect = revealStageEl.getBoundingClientRect();
-       const vh = window.innerHeight;
-       
-       const topPercent = (rect.top / vh) * 100;
-       const bottomPercent = ((vh - rect.bottom) / vh) * 100;
-       
-       return `${topPercent.toFixed(2)}% ${bottomPercent.toFixed(2)}%`;
-     };
-
-     const dynamicInsetValue = calculateInset();
-
-    console.log("Using dynamic view timeline inset:", dynamicInsetValue);
-    console.log("Found text blocks:", textBlocksEls.length);
-    console.log("Text blocks:", textBlocksEls);
-
-    // Apply dynamic inset to each text-block
-    textBlocksEls.forEach((block, index) => {
-      (block.style as any).viewTimelineAxis = "block";
-      (block.style as any).viewTimelineInset = dynamicInsetValue;
-      console.log(`Text block ${index}:`, {
-        element: block,
-        dataSection: block.getAttribute("data-section"),
-        computedViewTimelineName: (window.getComputedStyle(block) as any)
-          .viewTimelineName,
-        computedViewTimelineAxis: (window.getComputedStyle(block) as any)
-          .viewTimelineAxis,
-        computedViewTimelineInset: (window.getComputedStyle(block) as any)
-          .viewTimelineInset,
-      });
-    });
-
-    // Force a reflow to ensure timelines are registered
-    void revealStageEl.offsetHeight;
-
-    console.log("View timelines initialized with dynamic inset");
-    
-    // Add resize listener to recalculate inset
-    window.addEventListener("resize", () => {
-      const newInset = calculateInset();
-      textBlocksEls.forEach((block) => {
-        (block.style as any).viewTimelineInset = newInset;
-      });
-      console.log("Inset recalculated on resize:", newInset);
-    });
-
-    // Add scroll listener to debug text block visibility
-    let lastVisibleSection = -1;
-    const checkTextBlockVisibility = () => {
-      textBlocksEls.forEach((block, index) => {
-        const rect = block.getBoundingClientRect();
-        const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (isVisible && index !== lastVisibleSection) {
-          console.log(
-            `Text block ${index} (section ${block.getAttribute("data-section")}) is now visible`
-          );
-          lastVisibleSection = index;
+    // Helper to populate banner
+    const populateBanner = () => {
+      // Clear existing content
+      banner.innerHTML = "";
+      
+      // We need to know the aspect ratio of the image to calculate how many we need
+      // Create a temporary image to load and check dimensions
+      const tempImg = new Image();
+      tempImg.src = "/GIF/farmove-arrow-loop.gif";
+      
+      tempImg.onload = () => {
+        const imgWidth = tempImg.naturalWidth;
+        const imgHeight = tempImg.naturalHeight;
+        
+        // Calculate effective width after rotation (-90deg)
+        // When rotated -90deg:
+        // The visual width of the item becomes its original height
+        // The visual height of the item becomes its original width
+        
+        // However, we want the items to fit the container height (150px)
+        // Container Height = 150px
+        // So the Rotated Item Height (Visual Height) must be 150px.
+        // Visual Height = Original Width.
+        // So we need to scale the image such that Original Width = 150px.
+        
+        const targetHeight = 90; // Reduced height for smaller items
+        const scaleRatio = targetHeight / imgWidth;
+        
+        // Scaled Original Height = imgHeight * scaleRatio
+        // Visual Width = Scaled Original Height
+        const itemVisualWidth = imgHeight * scaleRatio;
+        
+        // Calculate how many items needed to fill screen width
+        const screenWidth = window.innerWidth;
+        const count = Math.ceil(screenWidth / itemVisualWidth) + 1; // Add buffer
+        
+        // Create images
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+          // Create a wrapper div to handle layout space for rotated element
+          const wrapper = document.createElement("div");
+          wrapper.style.width = `${itemVisualWidth}px`;
+          wrapper.style.height = `${targetHeight}px`;
+          wrapper.style.display = "flex";
+          wrapper.style.alignItems = "center";
+          wrapper.style.justifyContent = "center";
+          wrapper.style.overflow = "hidden"; // clip any overflow
+          
+          const img = document.createElement("img");
+          img.src = "/GIF/farmove-arrow-loop.gif";
+          img.alt = "Motion divider";
+          img.className = "motion-banner-item";
+          
+          // Force image dimensions to match the scale required
+          // We want Original Width to be 150px (to match container height when rotated)
+          // But wait, if we rotate -90, height becomes width.
+          // CSS transform rotates the element but doesn't change layout flow unless we handle it.
+          // The .motion-banner-item class has transform: rotate(-90deg)
+          
+          // If we set width: 150px on the img tag (which becomes height visually), 
+          // and height: auto (which becomes width visually).
+          img.style.width = `${targetHeight}px`; 
+          img.style.height = "auto";
+          
+          // We need to ensure the rotated image is centered in the wrapper
+          // wrapper is itemVisualWidth x 150
+          
+          wrapper.appendChild(img);
+          fragment.appendChild(wrapper);
         }
-      });
+        
+        banner.appendChild(fragment);
+      };
     };
 
-    window.addEventListener("scroll", checkTextBlockVisibility);
-    checkTextBlockVisibility(); // Initial check
+    populateBanner();
+    
+    // Re-populate on resize (debounce)
+    let resizeTimeout: ReturnType<typeof setTimeout>;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(populateBanner, 250);
+    });
+  }
+
+  // Initialize motion divider
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initMotionDivider);
+  } else {
+    initMotionDivider();
   }
 </script>
