@@ -1438,9 +1438,8 @@ body {
   grid-column: 1;
   grid-row: 1;
   width: 300px;
-  height: 100%;
+  height: 157px;
   align-self: end;
-
 }
   
 .wth-background {
@@ -1539,7 +1538,6 @@ body {
   display: flex;
   gap: 35px;
   align-self: end;
-  margin-bottom: 40px;
 }
 
 .social-link {
@@ -1566,7 +1564,6 @@ body {
   gap: 14px;
   align-items: flex-start;
   align-self: end;
-  margin-bottom: 40px;
 }
 
 .status-indicator {
@@ -1621,7 +1618,6 @@ body {
   text-decoration: none;
   justify-self: end;
   align-self: end;
-  margin-bottom: 40px;
 }
 
 .home-link-text {
