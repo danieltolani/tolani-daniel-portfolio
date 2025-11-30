@@ -640,10 +640,8 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
   const headerLogo = document.querySelector(".header-logo") as HTMLElement;
   const allNavElements = [...navLinks, headerLogo];
 
-  // Set header logo as active by default (home/landing page)
-  if (headerLogo) {
-    headerLogo.classList.add("active");
-  }
+  // Initial active state is handled by Header component based on route
+  // Click handlers below manage interactive state changes
 
   navLinks.forEach((link) => {
     link.addEventListener("click", () => {

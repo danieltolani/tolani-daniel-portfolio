@@ -153,7 +153,8 @@
 }
 
 /* 4. Status (Bottom Left) */
-.footer-status {
+.footer-status,
+.availability-time {
   grid-column: 1;
   grid-row: 2;
   display: flex;
@@ -240,6 +241,7 @@
 
   .footer-wth-container,
   .footer-status,
+  .availability-time,
   .footer-home-link {
     position: relative;
     top: auto;
@@ -265,6 +267,7 @@
   }
   
   .footer-status,
+  .availability-time,
   .footer-home-link {
     margin-bottom: 0;
     align-self: flex-start;

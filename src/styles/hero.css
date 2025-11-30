@@ -1,0 +1,128 @@
+/* Hero Page Styles */
+
+/* Import Variables from Common/Portfolio or Define Here */
+:root {
+  --color-bg-dark: #141417;
+  --color-bg-darker: #1b1c1e;
+  --color-bg-light: #e5e3dc;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #777777;
+  --color-text-dark: #141417;
+  --color-text: #ffffff;
+  --font-mono: "Suisse Int'l Mono", monospace;
+  --color-accent: #f72f2f;
+  --color-link: #6b6a68;
+}
+
+.hero-page {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #141417; /* Matching footer background */
+  color: white;
+  overflow-x: hidden;
+  padding-top: 0; /* Header is overlay or top? */
+}
+
+.hero-availability-wrapper {
+  position: absolute;
+  top: 60.08px;
+  left: 113.97px;
+  z-index: 10;
+}
+
+/* Ensure availability component text is visible on dark background */
+.hero-availability-wrapper .status-label,
+.hero-availability-wrapper .status-time {
+  color: white;
+}
+
+.hero-availability-wrapper .status-time {
+  color: #7d8484; /* Match footer time color */
+}
+
+.hero-content {
+  margin: 0 auto;
+  width: 1512px;
+  max-width: 85%;
+  padding-top: 16.25rem;
+}
+
+.hero-text-row {
+  display: flex;
+  align-items: flex-end; /* Align bottom of texts or center? Figma shows subtitle lower */
+  gap: 14.5625rem; /* Calculated gap from Figma */
+  flex-wrap: wrap;
+}
+
+.hero-title {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 2.2rem; /* Approx 35px from Figma */
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1.114;
+  margin: 0; /* Remove bottom margin */
+  max-width: 800px;
+  color: white;
+}
+
+.hero-title .pixel-font {
+  font-family: "Neue Pixel Round", sans-serif;
+  font-weight: normal;
+}
+
+.hero-title .red-text {
+  color: #F72F2F;
+}
+
+.hero-subtitle {
+  font-family: "Suisse Int'l", sans-serif; /* Medium weight typically default for this font stack if avail, else set 500 */
+  font-weight: 500;
+  font-size: 1rem; /* 16px */
+  color: #7d8484;
+  text-transform: uppercase;
+  line-height: 1.4;
+  max-width: 300px;
+  margin: 0;
+}
+
+.hero-subtitle .red-text {
+  color: #F72F2F;
+}
+
+.hero-image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+  padding-bottom: 100px;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .hero-availability-wrapper {
+    position: relative;
+    top: 120px; /* Push down below header */
+    left: 20px;
+    margin-bottom: 40px;
+  }
+
+  .hero-content {
+    padding-top: 140px; /* Adjust for availability */
+  }
+
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+}
+

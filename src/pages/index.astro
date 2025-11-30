@@ -1,0 +1,39 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import AvailabilityTime from '../components/AvailabilityTime.astro';
+import '../styles/hero.css';
+import '../styles/header.css';
+import '../styles/footer.css';
+---
+
+<Layout>
+  <Header />
+  
+  <main class="hero-page">
+    <div class="hero-availability-wrapper">
+      <AvailabilityTime />
+    </div>
+
+    <section class="hero-content">
+      <div class="hero-text-row">
+        <h1 class="hero-title">
+          moti<span class="pixel-font">o</span>n an<span class="pixel-font">d</span><br>
+          IN<span class="pixel-font">T</span>E<span class="pixel-font">R</span>A<span class="pixel-font">C</span>TION<br>
+          <span class="red-text">de</span><span class="pixel-font">s</span>ign<span class="pixel-font">e</span>r.
+        </h1>
+        <p class="hero-subtitle">
+          using aRTISTIC shapes, colors, texts AND sound in a way that they <span class="red-text">MOVE to COMMUNICATE.</span>
+        </p>
+      </div>
+    </section>
+
+    <div class="hero-image-container">
+      <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" />
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+

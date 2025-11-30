@@ -1,0 +1,55 @@
+---
+---
+<div class="availability-time">
+  <div class="status-dot">
+    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" fill="none">
+      <path class="status-blink" fill="#F72F2F" d="M3.396 7.199V3.277h4.098V7.2H3.396Z"/>
+      <path stroke="#F72F2F" stroke-width="1.305" d="M.652 9.826V.652h9.586v9.174H.652Z"/>
+    </svg>
+  </div>
+  <div class="status-text-group">
+    <p class="status-label">available for work</p>
+    <div class="status-time live-time" data-time="">
+      <span data-hour="">16</span><span class="status-blink">:</span><span data-minute="">45</span><span>&nbsp;gmt +1</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  function updateAvailabilityTime() {
+    const now = new Date();
+    // Calculate GMT+1
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const gmtPlus1 = new Date(utc + (3600000));
+
+    // Format Time: 16:45 gmt +1 (with blinking colon)
+    const hours = gmtPlus1.getHours().toString().padStart(2, '0');
+    const minutes = gmtPlus1.getMinutes().toString().padStart(2, '0');
+    const timeString = `${hours}:${minutes} gmt +1`;
+    
+    const timeEls = document.querySelectorAll('.live-time');
+    timeEls.forEach(timeEl => {
+        // Update data-time attribute
+        timeEl.setAttribute('data-time', timeString);
+        
+        // Update hour span
+        const hourSpan = timeEl.querySelector('[data-hour]');
+        if (hourSpan) {
+            hourSpan.setAttribute('data-hour', hours);
+            hourSpan.textContent = hours;
+        }
+        
+        // Update minute span
+        const minuteSpan = timeEl.querySelector('[data-minute]');
+        if (minuteSpan) {
+            minuteSpan.setAttribute('data-minute', minutes);
+            minuteSpan.textContent = minutes;
+        }
+    });
+  }
+
+  // Update immediately and then every second
+  updateAvailabilityTime();
+  setInterval(updateAvailabilityTime, 1000);
+</script>
+
