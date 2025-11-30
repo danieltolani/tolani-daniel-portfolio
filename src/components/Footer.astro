@@ -3,15 +3,6 @@
 ---
 
 <footer class="footer-section">
-  <style>
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-    .status-blink {
-      animation: blink 1s infinite;
-    }
-  </style>
   <div class="footer-container">
     <!-- 1. WTH! Section (Top Left) -->
     <div class="footer-wth-container">
@@ -39,7 +30,9 @@
       </div>
       <div class="status-text-group">
         <p class="status-label">available for work</p>
-        <p class="status-time" id="live-time">16:45 gmt +1</p>
+        <div class="status-time" data-time="" id="live-time">
+          <span data-hour="">16</span><span class="status-blink">:</span><span data-minute="">45</span><span>&nbsp;gmt +1</span>
+        </div>
       </div>
     </div>
 
@@ -84,13 +77,30 @@
     const dateEl = document.getElementById('live-date');
     if (dateEl) dateEl.textContent = dateString;
 
-    // Format Time: 16:45 gmt +1
+    // Format Time: 16:45 gmt +1 (with blinking colon)
     const hours = gmtPlus1.getHours().toString().padStart(2, '0');
     const minutes = gmtPlus1.getMinutes().toString().padStart(2, '0');
     const timeString = `${hours}:${minutes} gmt +1`;
     
     const timeEl = document.getElementById('live-time');
-    if (timeEl) timeEl.textContent = timeString;
+    if (timeEl) {
+      // Update data-time attribute
+      timeEl.setAttribute('data-time', timeString);
+      
+      // Update hour span
+      const hourSpan = timeEl.querySelector('[data-hour]');
+      if (hourSpan) {
+        hourSpan.setAttribute('data-hour', hours);
+        hourSpan.textContent = hours;
+      }
+      
+      // Update minute span
+      const minuteSpan = timeEl.querySelector('[data-minute]');
+      if (minuteSpan) {
+        minuteSpan.setAttribute('data-minute', minutes);
+        minuteSpan.textContent = minutes;
+      }
+    }
   }
 
   // Update immediately and then every second
