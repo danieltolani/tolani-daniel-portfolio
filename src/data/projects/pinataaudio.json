@@ -2,5 +2,51 @@
     "project": "pinataaudio",
     "title": "PINATAAUDIO",
     "description1": "Description coming soon.",
-    "styleframes": []
+    "videoId": "",
+    "videoTitle": "",
+    "metadata": {
+        "year": "",
+        "role": "",
+        "tools": "",
+        "type": ""
+    },
+    "styleframes": [],
+    "styleframes-title": "Styleframes design",
+    "styleframes-breakdown": {
+        "top-images": [],
+        "top-text": {
+            "title": "",
+            "content": []
+        },
+        "layout-images": []
+    },
+    "design-process-title": "Design Process Title",
+    "design-process-par": "Design process description coming soon.",
+    "design-process-images": [],
+    "design-text-block-1": "Content coming soon.",
+    "design-text-block-2": "Content coming soon.",
+    "design-challenge-title": "Challenge Title",
+    "motion-process-title": "Motion Process Title",
+    "motion-process-par": "Motion process description coming soon.",
+    "motion-process-images-sets": {
+        "set1": [],
+        "banner": "",
+        "set2": []
+    },
+    "motion-process-text-blocks": [
+        { "paragraph": "PROBLEM" },
+        { "paragraph": "SOLUTION" }
+    ],
+    "motion-text-block-1": "Content coming soon.",
+    "motion-text-block-2": "Content coming soon.",
+    "motion-text-block-3": "Content coming soon.",
+    "motion-text-block-4": "Content coming soon.",
+    "sound-design": {
+        "title": "",
+        "description": "",
+        "audio-caption": "",
+        "channel-image": "",
+        "main-image": ""
+    },
+    "credits": []
 }

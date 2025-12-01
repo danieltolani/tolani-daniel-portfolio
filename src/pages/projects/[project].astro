@@ -52,11 +52,19 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
                         data-image-url={styleframeSet[index]}
                         data-image-index={index}
                       >
-                        <CldImage
-                          class="carousel-image2"
-                          src={item.src}
-                          alt="Styleframe ${index}"
-                        />
+                        {item.src.startsWith("/") ? (
+                          <img
+                            class="carousel-image2"
+                            src={item.src}
+                            alt={`Styleframe ${index}`}
+                          />
+                        ) : (
+                          <CldImage
+                            class="carousel-image2"
+                            src={item.src}
+                            alt={`Styleframe ${index}`}
+                          />
+                        )}
                         <span class="carousel-number">STY-{index + 1}</span>
                       </div>
                     </div>
@@ -70,23 +78,19 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
           <div class="project-metadata">
             <div class="metadata-item">
               <span class="metadata-label">YEAR</span>
-              <span class="metadata-value">2023</span>
+              <span class="metadata-value">{projectData?.metadata?.year || "N/A"}</span>
             </div>
             <div class="metadata-item">
               <span class="metadata-label">ROLE</span>
-              <span class="metadata-value"
-                >Creative Direction, Motion Design</span
-              >
+              <span class="metadata-value">{projectData?.metadata?.role || "N/A"}</span>
             </div>
             <div class="metadata-item">
               <span class="metadata-label">TOOLS</span>
-              <span class="metadata-value"
-                >Figma, Adobe AE, PR & Illustrator</span
-              >
+              <span class="metadata-value">{projectData?.metadata?.tools || "N/A"}</span>
             </div>
             <div class="metadata-item">
               <span class="metadata-label">TYPE</span>
-              <span class="metadata-value">Launch Teaser</span>
+              <span class="metadata-value">{projectData?.metadata?.type || "N/A"}</span>
             </div>
           </div>
         </div>
@@ -94,18 +98,21 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
     </main>
 
     <!-- VIDEO SECTION -->
-    <section class="snap-section video-section">
-      <div class="video-embed-wrapper">
-        <iframe
-          src="https://player.vimeo.com/video/809298150?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=0&loop=1&title=0&byline=0&portrait=0&transparent=0"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
-          referrerpolicy="strict-origin-when-cross-origin"
-          style="position:absolute;top:0;left:0;width:100%;height:100%;"
-          title="Faramove Launch"
-          allowfullscreen></iframe>
-      </div>
-    </section>
+    {projectData?.videoId && (
+      <section class="snap-section video-section">
+        <div class="video-embed-wrapper">
+          <iframe
+            src={`https://player.vimeo.com/video/${projectData.videoId}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=0&loop=1&title=0&byline=0&portrait=0&transparent=0`}
+            frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;"
+            title={projectData.videoTitle || "Project Video"}
+            allowfullscreen
+          ></iframe>
+        </div>
+      </section>
+    )}
     <script src="https://player.vimeo.com/api/player.js"></script>
 
     <script>
@@ -174,458 +181,487 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
   </div>
 
   <!-- PROCESS BREAKDOWN SECTION -->
-  <section class="process-section design-process-breakdown">
-    <div class="process-container">
-      <!-- Header -->
-      <div class="process-header">
-        <h2
-          class="process-title"
-          set:html={projectData?.["design-process-title"] || "Add Title"}
-        />
-        <div class="process-description">
-          <p
-            set:html={projectData?.["design-process-par"] || "Add process description"}
+  {projectData?.["design-process-title"] && (
+    <section class="process-section design-process-breakdown">
+      <div class="process-container">
+        <!-- Header -->
+        <div class="process-header">
+          <h2
+            class="process-title"
+            set:html={projectData?.["design-process-title"] || "Add Title"}
           />
+          <div class="process-description">
+            <p
+              set:html={projectData?.["design-process-par"] || "Add process description"}
+            />
+          </div>
         </div>
-      </div>
 
-      <!-- Decorative Lines with Image Containers -->
-      <div class="decorative-lines">
-        <svg
-          class="grid-lines-svg"
-          preserveAspectRatio="none"
-          viewBox="0 0 1512 400"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <!-- Lines will be generated by JavaScript -->
-        </svg>
+        <!-- Decorative Lines with Image Containers -->
+        <div class="decorative-lines">
+          <svg
+            class="grid-lines-svg"
+            preserveAspectRatio="none"
+            viewBox="0 0 1512 400"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Lines will be generated by JavaScript -->
+          </svg>
 
-        <!-- Image Container Overlay -->
-        <div class="sketch-container-wrapper">
-          <div class="sketch-container-grid">
-            <!-- Row 1: Main Sketch Containers -->
-            <div
-              class="sketch-container main-sketch"
-              data-grid-column="1"
-              data-grid-row="1"
-            >
-              <CldImage
-                src={projectData?.["design-process-images"]?.[0]?.src || ""}
-                alt={projectData?.["design-process-images"]?.[0]?.alt || "Main sketch"}
-                class="sketch-image"
-              />
-            </div>
-
-            <div
-              class="sketch-container mobile-sketch-1"
-              data-grid-column="2"
-              data-grid-row="1"
-            >
-              <CldImage
-                src={projectData?.["design-process-images"]?.[1]?.src || ""}
-                alt={projectData?.["design-process-images"]?.[1]?.alt || "Mobile sketch 1"}
-                class="sketch-image"
-              />
-            </div>
-
-            <div
-              class="sketch-container mobile-sketch-2"
-              data-grid-column="3"
-              data-grid-row="1"
-            >
-              <CldImage
-                src={projectData?.["design-process-images"]?.[2]?.src || ""}
-                alt={projectData?.["design-process-images"]?.[2]?.alt || "Mobile sketch 2"}
-                class="sketch-image"
-              />
-            </div>
-
-            <!-- Row 2: Text Blocks - Equal Width -->
-            <div class="sketch-container text-block-1">
-              <div class="text-content">
-                <p
-                  set:html={projectData?.["design-text-block-1"] ||
-                    "Add text block 1 content"}
-                />
+          <!-- Image Container Overlay -->
+          <div class="sketch-container-wrapper">
+            <div class="sketch-container-grid">
+              <!-- Row 1: Dynamic Design Process Grid -->
+              <div class={`design-sketch-grid layout-${(projectData?.["design-process-images"] || []).length}`}>
+                {(projectData?.["design-process-images"] || []).map((img) => (
+                  <div class="sketch-container dynamic-sketch-item">
+                    {img.src.startsWith("/") ? (
+                      <img
+                        src={img.src}
+                        alt={img.alt || "Design process sketch"}
+                        class="sketch-image"
+                      />
+                    ) : (
+                      <CldImage
+                        src={img.src}
+                        alt={img.alt || "Design process sketch"}
+                        class="sketch-image"
+                      />
+                    )}
+                  </div>
+                ))}
               </div>
-            </div>
 
-            <div class="sketch-container text-block-2">
-              <!-- Text content will go here -->
-              <div class="text-content">
-                <p
-                  set:html={projectData?.["design-text-block-2"] ||
-                    "Add text block 2 content"}
-                />
-              </div>
-            </div>
-
-            <!-- Row 3: Full Width Text Block -->
-            <div class="sketch-container text-block-full">
-              <!-- Challenge Section -->
-              <div class="challenge-section">
-                <div class="challenge-badge">
-                  <p class="challenge-label">challenge</p>
-                  <p class="challenge-number">ONE</p>
+              <!-- Row 2: Text Blocks - Equal Width -->
+              <div class="sketch-container text-block-1">
+                <div class="text-content">
+                  <p
+                    set:html={projectData?.["design-text-block-1"] ||
+                      "Add text block 1 content"}
+                  />
                 </div>
-                <h2
-                  class="challenge-title"
-                  set:html={projectData?.["design-challenge-title"] ||
-                    "Add challenge title"}
-                />
+              </div>
+
+              <div class="sketch-container text-block-2">
+                <!-- Text content will go here -->
+                <div class="text-content">
+                  <p
+                    set:html={projectData?.["design-text-block-2"] ||
+                      "Add text block 2 content"}
+                  />
+                </div>
+              </div>
+
+              <!-- Row 3: Full Width Text Block -->
+              <div class="sketch-container text-block-full">
+                <!-- Challenge Section -->
+                <div class="challenge-section">
+                  <div class="challenge-badge">
+                    <p class="challenge-label">challenge</p>
+                    <p class="challenge-number">ONE</p>
+                  </div>
+                  <h2
+                    class="challenge-title"
+                    set:html={projectData?.["design-challenge-title"] ||
+                      "Add challenge title"}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <!-- STYLEFRAMES DETAIL SECTION -->
-  <section class="styleframes-section">
-    <div class="styleframes-container">
-      <div class="styleframes-content">
-        <!-- Large Preview with Counter -->
-        <div
-          class="styleframes-preview"
-          data-styleframes={JSON.stringify(styleframeSet)}
-        >
-          <img
-            id="current-styleframe"
-            src={styleframeSet[0]}
-            alt="Current styleframe"
-            class="preview-image"
-          />
-          <div class="styleframe-counter">
-            <div class="counter-number current">1</div>
-            <span class="counter-of">OF</span>
-            <div class="counter-number total">
-              {(projectData?.styleframes || []).length}
+  {projectData?.styleframes?.length > 0 && (
+    <section class="styleframes-section">
+      <div class="styleframes-container">
+        <div class="styleframes-content">
+          <!-- Large Preview with Counter -->
+          <div
+            class="styleframes-preview"
+            data-styleframes={JSON.stringify(styleframeSet)}
+          >
+            <img
+              id="current-styleframe"
+              src={styleframeSet[0] || ""}
+              alt="Current styleframe"
+              class="preview-image"
+              style={!styleframeSet[0] ? "display: none;" : ""}
+            />
+            <div class="styleframe-counter">
+              <div class="counter-number current">1</div>
+              <span class="counter-of">OF</span>
+              <div class="counter-number total">
+                {(projectData?.styleframes || []).length}
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- bottom rail: masked horizontal rail (placeholders for now) -->
-        <div class="carousel-container styleframes-carousel">
-          <!-- Fixed detection rectangle on far left -->
-          <div class="fixed-detection-rect" id="styleframe-detector"></div>
-          <div class="carousel-wrapper" id="hero-carousel" data-slider>
-            {
-              (projectData?.styleframes || []).map((item, index) => (
-                <div class="carousel-item">
-                  <div
-                    class="carousel-item-inner"
-                    data-image-url={styleframeSet[index]}
-                    data-image-index={index}
-                  >
-                    <CldImage
-                      class="carousel-image2"
-                      src={item.src}
-                      alt="Styleframe ${index}"
-                    />
+          <!-- bottom rail: masked horizontal rail (placeholders for now) -->
+          <div class="carousel-container styleframes-carousel">
+            <!-- Fixed detection rectangle on far left -->
+            <div class="fixed-detection-rect" id="styleframe-detector"></div>
+            <div class="carousel-wrapper" id="hero-carousel" data-slider>
+              {
+                (projectData?.styleframes || []).map((item, index) => (
+                  <div class="carousel-item">
+                    <div
+                      class="carousel-item-inner"
+                      data-image-url={styleframeSet[index]}
+                      data-image-index={index}
+                    >
+                      {item.src.startsWith("/") ? (
+                        <img
+                          class="carousel-image2"
+                          src={item.src}
+                          alt={`Styleframe ${index}`}
+                        />
+                      ) : (
+                        <CldImage
+                          class="carousel-image2"
+                          src={item.src}
+                          alt={`Styleframe ${index}`}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
-            }
+                ))
+              }
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Styleframes Breakdown Section -->
-    <div class="styleframes-breakdown">
-      <!-- Top: Flex with images (left) and text (right) -->
-      <div class="breakdown-top">
-        <div class="breakdown-images">
-          <img
-            src="/png/Faramove-APMF-Style-Frame_B&W.png"
-            alt="Faramove APMF Style Frame B&W"
-            class="breakdown-image"
-          />
-          <img
-            src="/GIF/Farmove-pointer-select.gif"
-            alt="Faramove pointer select animation"
-            class="breakdown-image"
-          />
-          <img
-            src="/png/Faramove-Truck-UI-Style-Frame.png"
-            alt="Faramove Truck UI Style Frame"
-            class="breakdown-image"
-          />
-        </div>
-        <div class="breakdown-text">
-          <h2 class="breakdown-title">{projectData?.["styleframes-breakdown"]?.["top-text"]?.title}</h2>
-          <div class="breakdown-content">
-            {
-              projectData?.["styleframes-breakdown"]?.["top-text"]?.content?.map((paragraph, index) => (
-                <p class="breakdown-paragraph">{paragraph}</p>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-      
-      <!-- Bottom: 2-column grid layout -->
-      <!-- Bottom: Flex Column Layout -->
-      <div class="breakdown-layout">
-        <!-- Row 1: Two images (Matched Height) -->
-        <div class="breakdown-row-top">
-          <div class="breakdown-item-large">
-            <img src="/png/Road_Ariel_STYL-F_Blue.png" alt="Faramove logo" class="breakdown-media" />
-          </div>
-          <div class="breakdown-item-tall">
-            <img src="/png/aerial-view-road-intersection-roundabout.png" alt="Aerial road view" class="breakdown-media breakdown-media-2" />
-          </div>
-        </div>
-        
-        <!-- Row 2: One full-width image -->
-        <div class="breakdown-item-full">
-          <!-- Placeholder for full-width media -->
-        </div>
-        
-        <!-- Row 3: Two equal side-by-side images -->
-        <div class="breakdown-row-bottom">
-          <div class="breakdown-item-half">
-            <img src="/png/Faramove-AAMF-SF-unused-2.png" alt="Faramove unused style frame 1" class="breakdown-media" />
-          </div>
-          <div class="breakdown-item-half">
-            <img src="/png/Faramove-pointer-SF-unused.png" alt="Faramove unused style frame 2" class="breakdown-media" />
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</Layout>
-
-<!-- CHALLENGE SECTION -->
-<section class="process-section motion-process-section">
-  <div class="process-container">
-    <!-- Header -->
-    <div class="process-header">
-      <h2 class="process-title">{projectData?.["motion-process-title"]}</h2>
-      <div class="process-description">
-        <p set:html={projectData?.["motion-process-par"] || "Add motion process description"} />
-      </div>
-    </div>
-
-    <!-- Decorative Lines with Image Containers -->
-    <div class="decorative-lines">
-      <svg
-        class="grid-lines-svg"
-        preserveAspectRatio="none"
-        viewBox="0 0 1512 400"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <!-- Lines will be generated by JavaScript -->
-      </svg>
-
-      <!-- Image Container Overlay -->
-      <div class="sketch-container-wrapper">
-        <div class="sketch-container-grid motion-variant">
-          <!-- Row 1: Process Image Containers -->
-          <div
-            class="sketch-container motion-side-1"
-            data-grid-column="1"
-            data-grid-row="1"
-          >
-             <img
-               src="/png/faramove-box-unwrapped.png"
-               alt="Faramove box unwrapped"
-                  class="sketch-image"
-                />
-          </div>
-
-          <div
-            class="sketch-container motion-side-2"
-            data-grid-column="1"
-            data-grid-row="2"
-          >
-             <img
-               src="/GIF/farmove-box-spin-loop.gif"
-               alt="Faramove box spin animation"
-                  class="sketch-image"
-                />
-          </div>
-
-          <div
-            class="sketch-container motion-main"
-            data-grid-column="2"
-            data-grid-row="1"
-          >
-             <img
-               src="/GIF/farmove-pointer-parcel-pickup-loop.gif"
-               alt="Faramove parcel pickup animation"
-                  class="sketch-image"
-                />
-          </div>
-
-          <!-- Row 2: Text Blocks - Equal Width -->
-          <div class="sketch-container text-block-1">
-                <div class="text-content">
-              <p
-                set:html={projectData?.["motion-text-block-1"] || "Add motion text 1"}
-              />
+      <!-- Styleframes Breakdown Section -->
+      {projectData?.["styleframes-breakdown"] && (
+        <div class="styleframes-breakdown">
+          <!-- Top: Flex with images (left) and text (right) -->
+          <div class="breakdown-top">
+            {projectData?.["styleframes-breakdown"]?.["top-images"] && (
+              <div class="breakdown-images">
+                {projectData["styleframes-breakdown"]["top-images"].map((img) => (
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    class="breakdown-image"
+                  />
+                ))}
+              </div>
+            )}
+            {projectData?.["styleframes-breakdown"]?.["top-text"] && (
+              <div class="breakdown-text">
+                <h2 class="breakdown-title">{projectData["styleframes-breakdown"]["top-text"].title}</h2>
+                <div class="breakdown-content">
+                  {
+                    projectData["styleframes-breakdown"]["top-text"].content.map((paragraph) => (
+                      <p class="breakdown-paragraph">{paragraph}</p>
+                    ))
+                  }
                 </div>
               </div>
-
-          <div class="sketch-container text-block-2">
-            <div class="text-content">
-              <p
-                set:html={projectData?.["motion-text-block-2"] || "Add motion text 2"}
-              />
-            </div>
+            )}
           </div>
-
-          <!-- Row 3: Full Width Text Block -->
-          <div class="sketch-container text-block-full">
-            <!-- Challenge Section -->
-            <div class="challenge-section">
-              <div class="challenge-badge">
-                <p class="challenge-label">challenge</p>
-                <p class="challenge-number">TWO</p>
+          
+          <!-- Bottom: Flex Column Layout -->
+          {projectData?.["styleframes-breakdown"]?.["layout-images"] && projectData["styleframes-breakdown"]["layout-images"].length >= 4 && (
+            <div class="breakdown-layout">
+              <!-- Row 1: Two images (Matched Height) -->
+              <div class="breakdown-row-top">
+                <div class="breakdown-item-large">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images"][0].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images"][0].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+                <div class="breakdown-item-tall">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images"][1].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images"][1].alt} 
+                    class="breakdown-media breakdown-media-2" 
+                  />
+                </div>
               </div>
-              <h2 class="challenge-title">the rigs.</h2>
+              
+              <!-- Row 2: One full-width image -->
+              <div class="breakdown-item-full">
+                <!-- Placeholder for full-width media -->
+              </div>
+              
+              <!-- Row 3: Two equal side-by-side images -->
+              <div class="breakdown-row-bottom">
+                <div class="breakdown-item-half">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images"][2].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images"][2].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+                <div class="breakdown-item-half">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images"][3].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images"][3].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+              </div>
             </div>
+          )}
+        </div>
+      )}
+    </section>
+  )}
+
+  <!-- CHALLENGE SECTION -->
+  {projectData?.["motion-process-title"] && (
+    <section class="process-section motion-process-section">
+      <div class="process-container">
+        <!-- Header -->
+        <div class="process-header">
+          <h2 class="process-title">{projectData?.["motion-process-title"]}</h2>
+          <div class="process-description">
+            <p set:html={projectData?.["motion-process-par"] || "Add motion process description"} />
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- Full-width GIF Banner -->
-    <div class="motion-divider-banner"></div>
-
-    <div class="decorative-lines">
-      <svg
-        class="grid-lines-svg"
-        preserveAspectRatio="none"
-        viewBox="0 0 1512 400"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <!-- Lines will be generated by JavaScript -->
-      </svg>
-
-      <!-- Image Container Overlay -->
-      <div class="sketch-container-wrapper">
-        <div class="sketch-container-grid motion-variant">
-          <!-- Row 1: Process Image Containers -->
-          <div
-            class="sketch-container motion-side-1"
-            data-grid-column="1"
-            data-grid-row="1"
+        <!-- Decorative Lines with Image Containers -->
+        <div class="decorative-lines">
+          <svg
+            class="grid-lines-svg"
+            preserveAspectRatio="none"
+            viewBox="0 0 1512 400"
+            xmlns="http://www.w3.org/2000/svg"
           >
-             <img
-               src="/png/Faramove-cc-bend-it-ss.png"
-               alt="Faramove CC Bend It effect"
-               class="sketch-image"
-             />
-  </div>
-
-          <div
-            class="sketch-container motion-side-2"
-            data-grid-column="1"
-            data-grid-row="2"
-          >
-             <img
-               src="/GIF/farmove-arrow-loop-wide.gif"
-               alt="Faramove arrow loop animation"
-               class="sketch-image"
-             />
-            </div>
-
-          <div
-            class="sketch-container motion-main"
-            data-grid-column="2"
-            data-grid-row="1"
-          >
-             <img
-               src="/GIF/farmove-pointer-ariel-loop.gif"
-               alt="Faramove pointer animation"
-               class="sketch-image"
-             />
-        </div>
-        
-          <!-- Row 2: Text Blocks - Equal Width -->
-          <div class="sketch-container text-block-1">
-            <div class="text-content">
-              <p
-                set:html={projectData?.["motion-text-block-3"] || "Add motion text 3"}
-              />
-            </div>
-        </div>
-
-          <div class="sketch-container text-block-2">
-            <div class="text-content">
-              <p
-                set:html={projectData?.["motion-text-block-4"] || "Add motion text 4"}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    </div>
-</section>
-
-<!-- SPEED LINES SECTION -->
-<section class="sound-design-section">
-  <div class="sound-design-container">
-    <!-- Top: Full Width Image -->
-    <div class="sound-design-top">
-      <img src="/png/Faramove-Music_PP-Audio-Stacks.png" alt="Faramove Audio Stacks" />
-          </div>
-    
-    <!-- Bottom: Split Layout -->
-    <div class="sound-design-bottom">
-      <!-- Left: Image + Caption -->
-      <div class="sound-bottom-left">
-        <div class="sound-channel-image">
-          <img src="/png/Faramove-Tom&Hat_PP-Audio-Channel.png" alt="Faramove Audio Channel" />
-        </div>
-        <p class="sound-caption">
-          {projectData?.["sound-design"]?.["audio-caption"] || "Tom_and_Snare_Fill-Mastered.wav"}
-        </p>
-        </div>
-      
-      <!-- Right: Text Content -->
-      <div class="sound-bottom-right">
-        <h2 class="sound-title">{projectData?.["sound-design"]?.title || "noises"}</h2>
-        <p class="sound-description">
-          {projectData?.["sound-design"]?.description || "When you decide to open a teaser with the brand logo sitting on screen for 5 seconds, you need something extra to keep viewers from hitting the skip button: sound. Staying true to my “DO NOTs” and avoiding any heavy UI cues, I pushed this idea through the audio. I chose a sound that felt deliberately unexpected—using a tom and snare to open an app video where clicks, bells, notifications, and swooshes are what you’d normally expect."}
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CREDITS SECTION -->
-<section class="credits-section">
-  <div class="credits-container">
-    <div class="credits-list">
-      {projectData?.credits?.map((credit) => (
-        <div class="credit-item">
-          <p class="credit-role">{credit.role}</p>
-          <p class="credit-name">{credit.name}</p>
-        </div>
-      ))}
-    </div>
-    
-    <div class="credits-header">
-      <h2 class="credits-title">credits</h2>
-      <p class="credits-subtitle">priviledged to work with some of the most talented people existing.</p>
-      
-      <div class="more-cc-link">
-        <a href="#" class="cc-link-text">more cc</a>
-        <div class="cc-arrow">
-          <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 5L11 5M11 5L7 1M11 5L7 9" stroke="#7d8484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Lines will be generated by JavaScript -->
           </svg>
+
+          <!-- Image Container Overlay -->
+          <div class="sketch-container-wrapper">
+            <div class="sketch-container-grid motion-variant">
+              <!-- Row 1: Process Image Containers -->
+              {projectData?.["motion-process-images-sets"]?.set1 && projectData["motion-process-images-sets"].set1.length >= 3 && (
+                <>
+                  <div
+                    class="sketch-container motion-side-1"
+                    data-grid-column="1"
+                    data-grid-row="1"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set1[0].src}
+                       alt={projectData["motion-process-images-sets"].set1[0].alt}
+                       class="sketch-image"
+                     />
+                  </div>
+
+                  <div
+                    class="sketch-container motion-side-2"
+                    data-grid-column="1"
+                    data-grid-row="2"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set1[1].src}
+                       alt={projectData["motion-process-images-sets"].set1[1].alt}
+                       class="sketch-image"
+                     />
+                  </div>
+
+                  <div
+                    class="sketch-container motion-main"
+                    data-grid-column="2"
+                    data-grid-row="1"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set1[2].src}
+                       alt={projectData["motion-process-images-sets"].set1[2].alt}
+                       class="sketch-image"
+                     />
+                  </div>
+                </>
+              )}
+
+              <!-- Row 2: Text Blocks - Equal Width -->
+              <div class="sketch-container text-block-1">
+                    <div class="text-content">
+                  <p
+                    set:html={projectData?.["motion-text-block-1"] || "Add motion text 1"}
+                  />
+                    </div>
+                  </div>
+
+              <div class="sketch-container text-block-2">
+                <div class="text-content">
+                  <p
+                    set:html={projectData?.["motion-text-block-2"] || "Add motion text 2"}
+                  />
+                </div>
+              </div>
+
+              <!-- Row 3: Full Width Text Block -->
+              <div class="sketch-container text-block-full">
+                <!-- Challenge Section -->
+                <div class="challenge-section">
+                  <div class="challenge-badge">
+                    <p class="challenge-label">challenge</p>
+                    <p class="challenge-number">TWO</p>
+                  </div>
+                  <h2 class="challenge-title">the rigs.</h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full-width GIF Banner -->
+        <div class="motion-divider-banner" data-banner-src={projectData?.["motion-process-images-sets"]?.banner}></div>
+
+        <div class="decorative-lines">
+          <svg
+            class="grid-lines-svg"
+            preserveAspectRatio="none"
+            viewBox="0 0 1512 400"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- Lines will be generated by JavaScript -->
+          </svg>
+
+          <!-- Image Container Overlay -->
+          <div class="sketch-container-wrapper">
+            <div class="sketch-container-grid motion-variant">
+              <!-- Row 1: Process Image Containers -->
+              {projectData?.["motion-process-images-sets"]?.set2 && projectData["motion-process-images-sets"].set2.length >= 3 && (
+                <>
+                  <div
+                    class="sketch-container motion-side-1"
+                    data-grid-column="1"
+                    data-grid-row="1"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set2[0].src}
+                       alt={projectData["motion-process-images-sets"].set2[0].alt}
+                       class="sketch-image"
+                     />
+                  </div>
+
+                  <div
+                    class="sketch-container motion-side-2"
+                    data-grid-column="1"
+                    data-grid-row="2"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set2[1].src}
+                       alt={projectData["motion-process-images-sets"].set2[1].alt}
+                       class="sketch-image"
+                     />
+                    </div>
+
+                  <div
+                    class="sketch-container motion-main"
+                    data-grid-column="2"
+                    data-grid-row="1"
+                  >
+                     <img
+                       src={projectData["motion-process-images-sets"].set2[2].src}
+                       alt={projectData["motion-process-images-sets"].set2[2].alt}
+                       class="sketch-image"
+                     />
+                  </div>
+                </>
+              )}
+            
+              <!-- Row 2: Text Blocks - Equal Width -->
+              <div class="sketch-container text-block-1">
+                <div class="text-content">
+                  <p
+                    set:html={projectData?.["motion-text-block-3"] || "Add motion text 3"}
+                  />
+                </div>
+            </div>
+
+              <div class="sketch-container text-block-2">
+                <div class="text-content">
+                  <p
+                    set:html={projectData?.["motion-text-block-4"] || "Add motion text 4"}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
+    </section>
+  )}
 
-<Footer />
+  <!-- SPEED LINES SECTION -->
+  {projectData?.["sound-design"] && (
+    <section class="sound-design-section">
+      <div class="sound-design-container">
+        <!-- Top: Full Width Image -->
+        {projectData["sound-design"]["main-image"] && (
+          <div class="sound-design-top">
+            <img src={projectData["sound-design"]["main-image"]} alt={projectData["sound-design"].title} />
+          </div>
+        )}
+        
+        <!-- Bottom: Split Layout -->
+        <div class="sound-design-bottom">
+          <!-- Left: Image + Caption -->
+          <div class="sound-bottom-left">
+            {projectData["sound-design"]["channel-image"] && (
+              <div class="sound-channel-image">
+                <img src={projectData["sound-design"]["channel-image"]} alt="Audio Channel" />
+              </div>
+            )}
+            <p class="sound-caption">
+              {projectData["sound-design"]["audio-caption"]}
+            </p>
+          </div>
+          
+          <!-- Right: Text Content -->
+          <div class="sound-bottom-right">
+            <h2 class="sound-title">{projectData["sound-design"].title}</h2>
+            <p class="sound-description">
+              {projectData["sound-design"].description}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CREDITS SECTION -->
+  {projectData?.credits && (
+    <section class="credits-section">
+      <div class="credits-container">
+        <div class="credits-list">
+          {projectData.credits.map((credit) => (
+            <div class="credit-item">
+              <p class="credit-role">{credit.role}</p>
+              <p class="credit-name">{credit.name}</p>
+            </div>
+          ))}
+        </div>
+        
+        <div class="credits-header">
+          <h2 class="credits-title">credits</h2>
+          <p class="credits-subtitle">priviledged to work with some of the most talented people existing.</p>
+          
+          <div class="more-cc-link">
+            <a href="#" class="cc-link-text">more cc</a>
+            <div class="cc-arrow">
+              <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L11 5M11 5L7 1M11 5L7 9" stroke="#7d8484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <Footer />
 
 <script>
   // @ts-check
@@ -752,6 +788,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
           duration: 0.8,
           ease: "power2.inOut",
           overwrite: true,
+          
         });
       },
       onEnterBack: () => {
@@ -1291,6 +1328,13 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
     const banner = document.querySelector(".motion-divider-banner") as HTMLElement;
     if (!banner) return;
 
+    const bannerSrc = banner.getAttribute('data-banner-src');
+    // If banner src not provided, hide or return
+    if (!bannerSrc) {
+        banner.style.display = 'none';
+        return;
+    }
+
     // Helper to populate banner
     const populateBanner = () => {
       // Clear existing content
@@ -1299,7 +1343,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
       // We need to know the aspect ratio of the image to calculate how many we need
       // Create a temporary image to load and check dimensions
       const tempImg = new Image();
-      tempImg.src = "/GIF/farmove-arrow-loop.gif";
+      tempImg.src = bannerSrc;
       
       tempImg.onload = () => {
         const imgWidth = tempImg.naturalWidth;
@@ -1340,7 +1384,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
           wrapper.style.overflow = "hidden"; // clip any overflow
           
           const img = document.createElement("img");
-          img.src = "/GIF/farmove-arrow-loop.gif";
+          img.src = bannerSrc;
           img.alt = "Motion divider";
           img.className = "motion-banner-item";
           

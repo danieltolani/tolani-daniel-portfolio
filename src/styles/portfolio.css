@@ -501,11 +501,12 @@ body {
   line-height: 1.114;
   margin: 0 0 0 15%;
   text-transform: uppercase;
-  max-width: 65%;
+  max-width: 66%;
 }
 
 .process-description {
   grid-column: 2;
+  align-self: end;
 }
 
 .process-description p {
@@ -567,6 +568,110 @@ body {
   padding: clamp(2rem, 5vw, 4rem) 0;
 
   /* background-color: #ACAAA3; */
+}
+
+/* Dynamic Design Sketch Grid (Row 1 replacement) */
+.design-sketch-grid {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  /* Default to 2 columns for Layout 3 */
+  grid-template-columns: 2.5fr 1fr;
+  width: 100%;
+  grid-auto-flow: dense;
+  
+  /* "Border" effect via padding/gap and background */
+  background-color: #222325;
+  padding: 20px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+.dynamic-sketch-item {
+  width: 100%;
+  background-color: #222325;
+  /* Border removed to let container background form the "border" */
+  border: none; 
+  overflow: hidden;
+  position: relative;
+}
+
+.dynamic-sketch-item .sketch-image,
+.dynamic-sketch-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+object-position: top left;
+  display: block;
+}
+
+/* === Layout Rules === */
+
+/* Item 1: Always Wide (Left) - Spans 2 rows to match the stack on right */
+.design-sketch-grid .dynamic-sketch-item:nth-child(1) {
+  grid-column: 1;
+  grid-row: span 2;
+  height: 100%;
+  /* aspect-ratio handled by grid cell dimensions */
+}
+
+/* Layout 3: [ Wide (3fr) ] [ Sq (1fr) ]
+                            [ Sq (1fr) ] */
+.layout-3 {
+  grid-template-columns: 2.5fr 1fr;
+}
+
+.layout-3 .dynamic-sketch-item:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+  aspect-ratio: 1 / 1;
+}
+
+.layout-3 .dynamic-sketch-item:nth-child(3) {
+  grid-column: 2;
+  grid-row: 2;
+  aspect-ratio: 1 / 1;
+}
+
+
+/* Layout 4: [ Wide (3fr) ] [ Tall (1fr) ] [ Sq (1fr) ]
+                                           [ Sq (1fr) ] */
+.layout-4 {
+  grid-template-columns: 3fr 1fr 1fr;
+}
+
+.layout-4 .dynamic-sketch-item:nth-child(2) {
+  grid-column: 2;
+  grid-row: span 2; /* Tall item spanning full height */
+  /* No fixed aspect ratio, adapts to height of neighbors */
+}
+
+.layout-4 .dynamic-sketch-item:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+  aspect-ratio: 1 / 1;
+}
+
+.layout-4 .dynamic-sketch-item:nth-child(4) {
+  grid-column: 3;
+  grid-row: 2;
+  aspect-ratio: 1 / 1;
+}
+
+/* Mobile Overrides */
+@media (max-width: 768px) {
+  .design-sketch-grid,
+  .layout-3,
+  .layout-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .design-sketch-grid .dynamic-sketch-item:nth-child(n) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+  }
 }
 
 /* Motion Variant Grid Layout */
@@ -797,6 +902,37 @@ body {
   .process-description {
     grid-column: 1;
   }
+
+  /* Stack grid on mobile */
+  .sketch-container-grid,
+  .sketch-container-grid.motion-variant {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    padding: 2rem 0; /* Reduced padding */
+  }
+
+  /* Reset grid placement for all children to stack vertically */
+  .text-block-1,
+  .text-block-2,
+  .text-block-full,
+  .sketch-container-grid.motion-variant .text-block-1,
+  .sketch-container-grid.motion-variant .text-block-2,
+  .sketch-container-grid.motion-variant .text-block-full,
+  .sketch-container.motion-side-1,
+  .sketch-container.motion-side-2,
+  .sketch-container.motion-main {
+    grid-column: 1 / -1 !important;
+    grid-row: auto !important;
+    width: 100%;
+  }
+
+  /* Reset aspect ratios for motion images */
+  .sketch-container.motion-side-1,
+  .sketch-container.motion-side-2,
+  .sketch-container.motion-main {
+    aspect-ratio: 16/9;
+    min-height: 250px;
+  }
 }
 
 /* ==================== STYLEFRAMES DETAIL SECTION ==================== */
@@ -918,7 +1054,7 @@ body {
 
   .breakdown-title {
     font-family: "Suisse Int'l", sans-serif;
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-size: clamp(2.5rem, 1vw, 3.5rem);
     font-weight: bold;
     text-transform: uppercase;
     color: #F72F2F;
@@ -1322,4 +1458,182 @@ body {
   transform: rotate(90deg);
   /* Ensure image fits within the container height after rotation */
   object-fit: contain;
+}
+
+/* ==================== PROJECTS OVERVIEW PAGE ==================== */
+.projects-overview-section {
+  padding-top: 12rem;
+  padding-bottom: 5rem;
+  background-color: #e5e3dc;
+  min-height: 100vh;
+}
+
+.projects-overview-container {
+  width: 85%;
+  max-width: 1512px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 4fr 6fr;
+  gap: clamp(2rem, 5vw, 6rem);
+}
+
+/* Left Column: List */
+.projects-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-list-item {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
+  border-top: 1px solid #acaaa3;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.project-list-item:last-child {
+  border-bottom: 1px solid #acaaa3;
+}
+
+.project-list-item.active .project-name {
+  color: #F72F2F;
+}
+
+.project-item-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.project-number {
+  font-family: "Neue Pixel Round", monospace;
+  font-size: 14px;
+  color: #7d8484;
+}
+
+.project-name {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: clamp(2rem, 3vw, 3.5rem);
+  font-weight: bold;
+  color: #141417;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.project-name .special-o {
+  font-family: "Neue Pixel Round", monospace;
+}
+
+.project-link-btn {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 14px;
+  color: #7d8484;
+  text-transform: uppercase;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.project-list-item:hover .project-link-btn,
+.project-list-item.active .project-link-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Right Column: Sticky Preview */
+.project-preview-column {
+  position: relative;
+}
+
+.project-preview-sticky {
+  position: sticky;
+  top: 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.preview-media-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #222325;
+  overflow: hidden;
+  /* border-radius: 4px; */
+}
+
+.preview-media-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.preview-description {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #141417;
+  max-width: 90%;
+}
+
+.preview-metadata {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #acaaa3;
+}
+
+.meta-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7d8484;
+  text-transform: uppercase;
+}
+
+.meta-value {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 14px;
+  color: #141417;
+}
+
+@media (max-width: 900px) {
+  .projects-overview-container {
+    grid-template-columns: 1fr;
+  }
+
+  .project-preview-column {
+    display: none;
+  }
+  
+  .project-link-btn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .projects-list {
+    padding-bottom: 4rem;
+  }
 }

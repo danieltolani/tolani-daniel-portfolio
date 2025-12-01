@@ -1,71 +1,121 @@
 {
     "project": "eigenda",
     "title": "Eig<span class='special-o'>e</span>nD<span class='special-o'>A</span>",
-    "description1": "Redefining data availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
+    "description1": "Redefining Data Availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
+    "videoId": "",
+    "videoTitle": "",
+    "metadata": {
+        "year": "2025",
+        "role": "Creative Director & Motion Designer",
+        "tools": "Figma, Adobe AE, PR & Illustrator",
+        "type": "Explainer Video"
+    },
     "styleframes": [
-        {
-            "src": "EDA-DA-SF-0",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-1",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-2",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-3",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-4",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-5",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-6",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-7",
-            "alt": "Hello 1"
-        },
-        {
-            "src": "EDA-DA-SF-8",
-            "alt": "Hello 1"
-        }
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-0.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-1.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-2.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-3.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-4.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-5.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-6.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-7.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-8.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-9.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-10.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-11.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-12.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-13.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-14.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-15.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-16.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-17.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-18.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-19.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-20.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-21.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-22.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-23.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-24.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-25.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-26.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-27.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-28.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-29.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-30.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-31.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-32.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-33.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-34.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-35.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-36.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-37.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-38.png", "alt": "Eigenda styleframe" },
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-39.png", "alt": "Eigenda styleframe" }
     ],
     "styleframes-title": "Design.",
+    "styleframes-breakdown": {
+        "top-images": [
+            { "src": "/png/EDA/EDA-modular-grid.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/GIF/EDA/modular-grid-face.gif", "alt": "Faramove pointer select animation" },
+            { "src": "/png/EDA/EDA-tetris-drop.png", "alt": "Faramove Truck UI Style Frame" }
+        ],
+        "top-text": {
+            "title": "What does it look like to focus on one thing completely?",
+            "content": [
+                "The other side of the coin of monomania is minimalism. When there’s only one thing to do, you don’t need all the extra frills.",
+                "If EDA was to dress for multiple events, they’d be known for the same style and color of shoes, ties, hats, etc. So boring, it’s interesting and intriguing. This would lead to having almost zero background-color shifts and centering of elements in the design, using blocks to have some sort of modular grid mosaic effect.",
+                "Monomania and obsession have a dark side. They can be strange, intense, Even off-putting so we made sure to feauture relatable concepts too, for example, ‘to solve’ we used a simpler two color version of a rubik’s cube to explain that phrase."
+            ]
+        },
+        "layout-images": [
+            { "src": "/png/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
+            { "src": "/png/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
+            { "src": "/png/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
+        ]
+    },
+    "design-process-title": "monomania & minimalism",
+    "design-process-par": "At its simplest, data availability (“DA”) is short-term storage for blockchains. You don’t get it right? I also didn’t!",
+    "design-process-images": [
+        { "src": "/png/EDA/EDA-storyboard-sketch-final.png", "alt": "Storyboard sketch final" },
+        { "src": "/png/EDA/EDA-moodboard-final.png", "alt": "Moodboard final" },
+        { "src": "/png/EDA/EDA-freewriting.png", "alt": "Freewriting sketch" },
+        { "src": "/png/EDA/EDA-3D-brand-asset.png", "alt": "3D brand asset" }
+    ],
+    "preview-media": {
+        "src": "/png/STY-EDA-DA/EDA-DA-SF-0.png",
+        "alt": "Eigenda Preview",
+        "type": "image"
+    },
+    "design-text-block-1": "When you are to make en explainer video, and getting hit with concepts like “modularity,” “cross-chain composability,” “economic security,” “unification layer,” and other offerings beyond pure data availability, you’re best going to need a lot of research, free writing, do it for yourself first",
+    "design-text-block-2": "After several rereads of the brief, I cleared my whiteboard and began sketching ideas for each line of the script. The aim was to explain DA so clearly that even the Eigen DA team might rethink how they understood and communicated their own product.",
+    "design-challenge-title": "what is DA?",
     "motion-process-title": "Motion Process",
     "motion-process-par": "Add description about the motion process.",
     "motion-process-images": [
-        {
-            "src": "EDA-MOTION-PROCESS-01",
-            "alt": "Process 1"
-        },
-        {
-            "src": "EDA-MOTION-PROCESS-02",
-            "alt": "Process 2"
-        },
-        {
-            "src": "EDA-MOTION-PROCESS-03",
-            "alt": "Process 3"
-        }
+        { "src": "EDA-MOTION-PROCESS-01", "alt": "Process 1" },
+        { "src": "EDA-MOTION-PROCESS-02", "alt": "Process 2" },
+        { "src": "EDA-MOTION-PROCESS-03", "alt": "Process 3" }
     ],
+    "motion-process-images-sets": {
+        "set1": [],
+        "banner": "",
+        "set2": []
+    },
     "motion-process-text-blocks": [
-        {
-            "paragraph": "PROBLEM"
-        },
-        {
-            "paragraph": "SOLUTION"
-        }
+        { "paragraph": "PROBLEM" },
+        { "paragraph": "SOLUTION" }
     ],
     "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
-    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space."
+    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space.",
+    "motion-text-block-3": "Content coming soon.",
+    "motion-text-block-4": "Content coming soon.",
+    "sound-design": {
+        "title": "",
+        "description": "",
+        "audio-caption": "",
+        "channel-image": "",
+        "main-image": ""
+    },
+    "credits": []
 }
-

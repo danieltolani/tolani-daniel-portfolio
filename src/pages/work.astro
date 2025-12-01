@@ -1,6 +1,129 @@
 ---
-import ComingSoonPage from '../components/ComingSoonPage.astro';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import data from "../data/projects/index";
+import "../styles/portfolio.css";
+
+// Sort projects if needed, or use as-is
+const projects = data;
+
+// Helper to get preview source
+const getPreviewSrc = (project: any) => {
+  return project["preview-media"]?.src || "";
+};
 ---
 
-<ComingSoonPage title="Work" />
+<Layout title="Work | Portfolio">
+  <div class="page-container">
+    <Header />
 
+    <main class="projects-overview-section">
+      <div class="projects-overview-container">
+        <!-- Left: Project List -->
+        <div class="projects-list">
+          {projects.map((project, index) => (
+            <div 
+              class={`project-list-item ${index === 0 ? "active" : ""}`}
+              data-project={JSON.stringify(project)}
+              data-index={index}
+            >
+              <div class="project-item-header">
+                <span class="project-number">{(index + 1).toString().padStart(2, '0')}</span>
+                <h2 class="project-name" set:html={project.title}></h2>
+              </div>
+              <a href={`/projects/${project.project}`} class="project-link-btn">
+                view case study
+                <span class="arrow-icon">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 11L11 1M11 1H3M11 1V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+          ))}
+        </div>
+
+        <!-- Right: Preview (Sticky) -->
+        <div class="project-preview-column">
+          <div class="project-preview-sticky">
+            <div class="preview-media-wrapper">
+               <img 
+                id="preview-image" 
+                src={projects[0]?.["preview-media"]?.src || ""} 
+                alt="Project Preview" 
+                class="preview-media-element" 
+              />
+            </div>
+            
+            <div class="preview-info">
+              <h3 id="preview-title" class="preview-title" set:html={projects[0]?.title || ""}></h3>
+              <p id="preview-description" class="preview-description">
+                {projects[0]?.description1}
+              </p>
+              
+              <div class="preview-metadata">
+                <div class="meta-pair">
+                  <span class="meta-label">YEAR</span>
+                  <span id="preview-year" class="meta-value">{projects[0]?.metadata?.year}</span>
+                </div>
+                <div class="meta-pair">
+                  <span class="meta-label">ROLE</span>
+                  <span id="preview-role" class="meta-value">{projects[0]?.metadata?.role}</span>
+                </div>
+                <div class="meta-pair">
+                  <span class="meta-label">TOOLS</span>
+                  <span id="preview-tools" class="meta-value">{projects[0]?.metadata?.tools}</span>
+                </div>
+                <div class="meta-pair">
+                  <span class="meta-label">TYPE</span>
+                  <span id="preview-type" class="meta-value">{projects[0]?.metadata?.type}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <Footer />
+  </div>
+</Layout>
+
+<script>
+  const listItems = document.querySelectorAll('.project-list-item');
+  const previewImage = document.getElementById('preview-image') as HTMLImageElement;
+  const previewTitle = document.getElementById('preview-title');
+  const previewDescription = document.getElementById('preview-description');
+  const previewYear = document.getElementById('preview-year');
+  const previewRole = document.getElementById('preview-role');
+  const previewTools = document.getElementById('preview-tools');
+  const previewType = document.getElementById('preview-type');
+
+  listItems.forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      // Remove active class from all
+      listItems.forEach(li => li.classList.remove('active'));
+      // Add to current
+      item.classList.add('active');
+
+      // Update preview
+      const projectData = JSON.parse(item.getAttribute('data-project') || '{}');
+      
+      if (previewImage) {
+        const src = projectData["preview-media"]?.src || "";
+        // Handle cloud vs local logic if needed, assuming src is usable url
+        previewImage.src = src;
+        // Simple fade effect could be added here
+      }
+
+      if (previewTitle) previewTitle.innerHTML = projectData.title || "";
+      if (previewDescription) previewDescription.textContent = projectData.description1 || "";
+      
+      if (previewYear) previewYear.textContent = projectData.metadata?.year || "";
+      if (previewRole) previewRole.textContent = projectData.metadata?.role || "";
+      if (previewTools) previewTools.textContent = projectData.metadata?.tools || "";
+      if (previewType) previewType.textContent = projectData.metadata?.type || "";
+    });
+  });
+</script>
