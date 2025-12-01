@@ -1,0 +1,270 @@
+{
+    "project": "faramove",
+    "title": "FARAM<span class='special-o'>O</span>VE",
+    "description1": "When home delivery became a necessity after COVID-19, Faramove wanted to reassure customers that a smarter solution was coming. I crafted a teaser video that introduced the mobile app and built anticipation for its launch.",
+    "styleframes": [
+        {
+            "src": "FRMV-TSR-SF-0",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-1",
+            "alt": "Faramove 1"
+        },               
+        {
+            "src": "FRMV-TSR-SF-2",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-3",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-4",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-5",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-6",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-7",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-8",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-9",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-10",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-11",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-12",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-13",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-14",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-15",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-16",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-17",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-18",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-19",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-20",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-21",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SF-22",
+            "alt": "Faramove 1"
+        }
+    ],
+    
+    "design-process-title": "THE three points brief.",
+    "design-process-par": "You’re working in-house as a motion designer, and now you have to fill out the same long questionnaire you usually send to clients to help them write their brief.",
+    "design-process-images": [
+        {
+            "src": "FRMV-TSR-SKETCH-01",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SKETCH-01",
+            "alt": "Faramove 1"
+        },
+        {
+            "src": "FRMV-TSR-SKETCH-01",
+            "alt": "Faramove 1"
+        }
+    ],
+    "design-text-block-1": "What we needed to highlight were the three features that set Faramove apart. While this would normally feel like an incomplete - or even nonexistent—brief, it turned out to be an exciting moment: I realized I had full creative control.",
+    "design-text-block-2": "Starting with free-writing everything that came to mind about logistics and moving straight into sketching, the goal was to avoid leaning on “it’s a mobile app” or listing features. Instead, the aim was to grab attention and spark curiosity—because that’s exactly what a teaser is meant to do.",
+    "design-challenge-title": "mapping the process.",
+    "styleframes-title": "Styleframes design",
+    "styleframes-breakdown": {
+        "top-images": [
+            {
+                "src": "FRMV-BREAKDOWN-IMG-01",
+                "alt": "Faramove app interface 1"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-IMG-02",
+                "alt": "Faramove app interface 2"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-IMG-03",
+                "alt": "Faramove app interface 3"
+            }
+        ],
+        "top-text": {
+            "title": "creating walls to crack",
+            "content": [
+                "The goal was to move away from showing too many UI elements, especially since new apps were popping up everywhere post-covid. But somehow - my early frames still included UI components and copy that referenced \"the app.\" This pushed me to create a strict 'DO NOT' list (a technique I learnt from reading 'DESIGN FOR MOTION' by Austin Shaw.",
+                "One key rule was that no actual design components from the real product would appear in the teaser. I stuck to this fully, using only simple, recognizable elements like radio buttons, which could just as easily be interpreted as basic drawn shapes rather than app interface pieces.",
+                "Shortly before this teaser project, I had created a simple Lottie loader animation featuring the logo. It was visually catchy, so opening the video with it felt natural. When I compared it with my free-writing notes—movement, pickup, speed, dropping, location, and more—it aligned perfectly with the themes I wanted to express."
+            ]
+        },
+        "grid-media": [
+            {
+                "src": "FRMV-BREAKDOWN-GRID-01",
+                "alt": "Breakdown frame 1",
+                "type": "image"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-GRID-02",
+                "alt": "Breakdown frame 2",
+                "type": "image"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-GRID-03",
+                "alt": "Breakdown frame 3",
+                "type": "image"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-GRID-04",
+                "alt": "Breakdown frame 4",
+                "type": "image"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-GRID-05",
+                "alt": "Breakdown frame 5",
+                "type": "image"
+            },
+            {
+                "src": "FRMV-BREAKDOWN-GRID-06",
+                "alt": "Breakdown frame 6",
+                "type": "image"
+            }
+        ]
+    },
+    "motion-process-title": "Making it look 3d.",
+    "motion-process-par": "The intention for this scene was deeper: to communicate that Faramove never leaves an item undelivered. Using the four pointers from the logo, the idea was illustrated through three boxes being in frame. The first three were picked up immediately, and by the time the fourth pointer arrived, there was nothing left to carry - everything had already been delivered.",
+    "motion-process-images": [
+        {
+            "src": "FRMV-MOTION-PROCESS-01",
+            "alt": "Aftereffects process 1"
+        },
+        {
+            "src": "FRMV-MOTION-PROCESS-02",
+            "alt": "Aftereffects process 2"
+        },
+        {
+            "src": "FRMV-MOTION-PROCESS-03",
+            "alt": "Aftereffects process 3"
+        }
+    ],
+    "motion-process-text-blocks": [
+        {
+            "paragraph": "PROBLEM"
+        },
+        {
+            "paragraph": "SOLUTION"
+        }
+    ],
+    "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
+    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space.",
+    "motion-text-block-3": "For the three strokes that follow each pointer on the logo, I wanted to avoid using motion blur. Staying consistent with the flat faux-3D style, motion blur felt out of place. Instead, I leaned into using dashed strokes as speed trails which sold the fast, snappy movement feel.",
+    "motion-text-block-4": "The starting point was a simple rectangle shape with a stroke (no fill). Dashes and gaps were added to give it that broken-line motion. To make it loop cleanly so it could be duplicated easily, a TrimPaths animation was applied to create a continuous cycling movement by animating the offset property.<br>After that, the extra parts (top, right and bottom) that formed the full rectangle were masked out, leaving a straight dashed line that loops smoothly.<br>For the ones pointers that had to go round the curve, I simply added a cc Bend it effect for when they approach the curves.",
+    "credits-gifs": [
+        {
+            "src": "FRMV-CREDIT-GIF-01",
+            "alt": "Credit animation 1"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-02",
+            "alt": "Credit animation 2"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-03",
+            "alt": "Credit animation 3"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-04",
+            "alt": "Credit animation 4"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-05",
+            "alt": "Credit animation 5"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-06",
+            "alt": "Credit animation 6"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-07",
+            "alt": "Credit animation 7"
+        },
+        {
+            "src": "FRMV-CREDIT-GIF-08",
+            "alt": "Credit animation 8"
+        }
+    ],
+    "sound-design": {
+        "title": "noises",
+        "description": "When you decide to open a teaser with the brand logo sitting on screen for 5 seconds, you need something extra to keep viewers from hitting the skip button: sound. Staying true to my “DO NOTs” and avoiding any heavy UI cues, I pushed this idea through the audio. I chose a sound that felt deliberately unexpected—using a tom and snare to open an app video where clicks, bells, notifications, and swooshes are what you’d normally expect.",
+        "audio-caption": "Tom_and_Snare_Fill-Mastered.wav"
+    },
+    "credits": [
+        {
+            "role": "client",
+            "name": "faramove"
+        },
+        {
+            "role": "sound design",
+            "name": "daniel tolani"
+        },
+        {
+            "role": "motion design",
+            "name": "daniel tolani"
+        },
+        {
+            "role": "script",
+            "name": "faith adeoye"
+        },
+        {
+            "role": "director",
+            "name": "iyanu odenewu"
+        },
+        {
+            "role": "creative direction",
+            "name": "daniel tolani"
+        }
+    ]
+}
+

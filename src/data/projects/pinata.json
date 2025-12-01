@@ -1,0 +1,39 @@
+{
+    "project": "pinata",
+    "title": "PI<span class='special-o'>N</span>ATA",
+    "description1": "Redefining data availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
+    "styleframes": [
+        {
+            "src": "EDA-DA-SF-0",
+            "alt": "Hello 1"
+        }
+    ],
+    "styleframes-title": "Design.",
+    "motion-process-title": "Motion Process",
+    "motion-process-par": "Add description about the motion process.",
+    "motion-process-images": [
+        {
+            "src": "PIN-MOTION-PROCESS-01",
+            "alt": "Process 1"
+        },
+        {
+            "src": "PIN-MOTION-PROCESS-02",
+            "alt": "Process 2"
+        },
+        {
+            "src": "PIN-MOTION-PROCESS-03",
+            "alt": "Process 3"
+        }
+    ],
+    "motion-process-text-blocks": [
+        {
+            "paragraph": "PROBLEM"
+        },
+        {
+            "paragraph": "SOLUTION"
+        }
+    ],
+    "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
+    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space."
+}
+

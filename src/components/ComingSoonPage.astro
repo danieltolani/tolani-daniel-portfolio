@@ -1,0 +1,66 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import '../styles/hero.css'; // Reuse hero variables
+import '../styles/header.css';
+import '../styles/footer.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Layout>
+  <Header />
+  
+  <main class="coming-soon-page">
+    <div class="coming-soon-content">
+      <h1 class="coming-soon-text">
+        <span class="red-text">COMING</span> SOON
+      </h1>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .coming-soon-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #141417;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  .coming-soon-content {
+    text-align: center;
+  }
+
+  .coming-soon-text {
+    font-family: "Suisse Int'l", sans-serif;
+    font-size: 4rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.1;
+    color: white;
+  }
+
+  .red-text {
+    color: #F72F2F;
+  }
+
+  @media (max-width: 900px) {
+    .coming-soon-text {
+      font-size: 2.5rem;
+    }
+  }
+</style>
+
