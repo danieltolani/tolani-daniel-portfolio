@@ -1,16 +1,34 @@
 {
     "project": "eigendaxmantle",
-    "title": "EIGENDAxmantle",
-    "description1": "Description coming soon.",
+    "title": "Eig<span class='special-o'>e</span>nD<span class='special-o'>A</span> <span class='special-o'>x</span> M<span class='special-o'>A</span>NT</span>LE</span>",
+    "description1": "A Tetris-inspired motion teaser marked Mantle’s integration with EigenDA, illustrating the partnership’s scale and how it strengthens modular blockchain infrastructure through speed, security, and synergy.",
     "videoId": "",
     "videoTitle": "",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2025",
+        "role": "Sound & Motion Designer",
+        "tools": "Figma. Adobe AE, & Suite",
+        "type": "Partnership Teaser"
     },
-    "styleframes": [],
+    "styleframes": [
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-0.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-1.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-2.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-3.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-4.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-5.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-6.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-7.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-8.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-9.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-10.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-11.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-12.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-13.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-14.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-15.png", "alt": "EigenDA x Mantle styleframe" },
+        { "src": "/png/EDA-MANTLE/STY-EDA-x-MANTLE/EDA-MNTL-SF-16.png", "alt": "EigenDA x Mantle styleframe" }
+    ],
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
         "top-images": [],

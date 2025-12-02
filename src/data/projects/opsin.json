@@ -1,16 +1,44 @@
 {
     "project": "opsin",
-    "title": "OPSIN",
-    "description1": "Description coming soon.",
+    "title": "OP<span class='special-o'>S</span>IN",
+    "description1": "To introduce a next-generation crypto terminal - I crafted a teaser video that sparked excitement around its launch, blending energy for the crypto-native crowd with clarity for everyone else.",
     "videoId": "",
     "videoTitle": "",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2025",
+        "role": "Concept, Sound & Motion Designer",
+        "tools": "Figma, Adobe AE, PR & Illustrator",
+        "type": "Launch Teaser"
     },
-    "styleframes": [],
+    "styleframes": [
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-0.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-1.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-2.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-3.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-4.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-5.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-6.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-7.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-8.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-9.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-10.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-11.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-12.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-13.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-14.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-15.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-16.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-17.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-18.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-19.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-20.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-21.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-22.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-23.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-24.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-25.png", "alt": "Opsin styleframe" },
+        { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-26.png", "alt": "Opsin styleframe" }
+    ],
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
         "top-images": [],
@@ -20,14 +48,40 @@
         },
         "layout-images": []
     },
-    "design-process-title": "Design Process Title",
-    "design-process-par": "Design process description coming soon.",
-    "design-process-images": [],
-    "design-text-block-1": "Content coming soon.",
-    "design-text-block-2": "Content coming soon.",
-    "design-challenge-title": "Challenge Title",
-    "motion-process-title": "Motion Process Title",
-    "motion-process-par": "Motion process description coming soon.",
+    "design-process-title": "Phases & due dates.",
+    "design-process-par": "It was 6 weeks to the launch and the client had asked that I split the project in two phases. They had worked with a motion designer for another project and didn’t like how it turned out. Time wasn’t on our side.",
+    "design-process-images": [
+        { "src": "/png/OPSIN/OPS-moodboard-1.png", "alt": "Storyboard sketch final" },
+        { "src": "/png/OPSIN/OPS-moodboard-2.png", "alt": "Moodboard final" },
+        { "src": "/png/OPSIN/OPS-moodboard-3.png", "alt": "Freewriting sketch" },
+        { "src": "/png/OPSIN/OPS-moodboard-4.png", "alt": "3D brand asset" }
+    ],
+    "styleframes-breakdown": {
+        "top-images": [
+            { "src": "/png/OPSIN/TF-more-windows-II.png", "alt": "Faramove pointer select animation" },
+            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/png/OPSIN/TF-more-windows.png", "alt": "Faramove Truck UI Style Frame" }
+        ],
+        "top-text": {
+            "title": "Mood & Creative Direction",
+            "content": [
+                "With no voiceover guiding the story, typography became the foundation of the entire visual experience. Every message needed to feel bold, clear and quickly digestible, so the design direction leaned heavily on type as the main storytelling device. The layouts were built to highlight short, impactful lines, ensuring each felt deliberate without overwhelming the viewer.",
+                "Since speed and momentum were core themes from the brief, the text needed to move fast while remaining legible. This led to a design approach that kept type large, clean and high-contrast. Long sentences were avoided, and each visual block was structured to give the eye enough breathing room to follow the narrative without pausing the video.",
+                "Although the visuals had to feel dynamic, full 3D text wasn’t the right fit for the brand. Instead, the solution was to introduce subtle depth through layered blocks, shadow separation and light parallax. This approach created a sense of dimensionality while maintaining the brand’s flatter, refined visual identity. It kept the compositions sharp and modern without drifting into a different aesthetic language."
+            ]
+        },
+        "layout-images": [
+            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
+            { "src": "/png/OPSIN/Book-Flip-Ref.png", "alt": "Aerial road view" },
+            { "src": "/png/OPSIN/TF-logo-extrude.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/OPSIN/Book-Flip-Ref-II.png", "alt": "Faramove unused style frame 2" }
+        ]
+    },
+    "design-text-block-1": "As the launch date got closer, not skipping the usual sketching and writing process would have only slowed things down. With a brand that already had a strong visual identity, the best way to begin was through focused research, gathering references and designing a few test frames to set the direction quickly.",
+    "design-text-block-2": "The research centered on bold, readable typography to drive the narrative, supported by clean UI elements and subtle depth without relying on full 3D. Research and early test frames ensured the visuals stayed energetic, clear and aligned with the brand’s established identity.",
+    "design-challenge-title": "Concept Foundations",
+    "motion-process-title": "Fast but Readable Rhythm",
+    "motion-process-par": "Speed was a core theme from the brief, so the motion direction focused on quick, energetic transitions. Even with the fast pacing, timing was carefully balanced so each text beat remained fully readable without feeling rushed.",
     "motion-process-images-sets": {
         "set1": [],
         "banner": "",
@@ -38,11 +92,11 @@
         { "paragraph": "SOLUTION" }
     ],
     "motion-text-block-1": "Content coming soon.",
-    "motion-text-block-2": "Content coming soon.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
+    "motion-text-block-2": "With typography carrying the narrative, the motion amplified the message through pacing, spacing and directional flow. Each movement was designed to emphasize meaning — accelerating on key moments, slowing briefly for impact, and transitioning fluidly into the next idea",
+    "motion-text-block-3": "The focus on fast, readable text-based motion, smooth transitions, and minimal UI animation prioritizes clarity and pacing over intricate visual storytelling. As a result, highly detailed or visually complex sequences may feel constrained or underrepresented, since the motion language is deliberately restrained to maintain legibility and coherence.",
+    "motion-text-block-4": "UI moments were animated with precision and restraint. The goal was clarity: each interaction had to be instantly understandable. Movements were smooth and minimal, ensuring the UI supported the message rather than overshadowing it.",
     "sound-design": {
-        "title": "",
+        "title": "Sound as Rhythm, Motion as Structure",
         "description": "",
         "audio-caption": "",
         "channel-image": "",

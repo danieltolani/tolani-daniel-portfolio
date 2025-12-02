@@ -440,47 +440,27 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
 
           <!-- Image Container Overlay -->
           <div class="sketch-container-wrapper">
-            <div class="sketch-container-grid motion-variant">
-              <!-- Row 1: Process Image Containers -->
-              {projectData?.["motion-process-images-sets"]?.set1 && projectData["motion-process-images-sets"].set1.length >= 3 && (
-                <>
-                  <div
-                    class="sketch-container motion-side-1"
-                    data-grid-column="1"
-                    data-grid-row="1"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set1[0].src}
-                       alt={projectData["motion-process-images-sets"].set1[0].alt}
-                       class="sketch-image"
-                     />
+            <div class="sketch-container-grid">
+              <!-- Row 1: Dynamic Design Process Grid -->
+              <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set1 || []).length}`}>
+                {(projectData?.["motion-process-images-sets"]?.set1 || []).map((img) => (
+                  <div class="sketch-container dynamic-sketch-item">
+                    {img.src.startsWith("/") ? (
+                      <img
+                        src={img.src}
+                        alt={img.alt || "Motion process sketch"}
+                        class="sketch-image"
+                      />
+                    ) : (
+                      <CldImage
+                        src={img.src}
+                        alt={img.alt || "Motion process sketch"}
+                        class="sketch-image"
+                      />
+                    )}
                   </div>
-
-                  <div
-                    class="sketch-container motion-side-2"
-                    data-grid-column="1"
-                    data-grid-row="2"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set1[1].src}
-                       alt={projectData["motion-process-images-sets"].set1[1].alt}
-                       class="sketch-image"
-                     />
-                  </div>
-
-                  <div
-                    class="sketch-container motion-main"
-                    data-grid-column="2"
-                    data-grid-row="1"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set1[2].src}
-                       alt={projectData["motion-process-images-sets"].set1[2].alt}
-                       class="sketch-image"
-                     />
-                  </div>
-                </>
-              )}
+                ))}
+              </div>
 
               <!-- Row 2: Text Blocks - Equal Width -->
               <div class="sketch-container text-block-1">
@@ -529,47 +509,27 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
 
           <!-- Image Container Overlay -->
           <div class="sketch-container-wrapper">
-            <div class="sketch-container-grid motion-variant">
-              <!-- Row 1: Process Image Containers -->
-              {projectData?.["motion-process-images-sets"]?.set2 && projectData["motion-process-images-sets"].set2.length >= 3 && (
-                <>
-                  <div
-                    class="sketch-container motion-side-1"
-                    data-grid-column="1"
-                    data-grid-row="1"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set2[0].src}
-                       alt={projectData["motion-process-images-sets"].set2[0].alt}
-                       class="sketch-image"
-                     />
+            <div class="sketch-container-grid">
+              <!-- Row 1: Dynamic Design Process Grid -->
+              <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set2 || []).length}`}>
+                {(projectData?.["motion-process-images-sets"]?.set2 || []).map((img) => (
+                  <div class="sketch-container dynamic-sketch-item">
+                    {img.src.startsWith("/") ? (
+                      <img
+                        src={img.src}
+                        alt={img.alt || "Motion process sketch"}
+                        class="sketch-image"
+                      />
+                    ) : (
+                      <CldImage
+                        src={img.src}
+                        alt={img.alt || "Motion process sketch"}
+                        class="sketch-image"
+                      />
+                    )}
                   </div>
-
-                  <div
-                    class="sketch-container motion-side-2"
-                    data-grid-column="1"
-                    data-grid-row="2"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set2[1].src}
-                       alt={projectData["motion-process-images-sets"].set2[1].alt}
-                       class="sketch-image"
-                     />
-                    </div>
-
-                  <div
-                    class="sketch-container motion-main"
-                    data-grid-column="2"
-                    data-grid-row="1"
-                  >
-                     <img
-                       src={projectData["motion-process-images-sets"].set2[2].src}
-                       alt={projectData["motion-process-images-sets"].set2[2].alt}
-                       class="sketch-image"
-                     />
-                  </div>
-                </>
-              )}
+                ))}
+              </div>
             
               <!-- Row 2: Text Blocks - Equal Width -->
               <div class="sketch-container text-block-1">
