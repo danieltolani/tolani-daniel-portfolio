@@ -1588,6 +1588,10 @@ object-position: top left;
   .styleframes-section {
     padding-top: 6rem; /* Reduced padding */
   }
+
+  .styleframes-breakdown {
+    margin-top: 2rem; /* Reduced margin to bring it closer to content */
+  }
 }
 
 /* ==================== PROJECTS OVERVIEW PAGE ==================== */
