@@ -1225,6 +1225,7 @@ object-position: top left;
   @media (max-width: 768px) {
     .breakdown-top {
       flex-direction: column;
+      width: 100%;
     }
   }
 }
@@ -1572,13 +1573,15 @@ object-position: top left;
 
   /* Breakdown Images Mobile Overrides */
   .breakdown-images {
-    width: 100%;
+    width: 100% !important;
+    flex: none !important; /* Override flex: 1 to take full width */
     align-items: stretch; /* Allow images to stretch to full width */
   }
 
   .breakdown-image {
-    width: 100%;
-    max-width: 100%; /* Ensure images don't exceed container */
+    width: 100% !important;
+    max-width: 100% !important; /* Ensure images don't exceed container */
+    flex-shrink: 0; /* Prevent images from shrinking */
   }
 
   /* Styleframes Section Mobile Overrides */
