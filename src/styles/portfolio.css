@@ -1590,7 +1590,7 @@ object-position: top left;
   }
 
   .styleframes-breakdown {
-    margin-top: 2rem; /* Reduced margin to bring it closer to content */
+    margin-top: 1rem; /* Reduced margin to bring it closer to content */
   }
 }
 
