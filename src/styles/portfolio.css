@@ -712,34 +712,21 @@ object-position: top left;
   aspect-ratio: 1 / 1;
 }
 
-  /* Mobile Overrides */
-  @media (max-width: 768px) {
-    .design-sketch-grid,
-    .layout-3,
-    .layout-4 {
-      grid-template-columns: 1fr;
-      gap: 1rem; /* Ensure gap exists */
-    }
-
-    /* Ensure all grid items are full width and maintain aspect ratio or fit content */
-    .design-sketch-grid .dynamic-sketch-item:nth-child(n),
-    .layout-3 .dynamic-sketch-item:nth-child(n),
-    .layout-4 .dynamic-sketch-item:nth-child(n) {
-      grid-column: 1 / -1 !important; /* Force full width */
-      grid-row: auto !important; /* Auto row placement */
-      width: 100% !important;
-      height: auto !important; /* Allow height to adjust */
-      aspect-ratio: auto !important; /* Remove forced aspect ratio */
-    }
-
-    /* Images inside items should be full width */
-    .dynamic-sketch-item img,
-    .dynamic-sketch-item .sketch-image {
-      width: 100%;
-      height: auto; /* Maintain image aspect ratio */
-      object-fit: contain; /* or cover, depending on preference, but auto height usually implies contain logic via flow */
-    }
+/* Mobile Overrides */
+@media (max-width: 768px) {
+  .design-sketch-grid,
+  .layout-3,
+  .layout-4 {
+    grid-template-columns: 1fr;
   }
+  
+  .design-sketch-grid .dynamic-sketch-item:nth-child(n) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 16 / 9 !important;
+    height: auto !important;
+  }
+}
 
 /* Motion Variant Grid Layout */
 .sketch-container-grid.motion-variant {
@@ -1530,10 +1517,16 @@ object-position: top left;
 }
 
 @media (max-width: 900px) {
+  .video-section {
+    height: auto;
+    padding: 2rem 0;
+  }
+
   .video-embed-wrapper {
     width: 100%;
     height: auto;
     aspect-ratio: 16 / 9;
+    max-width: 100%;
   }
 
   .video-embed-wrapper iframe,
