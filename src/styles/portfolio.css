@@ -1578,6 +1578,11 @@ object-position: top left;
   .breakdown-image {
     width: 100%;
   }
+
+  /* Styleframes Section Mobile Overrides */
+  .styleframes-section {
+    padding-top: 2rem; /* Reduced padding */
+  }
 }
 
 /* ==================== PROJECTS OVERVIEW PAGE ==================== */
