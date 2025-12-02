@@ -142,14 +142,15 @@ body {
 
 @media (max-width: 900px) {
   .hero-section {
-    padding-top: 6rem;
+    padding-top: 0; /* Remove top padding to start from top */
     height: auto;
 
     .hero-content-wrapper {
       width: 100%;
+      margin-top: 0;
 
       .hero-content {
-        padding: 2rem 1.25rem 3rem;
+        padding: 8rem 1.25rem 3rem; /* Add top padding to content instead */
         min-height: auto;
 
         .hero-text {
