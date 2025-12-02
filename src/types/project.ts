@@ -50,6 +50,7 @@ export interface ProjectData {
   title: string;
   description1: string;
   videoId?: string;
+  videoSrc?: string;
   videoTitle?: string;
   metadata?: ProjectMetadata;
   styleframes: ProjectImage[];

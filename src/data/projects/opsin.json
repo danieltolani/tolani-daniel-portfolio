@@ -3,7 +3,8 @@
     "title": "OP<span class='special-o'>S</span>IN",
     "description1": "To introduce a next-generation crypto terminal - I crafted a teaser video that sparked excitement around its launch, blending energy for the crypto-native crowd with clarity for everyone else.",
     "videoId": "",
-    "videoTitle": "",
+    "videoSrc": "/mp4/OPSIN/001_OPSIN_TeaserLaunch_Track2.mp4",
+    "videoTitle": "Opsin Launch Teaser",
     "metadata": {
         "year": "2025",
         "role": "Concept, Sound & Motion Designer",
@@ -91,16 +92,19 @@
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "Content coming soon.",
-    "motion-text-block-2": "With typography carrying the narrative, the motion amplified the message through pacing, spacing and directional flow. Each movement was designed to emphasize meaning — accelerating on key moments, slowing briefly for impact, and transitioning fluidly into the next idea",
-    "motion-text-block-3": "The focus on fast, readable text-based motion, smooth transitions, and minimal UI animation prioritizes clarity and pacing over intricate visual storytelling. As a result, highly detailed or visually complex sequences may feel constrained or underrepresented, since the motion language is deliberately restrained to maintain legibility and coherence.",
-    "motion-text-block-4": "UI moments were animated with precision and restraint. The goal was clarity: each interaction had to be instantly understandable. Movements were smooth and minimal, ensuring the UI supported the message rather than overshadowing it.",
+    "motion-text-block-1": "The focus on fast, readable text-based motion, smooth transitions, and minimal UI animation prioritizes clarity and pacing over intricate visual storytelling. As a result, highly detailed or visually complex sequences may feel constrained or underrepresented, since the motion language is deliberately restrained to maintain legibility and coherence.",
+    "motion-text-block-2": "UI moments were animated with precision and restraint. The goal was clarity: each interaction had to be instantly understandable. Movements were smooth and minimal, ensuring the UI supported the message rather than overshadowing it.",
     "sound-design": {
         "title": "Sound as Rhythm, Motion as Structure",
-        "description": "",
-        "audio-caption": "",
-        "channel-image": "",
-        "main-image": ""
+        "description": "From the start, the music was something I cared about as much as the visuals. Before designing a single frame, I had already chosen a track that felt perfect for the story — a remix of the classic 20th Century Fox intro, but with a soft Christmas twist. Since the project kicked off in December, it felt like the right moment to use something familiar, warm and playful, while still giving it a modern polish. I even began reworking the track so its rises and pauses matched the animation beat-for-beat.\n\nThe direction wasn't about chasing hype for the sake of being loud. A lot of crypto videos lean heavily on EDM or fast, aggressive tracks, but that wasn't the energy we wanted. I was aiming for something cleaner and more intentional — the kind of sound that feels confident without shouting. The intro carried that nostalgic, cinematic feel, and as the video progressed, the music would build in energy exactly where the visuals needed it.\n\nEventually, the client wanted us to stir away from this direction and since the project carried into January, we had to move away from the Christmas-infused version. But the intention behind the sound never changed: avoid the predictable \"crypto soundtrack\" and build something closer to what brands like CTRL, Phantom or Coinbase lean into - modern, relatable and grounded. A sound that helps the product feel real, thoughtful and trustworthy, not just another loud marketing clip.",
+        "audio-caption": "Tom_and_Snare_Fill-Mastered.wav",
+        "channel-image": "/png/Faramove-Tom&Hat_PP-Audio-Channel.png",
+        "main-image": "/png/Faramove-Music_PP-Audio-Stacks.png"
     },
-    "credits": []
+    "credits": [
+        { "role": "client", "name": "opsin" },
+        { "role": "creative direction", "name": "daniel tolani" },
+        { "role": "motion design", "name": "daniel tolani" },
+        { "role": "sound design", "name": "daniel tolani" }
+    ]
 }

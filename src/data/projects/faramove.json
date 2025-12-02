@@ -77,15 +77,15 @@
     "motion-process-par": "The intention for this scene was deeper: to communicate that Faramove never leaves an item undelivered. Using the four pointers from the logo, the idea was illustrated through three boxes being in frame. The first three were picked up immediately, and by the time the fourth pointer arrived, there was nothing left to carry - everything had already been delivered.",
     "motion-process-images-sets": {
         "set1": [
+            { "src": "/GIF/farmove-pointer-parcel-pickup-loop.gif", "alt": "Faramove parcel pickup animation" },
             { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" },
-            { "src": "/GIF/farmove-box-spin-loop.gif", "alt": "Faramove box spin animation" },
-            { "src": "/GIF/farmove-pointer-parcel-pickup-loop.gif", "alt": "Faramove parcel pickup animation" }
+            { "src": "/GIF/farmove-box-spin-loop.gif", "alt": "Faramove box spin animation" }
         ],
         "banner": "/GIF/farmove-arrow-loop-wide.gif",
         "set2": [
-            { "src": "/png/Faramove-cc-bend-it-ss.png", "alt": "Faramove CC Bend It effect" },
+            { "src": "/GIF/farmove-pointer-ariel-loop.gif", "alt": "Faramove pointer animation" },
             { "src": "/GIF/farmove-arrow-loop-wide.gif", "alt": "Faramove arrow loop animation" },
-            { "src": "/GIF/farmove-pointer-ariel-loop.gif", "alt": "Faramove pointer animation" }
+            { "src": "/png/Faramove-cc-bend-it-ss.png", "alt": "Faramove CC Bend It effect" }
         ]
     },
     "motion-process-text-blocks": [
