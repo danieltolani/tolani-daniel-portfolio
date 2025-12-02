@@ -19,6 +19,17 @@ const projectData = data.find((item) => item.project === project) as ProjectData
 
 // Create dynamic styleframe set based on project data
 const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
+
+// Resolve video source:
+// - If videoSrc starts with "/", treat as local/static path
+// - Otherwise, treat as Cloudinary public ID and build URL from env cloud name
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+let resolvedVideoSrc = projectData?.videoSrc as string | undefined;
+
+if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
+  // Cloudinary delivery URL with automatic format & quality
+  resolvedVideoSrc = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedVideoSrc}.mp4`;
+}
 ---
 
 <Layout>
@@ -113,7 +124,7 @@ const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
             ></iframe>
           ) : (
             <video
-              src={projectData.videoSrc}
+              src={resolvedVideoSrc}
               controls
               playsinline
               preload="metadata"
