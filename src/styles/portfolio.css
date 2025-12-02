@@ -1573,15 +1573,17 @@ object-position: top left;
   /* Breakdown Images Mobile Overrides */
   .breakdown-images {
     width: 100%;
+    align-items: stretch; /* Allow images to stretch to full width */
   }
 
   .breakdown-image {
     width: 100%;
+    max-width: 100%; /* Ensure images don't exceed container */
   }
 
   /* Styleframes Section Mobile Overrides */
   .styleframes-section {
-    padding-top: 2rem; /* Reduced padding */
+    padding-top: 6rem; /* Reduced padding */
   }
 }
 
