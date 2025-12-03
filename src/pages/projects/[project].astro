@@ -411,9 +411,23 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
               </div>
               
               <!-- Row 2: One full-width image -->
-              <div class="breakdown-item-full">
-                <!-- Placeholder for full-width media -->
-              </div>
+              {projectData["styleframes-breakdown"]["layout-images"][4] && (
+                <div class="breakdown-item-full">
+                  {projectData["styleframes-breakdown"]["layout-images"][4].src.startsWith("/") ? (
+                    <img 
+                      src={projectData["styleframes-breakdown"]["layout-images"][4].src} 
+                      alt={projectData["styleframes-breakdown"]["layout-images"][4].alt} 
+                      class="breakdown-media" 
+                    />
+                  ) : (
+                    <CldImage
+                      src={projectData["styleframes-breakdown"]["layout-images"][4].src}
+                      alt={projectData["styleframes-breakdown"]["layout-images"][4].alt}
+                      class="breakdown-media"
+                    />
+                  )}
+                </div>
+              )}
               
               <!-- Row 3: Two equal side-by-side images -->
               <div class="breakdown-row-bottom">
