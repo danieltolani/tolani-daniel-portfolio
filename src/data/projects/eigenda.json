@@ -2,7 +2,8 @@
     "project": "eigenda",
     "title": "Eig<span class='special-o'>e</span>nD<span class='special-o'>A</span>",
     "description1": "Redefining Data Availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
-    "videoId": "",
+    "videoSrc": "001_EDA_WHATISDA",
+    "wireframeVideoSrc": "001_EDA_WHATISDA",
     "videoTitle": "",
     "metadata": {
         "year": "2025",
@@ -54,9 +55,9 @@
     "styleframes-title": "Design.",
     "styleframes-breakdown": {
         "top-images": [
-            { "src": "/png/EDA/EDA-modular-grid.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/png/EDA/EDA-computers-suspended.png ", "alt": "Faramove Truck UI Style Frame" },
             { "src": "/GIF/EDA/modular-grid-face.gif", "alt": "Faramove pointer select animation" },
-            { "src": "/png/EDA/EDA-tetris-drop.png", "alt": "Faramove Truck UI Style Frame" }
+            { "src": "/GIF/EDA/EDA-COIN-SPSIN.gif", "alt": "Faramove APMF Style Frame B&W" }
         ],
         "top-text": {
             "title": "What does it look like to focus on one thing completely?",
@@ -67,10 +68,11 @@
             ]
         },
         "layout-images": [
-            { "src": "/png/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
-            { "src": "/png/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
-            { "src": "/png/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
-            { "src": "/png/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
+            { "src": "/png/EDA/EDA-thumbnail-logo.png", "alt": "Faramove logo" },
+            { "src": "/png/EDA/EDA-flower-glitch.png", "alt": "Aerial road view" },
+            { "src": "/png/EDA/EDA-modular-grid.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/GIF/EDA/RUBIK_3D_SCENE_optimized.gif", "alt": "Faramove unused style frame 2" },
+            { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove unused style frame 1" }
         ]
     },
     "design-process-title": "monomania & minimalism",
@@ -89,15 +91,13 @@
     "design-text-block-1": "When you are to make en explainer video, and getting hit with concepts like “modularity,” “cross-chain composability,” “economic security,” “unification layer,” and other offerings beyond pure data availability, you’re best going to need a lot of research, free writing, do it for yourself first",
     "design-text-block-2": "After several rereads of the brief, I cleared my whiteboard and began sketching ideas for each line of the script. The aim was to explain DA so clearly that even the Eigen DA team might rethink how they understood and communicated their own product.",
     "design-challenge-title": "what is DA?",
-    "motion-process-title": "Motion Process",
+    "motion-process-title": "building blocks",
     "motion-process-par": "Add description about the motion process.",
-    "motion-process-images": [
-        { "src": "EDA-MOTION-PROCESS-01", "alt": "Process 1" },
-        { "src": "EDA-MOTION-PROCESS-02", "alt": "Process 2" },
-        { "src": "EDA-MOTION-PROCESS-03", "alt": "Process 3" }
-    ],
     "motion-process-images-sets": {
-        "set1": [],
+        "set1": [
+            { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove box unwrapped" },
+            { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" }
+        ],
         "banner": "",
         "set2": []
     },
@@ -107,8 +107,6 @@
     ],
     "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
     "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
     "sound-design": {
         "title": "",
         "description": "",
@@ -116,5 +114,15 @@
         "channel-image": "",
         "main-image": ""
     },
-    "credits": []
+    "credits": [
+        { "role": "script", "name": "Samantha Kelly" },
+        { "role": "creative director", "name": "Henry Thompson" },
+        { "role": "design", "name": "daniel tolani" },
+        { "role": "motion & sound designer", "name": "daniel tolani" }
+    ],
+    "moreCredits": [
+        { "role": "Music and SFX", "entity": "Artlist.io" },
+        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
+    ],
+    "inProduction": true
 }

@@ -4,6 +4,7 @@
     "description1": "To introduce a next-generation crypto terminal - I crafted a teaser video that sparked excitement around its launch, blending energy for the crypto-native crowd with clarity for everyone else.",
     "videoId": "",
     "videoSrc": "001_OPSIN_TeaserLaunch",
+    "wireframeVideoSrc": "002_OPSIN_Wired",
     "videoTitle": "Opsin Launch Teaser",
     "metadata": {
         "year": "2025",
@@ -74,8 +75,9 @@
         "layout-images": [
             { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
             { "src": "/png/OPSIN/Book-Flip-Ref.png", "alt": "Aerial road view" },
-            { "src": "/png/OPSIN/TF-logo-extrude.png", "alt": "Faramove unused style frame 1" },
-            { "src": "/png/OPSIN/Book-Flip-Ref-II.png", "alt": "Faramove unused style frame 2" }
+            { "src": "/GIF/OPSIN/OPS-3D_Base_Depth_o.gif", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/OPSIN/Book-Flip-Ref-II.png", "alt": "Faramove unused style frame 2" },
+            { "src": "/png/OPSIN/TF-logo-extrude.png", "alt": "Faramove unused style frame 1" }
         ]
     },
     "design-text-block-1": "As the launch date got closer, not skipping the usual sketching and writing process would have only slowed things down. With a brand that already had a strong visual identity, the best way to begin was through focused research, gathering references and designing a few test frames to set the direction quickly.",
@@ -84,9 +86,11 @@
     "motion-process-title": "Fast but Readable Rhythm",
     "motion-process-par": "Speed was a core theme from the brief, so the motion direction focused on quick, energetic transitions. Even with the fast pacing, timing was carefully balanced so each text beat remained fully readable without feeling rushed.",
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": [
+            { "src": "/GIF/OPSIN/OPS-text-wired-full-frame.gif", "alt": "Faramove parcel pickup animation" },
+            { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
+            { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
+        ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
@@ -97,14 +101,18 @@
     "sound-design": {
         "title": "Sound as Rhythm, Motion as Structure",
         "description": "From the start, the music was something I cared about as much as the visuals. Before designing a single frame, I had already chosen a track that felt perfect for the story — a remix of the classic 20th Century Fox intro, but with a soft Christmas twist. Since the project kicked off in December, it felt like the right moment to use something familiar, warm and playful, while still giving it a modern polish. I even began reworking the track so its rises and pauses matched the animation beat-for-beat.\n\nThe direction wasn't about chasing hype for the sake of being loud. A lot of crypto videos lean heavily on EDM or fast, aggressive tracks, but that wasn't the energy we wanted. I was aiming for something cleaner and more intentional — the kind of sound that feels confident without shouting. The intro carried that nostalgic, cinematic feel, and as the video progressed, the music would build in energy exactly where the visuals needed it.\n\nEventually, the client wanted us to stir away from this direction and since the project carried into January, we had to move away from the Christmas-infused version. But the intention behind the sound never changed: avoid the predictable \"crypto soundtrack\" and build something closer to what brands like CTRL, Phantom or Coinbase lean into - modern, relatable and grounded. A sound that helps the product feel real, thoughtful and trustworthy, not just another loud marketing clip.",
-        "audio-caption": "Tom_and_Snare_Fill-Mastered.wav",
-        "channel-image": "/png/Faramove-Tom&Hat_PP-Audio-Channel.png",
-        "main-image": "/png/Faramove-Music_PP-Audio-Stacks.png"
+        "audio-caption": "UI_Mic_Off-Mastered.wav",
+        "channel-image": "/png/EDA/EDA-UI_OFF__PP.png",
+        "main-image": "/png/EDA/EDA-Music_PP-Audio-Stacks.png"
     },
     "credits": [
         { "role": "client", "name": "opsin" },
         { "role": "creative direction", "name": "daniel tolani" },
         { "role": "motion design", "name": "daniel tolani" },
         { "role": "sound design", "name": "daniel tolani" }
+    ],
+    "moreCredits": [
+        { "role": "Music and SFX", "entity": "Artlist.io" },
+        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
     ]
 }

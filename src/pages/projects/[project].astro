@@ -20,15 +20,20 @@ const projectData = data.find((item) => item.project === project) as ProjectData
 // Create dynamic styleframe set based on project data
 const styleframeSet = projectData?.styleframes?.map((item) => item.src) || [];
 
-// Resolve video source:
-// - If videoSrc starts with "/", treat as local/static path
+// Resolve video sources:
+// - If a src starts with "/", treat as local/static path
 // - Otherwise, treat as Cloudinary public ID and build URL from env cloud name
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+
 let resolvedVideoSrc = projectData?.videoSrc as string | undefined;
+let resolvedWireframeVideoSrc = projectData?.wireframeVideoSrc as string | undefined;
 
 if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
-  // Cloudinary delivery URL with automatic format & quality
   resolvedVideoSrc = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedVideoSrc}.mp4`;
+}
+
+if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
+  resolvedWireframeVideoSrc = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedWireframeVideoSrc}.mp4`;
 }
 ---
 
@@ -44,9 +49,14 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
           <!-- Project Title & Description -->
           <div class="hero-desc">
             <div class="hero-text">
-              <h1 class="hero-title">
-                <div set:html={projectData?.title} />
-              </h1>
+              <div class="hero-title-row">
+                <h1 class="hero-title">
+                  <div set:html={projectData?.title} />
+                </h1>
+                {projectData.inProduction && (
+                  <span class="wip-tag">IN PRODUCTION</span>
+                )}
+              </div>
               <p class="hero-description">
                 {projectData?.description1}
               </p>
@@ -112,6 +122,14 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
     {(projectData?.videoId || projectData?.videoSrc) && (
       <section class="snap-section video-section">
         <div class="video-embed-wrapper">
+          <!-- Video Play Helper (Follows Cursor) -->
+          <div class="video-play-helper">
+            <div class="play-helper-circle">
+              <svg width="164" height="164" viewBox="0 0 164 164" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="82" cy="82" r="81.5" stroke="white" stroke-dasharray="11 0 30 2"/></svg>
+
+            </div>
+            <span class="play-helper-text">PLAY</span>
+          </div>
           {projectData.videoId ? (
           <iframe
             src={`https://player.vimeo.com/video/${projectData.videoId}?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=0&loop=1&title=0&byline=0&portrait=0&transparent=0`}
@@ -172,8 +190,130 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
         }
       }
 
+      // Fade out video overlay when video comes into focus
+      function setupVideoOverlayFade() {
+        const videoSection = document.querySelector('.video-section');
+        const videoOverlay = document.querySelector('.video-overlay');
+        
+        if (!videoSection || !videoOverlay) return;
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              // When video section is in view, fade out the overlay
+              if (entry.isIntersecting) {
+                // Calculate opacity based on intersection ratio
+                // Video is "almost in full focus" when intersection ratio > 0.7
+                const opacity = Math.max(0, 0.35 * (1 - entry.intersectionRatio / 0.7));
+                (videoOverlay as HTMLElement).style.opacity = opacity.toString();
+              } else {
+                // Reset overlay when scrolling away
+                (videoOverlay as HTMLElement).style.opacity = '0.35';
+              }
+            });
+          },
+          {
+            threshold: Array.from({ length: 21 }, (_, i) => i * 0.05), // Check every 5%
+            rootMargin: '0px'
+          }
+        );
+
+        observer.observe(videoSection);
+      }
+
+      // Video Play Helper Logic
+      function setupVideoPlayHelper() {
+        const videoSection = document.querySelector('.video-section') as HTMLElement;
+        const helper = document.querySelector('.video-play-helper') as HTMLElement;
+        
+        if (!videoSection || !helper) return;
+
+        // Cursor following
+        videoSection.addEventListener('mousemove', (e) => {
+          helper.style.left = `${e.clientX}px`;
+          helper.style.top = `${e.clientY}px`;
+        });
+
+        // Video Play State Detection
+        const iframe = videoSection.querySelector('iframe');
+        const video = videoSection.querySelector('video');
+
+        // Matrix/HUD text effect
+        const specialChars = '$@#%*!?&<>[]{}';
+        let scrambleInterval: number;
+
+        const scrambleText = (element: Element, targetText: string) => {
+          let iteration = 0;
+          
+          clearInterval(scrambleInterval);
+          
+          scrambleInterval = window.setInterval(() => {
+            element.textContent = targetText
+              .split("")
+              .map((letter, index) => {
+                if (index < iteration) {
+                  return targetText[index];
+                }
+                return specialChars[Math.floor(Math.random() * specialChars.length)];
+              })
+              .join("");
+            
+            if (iteration >= targetText.length) { 
+              clearInterval(scrambleInterval);
+            }
+            
+            iteration += 1/3; 
+          }, 30);
+        };
+
+        // Function to handle play state
+        const setPlaying = (playing: boolean) => {
+          const helperText = helper.querySelector('.play-helper-text');
+          if (playing) {
+            videoSection.classList.add('is-playing');
+            if (helperText) scrambleText(helperText, 'PAUSE');
+          } else {
+            videoSection.classList.remove('is-playing');
+            if (helperText) scrambleText(helperText, 'PLAY');
+          }
+        };
+
+        if (iframe) {
+          // Vimeo
+          // @ts-ignore - Vimeo global comes from external script
+          if (typeof Vimeo !== 'undefined') {
+            // @ts-ignore
+            const player = new Vimeo.Player(iframe);
+            player.on('play', () => setPlaying(true));
+            player.on('pause', () => setPlaying(false));
+            player.on('ended', () => setPlaying(false));
+          } else {
+            // Fallback if Vimeo API not loaded yet - retry
+            iframe.addEventListener('load', () => {
+               // @ts-ignore
+              if (typeof Vimeo !== 'undefined') {
+                // @ts-ignore
+                const player = new Vimeo.Player(iframe);
+                player.on('play', () => setPlaying(true));
+                player.on('pause', () => setPlaying(false));
+                player.on('ended', () => setPlaying(false));
+              }
+            });
+          }
+        } else if (video) {
+          // HTML5 Video
+          video.addEventListener('play', () => setPlaying(true));
+          video.addEventListener('pause', () => setPlaying(false));
+          video.addEventListener('ended', () => setPlaying(false));
+        }
+      }
+
       // Run when DOM is ready
-      document.addEventListener("DOMContentLoaded", hideVimeoSideDock);
+      document.addEventListener("DOMContentLoaded", () => {
+        hideVimeoSideDock();
+        setupVideoOverlayFade();
+        setupVideoPlayHelper();
+      });
     </script>
 
     <!-- VIDEO MODAL -->
@@ -410,21 +550,38 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
                 </div>
               </div>
               
-              <!-- Row 2: One full-width image -->
-              {projectData["styleframes-breakdown"]["layout-images"][4] && (
+              <!-- Row 2: Full Width Video (Wireframe) or Image Fallback -->
+              {/* If wireframeVideoSrc is available, use it as wireframe loop.
+                  Otherwise, if videoSrc exists, use that. If neither exists,
+                  fallback to layout-images[4] if it exists. */}
+              {(projectData.wireframeVideoSrc || projectData.videoSrc || projectData["styleframes-breakdown"]["layout-images"][4]) && (
                 <div class="breakdown-item-full">
-                  {projectData["styleframes-breakdown"]["layout-images"][4].src.startsWith("/") ? (
-                    <img 
-                      src={projectData["styleframes-breakdown"]["layout-images"][4].src} 
-                      alt={projectData["styleframes-breakdown"]["layout-images"][4].alt} 
-                      class="breakdown-media" 
-                    />
-                  ) : (
-                    <CldImage
-                      src={projectData["styleframes-breakdown"]["layout-images"][4].src}
-                      alt={projectData["styleframes-breakdown"]["layout-images"][4].alt}
+                  {projectData.wireframeVideoSrc || projectData.videoSrc ? (
+                    <video
+                      src={projectData.wireframeVideoSrc ? resolvedWireframeVideoSrc : resolvedVideoSrc}
                       class="breakdown-media"
-                    />
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      preload="metadata"
+                      style="object-fit: cover;"
+                      oncontextmenu="return false;"
+                    ></video>
+                  ) : (
+                    projectData["styleframes-breakdown"]["layout-images"][4].src.startsWith("/") ? (
+                      <img 
+                        src={projectData["styleframes-breakdown"]["layout-images"][4].src} 
+                        alt={projectData["styleframes-breakdown"]["layout-images"][4].alt} 
+                        class="breakdown-media" 
+                      />
+                    ) : (
+                      <CldImage
+                        src={projectData["styleframes-breakdown"]["layout-images"][4].src}
+                        alt={projectData["styleframes-breakdown"]["layout-images"][4].alt}
+                        class="breakdown-media"
+                      />
+                    )
                   )}
                 </div>
               )}
@@ -482,18 +639,18 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
               <!-- Row 1: Dynamic Design Process Grid -->
               <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set1 || []).length}`}>
                 {(projectData?.["motion-process-images-sets"]?.set1 || []).map((img) => (
-                  <div class="sketch-container dynamic-sketch-item">
+                  <div class={`sketch-container dynamic-sketch-item ${img.src === "/GIF/OPSIN/OPS-text-wired-full-frame.gif" ? "opsin-wired-container" : ""}`}>
                     {img.src.startsWith("/") ? (
                       <img
                         src={img.src}
                         alt={img.alt || "Motion process sketch"}
-                        class={`sketch-image ${img.src === "/GIF/farmove-pointer-parcel-pickup-loop.gif" ? "pointer-parcel-image" : ""} ${img.src === "/png/faramove-box-unwrapped.png" ? "box-unwrapped-image" : ""}`}
+                        class={`sketch-image ${img.src === "/GIF/farmove-pointer-parcel-pickup-loop.gif" ? "pointer-parcel-image" : ""} ${img.src === "/png/faramove-box-unwrapped.png" ? "box-unwrapped-image" : ""} ${img.src === "/GIF/OPSIN/OPS-text-wired-full-frame.gif" ? "opsin-wired-text-image" : ""}`}
                       />
                     ) : (
                       <CldImage
                         src={img.src}
                         alt={img.alt || "Motion process sketch"}
-                        class={`sketch-image ${img.src === "/GIF/farmove-pointer-parcel-pickup-loop.gif" ? "pointer-parcel-image" : ""} ${img.src === "/png/faramove-box-unwrapped.png" ? "box-unwrapped-image" : ""}`}
+                        class={`sketch-image ${img.src === "/GIF/farmove-pointer-parcel-pickup-loop.gif" ? "pointer-parcel-image" : ""} ${img.src === "/png/faramove-box-unwrapped.png" ? "box-unwrapped-image" : ""} ${img.src === "/GIF/OPSIN/OPS-text-wired-full-frame.gif" ? "opsin-wired-text-image" : ""}`}
                       />
                     )}
                   </div>
@@ -557,13 +714,13 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
                         <img
                           src={img.src}
                           alt={img.alt || "Motion process sketch"}
-                          class={`sketch-image ${img.src === "/GIF/farmove-pointer-ariel-loop.gif" ? "pointer-ariel-image" : ""}`}
+                          class={`sketch-image ${img.src === "/GIF/farmove-pointer-ariel-loop.gif" ? "pointer-ariel-image" : ""} ${img.src === "/GIF/farmove-arrow-loop-wide.gif" ? "arrow-loop-image" : ""}`}
                         />
                       ) : (
                         <CldImage
                           src={img.src}
                           alt={img.alt || "Motion process sketch"}
-                          class={`sketch-image ${img.src === "/GIF/farmove-pointer-ariel-loop.gif" ? "pointer-ariel-image" : ""}`}
+                          class={`sketch-image ${img.src === "/GIF/farmove-pointer-ariel-loop.gif" ? "pointer-ariel-image" : ""} ${img.src === "/GIF/farmove-arrow-loop-wide.gif" ? "arrow-loop-image" : ""}`}
                         />
                       )}
                     </div>
@@ -644,17 +801,31 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
           ))}
         </div>
         
-        <div class="credits-header">
-          <h2 class="credits-title">credits</h2>
-          <p class="credits-subtitle">priviledged to work with some of the most talented people existing.</p>
-          
-          <div class="more-cc-link">
-            <a href="#" class="cc-link-text">more cc</a>
-            <div class="cc-arrow">
-              <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 5L11 5M11 5L7 1M11 5L7 9" stroke="#7d8484" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
+        <div class="credits-right">
+          <div class="credits-header">
+            <h2 class="credits-title">credits</h2>
+            <p class="credits-subtitle">priviledged to work with some of the most talented people existing.</p>
+          </div>
+
+          <div class="more-cc-container">
+            {projectData.moreCredits && (
+              <div class="more-credits-list">
+                {projectData.moreCredits.map((credit) => (
+                  <div class="more-credit-item">
+                    <span class="more-credit-role">{credit.role}</span>
+                    <span class="more-credit-entity">{credit.entity}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            <button class="more-cc-button" aria-expanded="false">
+              <span class="cc-link-text">more cc</span>
+              <div class="cc-arrow">
+                
+<svg xmlns="http://www.w3.org/2000/svg" width="12" height="10" fill="none"><path fill="#F72F2F" d="m5.774 0 5.773 10H0L5.774 0Z"/></svg>
+              </div>
+            </button>
           </div>
         </div>
       </div>
@@ -1390,5 +1561,30 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
     document.addEventListener("DOMContentLoaded", initMotionDivider);
   } else {
     initMotionDivider();
+  }
+
+  // ==================== MORE CREDITS TOGGLE ====================
+  const moreCCButton = document.querySelector('.more-cc-button');
+  const moreCCContainer = document.querySelector('.more-cc-container');
+
+  if (moreCCButton && moreCCContainer) {
+    moreCCButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isExpanded = moreCCButton.getAttribute('aria-expanded') === 'true';
+      
+      // Toggle state
+      moreCCButton.setAttribute('aria-expanded', (!isExpanded).toString());
+      moreCCContainer.classList.toggle('active');
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (moreCCContainer.classList.contains('active') && 
+          !moreCCContainer.contains(e.target as Node)) {
+        moreCCButton.setAttribute('aria-expanded', 'false');
+        moreCCContainer.classList.remove('active');
+      }
+    });
   }
 </script>

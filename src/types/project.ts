@@ -51,6 +51,7 @@ export interface ProjectData {
   description1: string;
   videoId?: string;
   videoSrc?: string;
+  wireframeVideoSrc?: string;
   videoTitle?: string;
   metadata?: ProjectMetadata;
   styleframes: ProjectImage[];
@@ -75,4 +76,9 @@ export interface ProjectData {
   "sound-design"?: SoundDesign;
   "preview-media"?: ProjectImage;
   credits?: Credit[];
+  moreCredits?: {
+    role: string;
+    entity: string;
+  }[];
+  inProduction?: boolean;
 }

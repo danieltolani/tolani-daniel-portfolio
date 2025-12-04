@@ -48,5 +48,9 @@
         "channel-image": "",
         "main-image": ""
     },
-    "credits": []
+    "credits": [],
+    "moreCredits": [
+        { "role": "Music and SFX", "entity": "Artlist.io" },
+        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
+    ]
 }

@@ -110,5 +110,10 @@
         { "role": "script", "name": "faith adeoye" },
         { "role": "director", "name": "iyanu odenewu" },
         { "role": "creative direction", "name": "daniel tolani" }
+    ],
+    "moreCredits": [
+        { "role": "Music and SFX", "entity": "Artlist.io" },
+        { "role": "Expressway top view", "entity": "dreamstime.com" },
+        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
     ]
 }

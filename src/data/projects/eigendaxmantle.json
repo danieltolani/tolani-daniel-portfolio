@@ -2,7 +2,7 @@
     "project": "eigendaxmantle",
     "title": "Eig<span class='special-o'>e</span>nD<span class='special-o'>A</span> <span class='special-o'>x</span> M<span class='special-o'>A</span>NT</span>LE</span>",
     "description1": "A Tetris-inspired motion teaser marked Mantle’s integration with EigenDA, illustrating the partnership’s scale and how it strengthens modular blockchain infrastructure through speed, security, and synergy.",
-    "videoId": "",
+    "videoSrc": "002_EDA_EDAXMANTLE",
     "videoTitle": "",
     "metadata": {
         "year": "2025",
@@ -66,5 +66,9 @@
         "channel-image": "",
         "main-image": ""
     },
-    "credits": []
+    "credits": [],
+    "moreCredits": [
+        { "role": "Music and SFX", "entity": "Artlist.io" },
+        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
+    ]
 }
