@@ -68,6 +68,7 @@ export interface ProjectData {
   "motion-process-images"?: ProjectImage[];
   "motion-process-images-sets"?: MotionProcessImages;
   "motion-process-text-blocks"?: ProjectTextBlock[];
+  "motion-challenge-title"?: string;
   "motion-text-block-1"?: string;
   "motion-text-block-2"?: string;
   "motion-text-block-3"?: string;

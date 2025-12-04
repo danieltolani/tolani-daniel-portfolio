@@ -3,8 +3,8 @@
     "title": "Eig<span class='special-o'>e</span>nD<span class='special-o'>A</span>",
     "description1": "Redefining Data Availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
     "videoSrc": "001_EDA_WHATISDA",
-    "wireframeVideoSrc": "001_EDA_WHATISDA",
-    "videoTitle": "",
+    "wireframeVideoSrc": "002_EDA_WIDA_Wired",
+    "videoTitle": "What is DA?",
     "metadata": {
         "year": "2025",
         "role": "Creative Director & Motion Designer",
@@ -49,8 +49,7 @@
         { "src": "/png/STY-EDA-DA/EDA-DA-SF-34.png", "alt": "Eigenda styleframe" },
         { "src": "/png/STY-EDA-DA/EDA-DA-SF-35.png", "alt": "Eigenda styleframe" },
         { "src": "/png/STY-EDA-DA/EDA-DA-SF-36.png", "alt": "Eigenda styleframe" },
-        { "src": "/png/STY-EDA-DA/EDA-DA-SF-37.png", "alt": "Eigenda styleframe" },
-        { "src": "/png/STY-EDA-DA/EDA-DA-SF-38.png", "alt": "Eigenda styleframe" }
+        { "src": "/png/STY-EDA-DA/EDA-DA-SF-37.png", "alt": "Eigenda styleframe" }
     ],
     "styleframes-title": "Design.",
     "styleframes-breakdown": {
@@ -76,7 +75,7 @@
         ]
     },
     "design-process-title": "monomania & minimalism",
-    "design-process-par": "At its simplest, data availability (“DA”) is short-term storage for blockchains. You don’t get it right? I also didn’t!",
+    "design-process-par": "In simple terms, data availability (“DA”) is short-term storage for blockchains. And if that didn’t click immediately, same here.",
     "design-process-images": [
         { "src": "/png/EDA/EDA-storyboard-sketch-final.png", "alt": "Storyboard sketch final" },
         { "src": "/png/EDA/EDA-moodboard-final.png", "alt": "Moodboard final" },
@@ -88,13 +87,15 @@
         "alt": "Eigenda Preview",
         "type": "image"
     },
-    "design-text-block-1": "When you are to make en explainer video, and getting hit with concepts like “modularity,” “cross-chain composability,” “economic security,” “unification layer,” and other offerings beyond pure data availability, you’re best going to need a lot of research, free writing, do it for yourself first",
+    "design-text-block-1": "When you are to make en explainer video, and getting hit with concepts like “modularity,” “cross-chain composability,” “economic security,” “unification layer,” and other offerings beyond pure data availability, you’re best going to need a lot of research, free writing. Do the understanding for yourself first",
     "design-text-block-2": "After several rereads of the brief, I cleared my whiteboard and began sketching ideas for each line of the script. The aim was to explain DA so clearly that even the Eigen DA team might rethink how they understood and communicated their own product.",
     "design-challenge-title": "what is DA?",
     "motion-process-title": "building blocks",
-    "motion-process-par": "Add description about the motion process.",
+    "motion-challenge-title": "controlled complexity.",
+    "motion-process-par": "If you want clarity, tidy your space. For me, that space was the project file, and once it was clean, everything felt clearer.",
     "motion-process-images-sets": {
         "set1": [
+            { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove box unwrapped" },
             { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove box unwrapped" },
             { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" }
         ],
@@ -105,18 +106,12 @@
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
-    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space.",
-    "sound-design": {
-        "title": "",
-        "description": "",
-        "audio-caption": "",
-        "channel-image": "",
-        "main-image": ""
-    },
+    "motion-text-block-1": "As the edit grew, layers piling on layers, tiny components all moving in their own rhythm - the timeline started to feel like a living thing. And with a 2-minute voiceover guiding the entire piece, the only way to stay sane would be to build the most organized file system possible. folders within folders, labels that actually meant something, pre-comps arranged.",
+    "motion-text-block-2": "Every folder, every label, every pre-comp would have some sort of system. Once the structure was in place, the chaos started to feel intentional, and the whole project finally began to breathe. Tools like MOTION-4 became lifesavers, especially when I needed to rename entire groups of layers.",
     "credits": [
         { "role": "script", "name": "Samantha Kelly" },
-        { "role": "creative director", "name": "Henry Thompson" },
+        { "role": "creative director", "name": "Daniel Tolani" },
+        { "role": "Producer", "name": "Henry Thompson" },
         { "role": "design", "name": "daniel tolani" },
         { "role": "motion & sound designer", "name": "daniel tolani" }
     ],

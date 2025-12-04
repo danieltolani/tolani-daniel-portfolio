@@ -1058,7 +1058,7 @@ object-position: top left;
 .challenge-section {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 18px;
   width: 100%;
   padding: 10px;
 }
@@ -1071,7 +1071,7 @@ object-position: top left;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
@@ -1524,6 +1524,10 @@ object-position: top left;
   justify-content: center;
   min-height: 80vh;
   align-items: center;
+}
+
+.credits-section.no-sound-design {
+  padding-top: 0;
 }
 
 .credits-container {

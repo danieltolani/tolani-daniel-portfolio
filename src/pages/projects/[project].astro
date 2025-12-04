@@ -682,7 +682,7 @@ if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
                     <p class="challenge-label">challenge</p>
                     <p class="challenge-number">TWO</p>
                   </div>
-                  <h2 class="challenge-title">the rigs.</h2>
+                <h2 class="challenge-title">{projectData?.["motion-challenge-title"]}</h2>
                 </div>
               </div>
             </div>
@@ -790,7 +790,7 @@ if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
 
   <!-- CREDITS SECTION -->
   {projectData?.credits && (
-    <section class="credits-section">
+    <section class={`credits-section ${!projectData?.["sound-design"] ? "no-sound-design" : ""}`}>
       <div class="credits-container">
         <div class="credits-list">
           {projectData.credits.map((credit) => (

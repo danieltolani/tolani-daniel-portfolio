@@ -42,14 +42,6 @@
         { "src": "/png/OPSIN/STY-OPS-TEASER/OPS-TSR-DF-26.png", "alt": "Opsin styleframe" }
     ],
     "styleframes-title": "Styleframes design",
-    "styleframes-breakdown": {
-        "top-images": [],
-        "top-text": {
-            "title": "",
-            "content": []
-        },
-        "layout-images": []
-    },
     "design-process-title": "Phases & due dates.",
     "design-process-par": "It was 6 weeks to the launch and the client had asked that I split the project in two phases. They had worked with a motion designer for another project and didn’t like how it turned out. Time wasn’t on our side.",
     "design-process-images": [
@@ -84,6 +76,7 @@
     "design-text-block-2": "The research centered on bold, readable typography to drive the narrative, supported by clean UI elements and subtle depth without relying on full 3D. Research and early test frames ensured the visuals stayed energetic, clear and aligned with the brand’s established identity.",
     "design-challenge-title": "Concept Foundations",
     "motion-process-title": "Fast but Readable Rhythm",
+    "motion-challenge-title": "custom scripts",
     "motion-process-par": "Speed was a core theme from the brief, so the motion direction focused on quick, energetic transitions. Even with the fast pacing, timing was carefully balanced so each text beat remained fully readable without feeling rushed.",
     "motion-process-images-sets": {
         "set1": [
