@@ -2,7 +2,8 @@
     "project": "faramove",
     "title": "FARAM<span class='special-o'>O</span>VE",
     "description1": "When home delivery became a necessity after COVID-19, Faramove wanted to reassure customers that a smarter solution was coming. I crafted a teaser video that introduced the mobile app and built anticipation for its launch.",
-    "videoId": "809298150",
+    "videoSrc": "001_FARAMOVE_TeaserLaunch",
+    "wireframeVideoSrc": "001_FARAMOVE_WIRED_TSR",
     "videoTitle": "Faramove Launch",
     "metadata": {
         "year": "2023",
@@ -39,9 +40,9 @@
     "design-process-title": "THE three points brief.",
     "design-process-par": "You’re working in-house as a motion designer, and now you have to fill out the same long questionnaire you usually send to clients to help them write their brief.",
     "design-process-images": [
-        { "src": "FRMV-TSR-SKETCH-01", "alt": "Faramove 1" },
-        { "src": "FRMV-TSR-SKETCH-01", "alt": "Faramove 1" },
-        { "src": "FRMV-TSR-SKETCH-01", "alt": "Faramove 1" }
+        { "src": "/png/FARAMOVE/FARAMOVE_Teaser/FRMV-TSR-SKETCH-01.png", "alt": "Faramove 1" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Teaser/FRMV-TSR-SKETCH-02.png", "alt": "Faramove 1" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Teaser/FRMV-TSR-SKETCH-03.png", "alt": "Faramove 1" }
     ],
     "preview-media": {
         "src": "/GIF/farmove-arrow-loop-wide.gif",
@@ -81,7 +82,7 @@
             { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" },
             { "src": "/GIF/farmove-box-spin-loop.gif", "alt": "Faramove box spin animation" }
         ],
-        "banner": "/GIF/farmove-arrow-loop-wide.gif",
+        "banner": "/GIF/farmove-arrow-loop.gif",
         "set2": [
             { "src": "/GIF/farmove-pointer-ariel-loop.gif", "alt": "Faramove pointer animation" },
             { "src": "/GIF/farmove-arrow-loop-wide.gif", "alt": "Faramove arrow loop animation" },
@@ -108,7 +109,7 @@
         { "role": "sound design", "name": "daniel tolani" },
         { "role": "motion design", "name": "daniel tolani" },
         { "role": "script", "name": "faith adeoye" },
-        { "role": "director", "name": "iyanu odenewu" },
+        { "role": "producer", "name": "iyanu odenewu" },
         { "role": "creative direction", "name": "daniel tolani" }
     ],
     "moreCredits": [
