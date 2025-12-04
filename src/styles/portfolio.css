@@ -1632,9 +1632,6 @@ object-position: top left;
   /* No transform on active state anymore */
 }
 
-.more-cc-container.active .more-cc-button {
-  /* transform: translateY(-120px); Removed: Button stays put */
-}
 
 .more-cc-container.active .cc-arrow svg {
   transform: rotate(-90deg); /* Rotate arrow */
