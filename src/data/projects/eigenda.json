@@ -95,9 +95,9 @@
     "motion-process-par": "If you want clarity, tidy your space. For me, that space was the project file, and once it was clean, everything felt clearer.",
     "motion-process-images-sets": {
         "set1": [
-            { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove box unwrapped" },
-            { "src": "/GIF/EDA/EDA-TOKEN-BRK-DWN_optimized.gif", "alt": "Faramove box unwrapped" },
-            { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" }
+            { "src": "/GIF/EDA/EDA-MOSAIC-BLUE_-_BEIGE.gif", "alt": "Faramove box unwrapped" },
+            { "src": "003_EDA_Layer_Stacks", "alt": "Faramove box unwrapped" },
+            { "src": "/GIF/EDA/EDA-LOGO-DROPPED-FRAME.gif", "alt": "Faramove box unwrapped" }
         ],
         "banner": "",
         "set2": []

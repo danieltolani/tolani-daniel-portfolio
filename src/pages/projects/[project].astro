@@ -640,7 +640,18 @@ if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
               <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set1 || []).length}`}>
                 {(projectData?.["motion-process-images-sets"]?.set1 || []).map((img) => (
                   <div class={`sketch-container dynamic-sketch-item ${img.src === "/GIF/OPSIN/OPS-text-wired-full-frame.gif" ? "opsin-wired-container" : ""}`}>
-                    {img.src.startsWith("/") ? (
+                    {!img.src.startsWith("/") && !img.src.includes(".") ? (
+                      <video
+                        src={`https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${img.src}.mp4`}
+                        class="sketch-image"
+                        autoplay
+                        loop
+                        muted
+                        playsinline
+                        style="object-fit: cover;"
+                        oncontextmenu="return false;"
+                      ></video>
+                    ) : img.src.startsWith("/") ? (
                       <img
                         src={img.src}
                         alt={img.alt || "Motion process sketch"}
@@ -710,7 +721,17 @@ if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
                 <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set2 || []).length}`}>
                   {(projectData?.["motion-process-images-sets"]?.set2 || []).map((img) => (
                     <div class="sketch-container dynamic-sketch-item">
-                      {img.src.startsWith("/") ? (
+                      {!img.src.startsWith("/") && !img.src.includes(".") ? (
+                        <video
+                          src={`https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${img.src}.mp4`}
+                          class="sketch-image"
+                          autoplay
+                          loop
+                          muted
+                          playsinline
+                          style="object-fit: cover;"
+                        ></video>
+                      ) : img.src.startsWith("/") ? (
                         <img
                           src={img.src}
                           alt={img.alt || "Motion process sketch"}
