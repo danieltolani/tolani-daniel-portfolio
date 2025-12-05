@@ -1,5 +1,5 @@
 {
-    "project": "faramovecampaign",
+    "project": "faramove-campaign",
     "title": "FARAM<span class='special-o'>O</span>VE <span class='special-o'>03</span>",
     "description1": "We crafted an activation campaign that visualized Faramove’s growing reach - highlighting the cities and the fleet of vehicles driving its delivery network.",
     "videoId": "",
@@ -13,16 +13,33 @@
     "styleframes": [],
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
-        "top-images": [],
+        "top-images": [
+            { "src": "/png/Faramove-APMF-Style-Frame_B&W.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/GIF/Farmove-pointer-select.gif", "alt": "Faramove pointer select animation" },
+            { "src": "/png/Faramove-Truck-UI-Style-Frame.png", "alt": "Faramove Truck UI Style Frame" }
+        ],
         "top-text": {
-            "title": "",
-            "content": []
+            "title": "creating walls to crack",
+            "content": [
+                "The goal was to move away from showing too many UI elements, especially since new apps were popping up everywhere post-covid. But somehow - my early frames still included UI components and copy that referenced \"the app.\" This pushed me to create a strict 'DO NOT' list (a technique I learnt from reading 'DESIGN FOR MOTION' by Austin Shaw.",
+                "One key rule was that no actual design components from the real product would appear in the teaser. I stuck to this fully, using only simple, recognizable elements like radio buttons, which could just as easily be interpreted as basic drawn shapes rather than app interface pieces.",
+                "Shortly before this teaser project, I had created a simple Lottie loader animation featuring the logo. It was visually catchy, so opening the video with it felt natural. When I compared it with my free-writing notes—movement, pickup, speed, dropping, location, and more—it aligned perfectly with the themes I wanted to express."
+            ]
         },
-        "layout-images": []
+        "layout-images": [
+            { "src": "/png/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
+            { "src": "/png/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
+            { "src": "/png/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
+        ]
     },
-    "design-process-title": "Design Process Title",
+    "design-process-title": "you can’t flip a mockup",
     "design-process-par": "Design process description coming soon.",
-    "design-process-images": [],
+    "design-process-images": [
+        { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-VEHICLE-LINE-UP.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-1" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-LORRY-BUS-FLIPPED-BLUE.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-2" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-LUX-BUS-BLUE.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-3" }
+    ],
     "design-text-block-1": "Content coming soon.",
     "design-text-block-2": "Content coming soon.",
     "design-challenge-title": "Challenge Title",

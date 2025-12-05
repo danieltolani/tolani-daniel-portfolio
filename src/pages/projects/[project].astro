@@ -43,7 +43,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 ---
 
 <Layout>
-  <div class="page-container scroll-container">
+  <div class={`page-container scroll-container project-${project}`}>
     <!-- Header Navigation -->
     <Header />
 
@@ -62,51 +62,49 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
                   <span class="wip-tag">IN PRODUCTION</span>
                 )}
               </div>
-              <p class="hero-description">
-                {projectData?.description1}
-              </p>
+              <div class="hero-description-wrapper">
+                <p class="hero-description">
+                  {projectData?.description1}
+                </p>
+                <button class="read-more-button" aria-expanded="false">Read more</button>
+              </div>
             </div>
 
             <!-- Thumbnail Carousel -->
             <div class="carousel-container">
-              {project === "faramovecampaign" && (projectData?.styleframes || []).length === 0 ? (
-                <div class="campaign-marquee-banner">
-                  <div class="campaign-marquee-content">
-                    <div class="campaign-marquee-track">
-                      <span class="marquee-text">Ibadan</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">ibadan</span>
-                      <span class="marquee-text">Ibadan</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">ibadan</span>
-                    </div>
-                    <div class="campaign-marquee-track">
-                      <span class="marquee-text">Ibadan</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">ibadan</span>
-                      <span class="marquee-text">Ibadan</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">lagos</span>
-                      <span class="marquee-separator">~</span>
-                      <span class="marquee-text">ibadan</span>
-                    </div>
-                  </div>
+              {projectData.project === "faramovecampaign" ? (
+                <div class="campaign-banner-wrapper">
                   <div class="campaign-vehicle-image">
-                    <img src="/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-MARUWA-BLUE.png" alt="Faramove Vehicle" />
+                    <img 
+                      src="/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-MARUWA-BLUE.png" 
+                      alt="Faramove Delivery Vehicle" 
+                    />
+                  </div>
+                  <div class="campaign-marquee-banner">
+                    <div class="campaign-marquee-content">
+                      <span class="city-name">Lagos</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Ibadan</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Abeokuta</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Osun</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Abuja</span>
+                      <span class="separator">~</span>
+                    </div>
+                    <div class="campaign-marquee-content" aria-hidden="true">
+                      <span class="city-name">Lagos</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Ibadan</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Abeokuta</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Osun</span>
+                      <span class="separator">~</span>
+                      <span class="city-name">Abuja</span>
+                      <span class="separator">~</span>
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -431,12 +429,14 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
                         src={img.src}
                         alt={img.alt || "Design process sketch"}
                         class="sketch-image"
+                        id={img.id || undefined}
                       />
                     ) : (
                       <CldImage
                         src={img.src}
                         alt={img.alt || "Design process sketch"}
                         class="sketch-image"
+                        id={img.id || undefined}
                       />
                     )}
                   </div>
@@ -486,8 +486,9 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   )}
 
   <!-- STYLEFRAMES DETAIL SECTION -->
-  {projectData?.styleframes?.length > 0 && (
+  {(projectData?.styleframes?.length > 0 || projectData?.["styleframes-breakdown"]) && (
     <section class="styleframes-section">
+      {projectData?.styleframes?.length > 0 && (
       <div class="styleframes-container">
         <div class="styleframes-content">
           <!-- Large Preview with Counter -->
@@ -545,6 +546,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
           </div>
         </div>
       </div>
+      )}
 
       <!-- Styleframes Breakdown Section -->
       {projectData?.["styleframes-breakdown"] && (
@@ -1454,7 +1456,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   ) as HTMLElement;
   let heroCarouselInstance: any;
 
-  // Only initialize if element exists (it won't exist for faramovecampaign)
+  // Check if the hero carousel actually exists (might be replaced by marquee banner)
   if (heroCarouselElement) {
     console.log("Hero carousel found:", heroCarouselElement);
 
@@ -1497,7 +1499,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     gsap.ticker.add(updateHero);
     gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
   } else {
-    console.log("Hero carousel not found in DOM - likely Faramove Campaign marquee");
+    console.log("Hero carousel not found in DOM (likely replaced by custom banner)");
   }
 
   // ==================== STYLEFRAMES THUMBS WITH SMOOOTHY ====================
@@ -1703,6 +1705,26 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     document.addEventListener("DOMContentLoaded", initMotionDivider);
   } else {
     initMotionDivider();
+  }
+
+  // ==================== READ MORE TOGGLE ====================
+  const readMoreButton = document.querySelector(".read-more-button");
+  const heroDescriptionWrapper = document.querySelector(".hero-description-wrapper");
+
+  if (readMoreButton && heroDescriptionWrapper) {
+    readMoreButton.addEventListener("click", () => {
+      const isExpanded = heroDescriptionWrapper.classList.contains("expanded");
+      
+      if (isExpanded) {
+        heroDescriptionWrapper.classList.remove("expanded");
+        readMoreButton.textContent = "Read more";
+        readMoreButton.setAttribute("aria-expanded", "false");
+      } else {
+        heroDescriptionWrapper.classList.add("expanded");
+        readMoreButton.textContent = "Read less";
+        readMoreButton.setAttribute("aria-expanded", "true");
+      }
+    });
   }
 
   // ==================== MORE CREDITS TOGGLE ====================

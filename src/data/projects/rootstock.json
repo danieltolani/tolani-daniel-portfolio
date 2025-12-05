@@ -1,12 +1,12 @@
 {
     "project": "rootstock",
-    "title": "Rootstock",
+    "title": "ROOT<span class='special-o'>S</span>TO<span class='special-o'>C</span>K",
     "description1": "Description coming soon.",
     "videoId": "",
     "videoTitle": "",
     "metadata": {
-        "year": "",
-        "role": "",
+        "year": "2025",
+        "role": "Creative Direction, Motion Design",
         "tools": "",
         "type": ""
     },
@@ -56,5 +56,6 @@
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
-    ]
+    ],
+    "inProduction": true
 }

@@ -1,6 +1,6 @@
 {
-    "project": "franklintempleton",
-    "title": "FRANKLINTEMPLETON",
+    "project": "portfolios-of-tomorrow",
+    "title": "PORTF<span class='special-o'>O</span>LIO<span class='special-o'>S</span> OF T<span class='special-o'>O</span>MORR<span class='special-o'>O</span>W",
     "description1": "Description coming soon.",
     "videoId": "",
     "videoTitle": "",
@@ -52,5 +52,6 @@
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
-    ]
+    ],
+    "inProduction": true
 }

@@ -1,6 +1,6 @@
 {
-    "project": "pinataaudio",
-    "title": "PINATAAUDIO",
+    "project": "pinata-audio",
+    "title": "PIN<span class='special-o'>A</span>TA A<span class='special-o'>U</span>DI<span class='special-o'>O</span>",
     "description1": "Description coming soon.",
     "videoId": "",
     "videoTitle": "",
@@ -52,5 +52,6 @@
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
-    ]
+    ],
+    "inProduction": true
 }

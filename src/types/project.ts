@@ -2,6 +2,7 @@ export interface ProjectImage {
   src: string;
   alt: string;
   type?: string;
+  id?: string;
 }
 
 export interface ProjectTextBlock {
