@@ -69,34 +69,76 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 
             <!-- Thumbnail Carousel -->
             <div class="carousel-container">
-              <div class="carousel-wrapper" id="hero-carousel" data-slider>
-                {
-                  (projectData?.styleframes || []).map((item, index) => (
-                    <div class="carousel-item">
-                      <div
-                        class="carousel-item-inner"
-                        data-image-url={styleframeSet[index]}
-                        data-image-index={index}
-                      >
-                        {item.src.startsWith("/") ? (
-                          <img
-                            class="carousel-image2"
-                            src={item.src}
-                            alt={`Styleframe ${index}`}
-                          />
-                        ) : (
-                          <CldImage
-                            class="carousel-image2"
-                            src={item.src}
-                            alt={`Styleframe ${index}`}
-                          />
-                        )}
-                        <span class="carousel-number">STY-{index + 1}</span>
-                      </div>
+              {project === "faramovecampaign" && (projectData?.styleframes || []).length === 0 ? (
+                <div class="campaign-marquee-banner">
+                  <div class="campaign-marquee-content">
+                    <div class="campaign-marquee-track">
+                      <span class="marquee-text">Ibadan</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">ibadan</span>
+                      <span class="marquee-text">Ibadan</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">ibadan</span>
                     </div>
-                  ))
-                }
-              </div>
+                    <div class="campaign-marquee-track">
+                      <span class="marquee-text">Ibadan</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">ibadan</span>
+                      <span class="marquee-text">Ibadan</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">lagos</span>
+                      <span class="marquee-separator">~</span>
+                      <span class="marquee-text">ibadan</span>
+                    </div>
+                  </div>
+                  <div class="campaign-vehicle-image">
+                    <img src="/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-MARUWA-BLUE.png" alt="Faramove Vehicle" />
+                  </div>
+                </div>
+              ) : (
+                <div class="carousel-wrapper" id="hero-carousel" data-slider>
+                  {
+                    (projectData?.styleframes || []).map((item, index) => (
+                      <div class="carousel-item">
+                        <div
+                          class="carousel-item-inner"
+                          data-image-url={styleframeSet[index]}
+                          data-image-index={index}
+                        >
+                          {item.src.startsWith("/") ? (
+                            <img
+                              class="carousel-image2"
+                              src={item.src}
+                              alt={`Styleframe ${index}`}
+                            />
+                          ) : (
+                            <CldImage
+                              class="carousel-image2"
+                              src={item.src}
+                              alt={`Styleframe ${index}`}
+                            />
+                          )}
+                          <span class="carousel-number">STY-{index + 1}</span>
+                        </div>
+                      </div>
+                    ))
+                  }
+                </div>
+              )}
             </div>
           </div>
 
@@ -1412,6 +1454,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   ) as HTMLElement;
   let heroCarouselInstance: any;
 
+  // Only initialize if element exists (it won't exist for faramovecampaign)
   if (heroCarouselElement) {
     console.log("Hero carousel found:", heroCarouselElement);
 
@@ -1454,7 +1497,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     gsap.ticker.add(updateHero);
     gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
   } else {
-    console.error("Hero carousel not found in DOM");
+    console.log("Hero carousel not found in DOM - likely Faramove Campaign marquee");
   }
 
   // ==================== STYLEFRAMES THUMBS WITH SMOOOTHY ====================
