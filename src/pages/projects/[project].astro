@@ -27,6 +27,7 @@ const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 
 let resolvedVideoSrc = projectData?.videoSrc as string | undefined;
 let resolvedWireframeVideoSrc = projectData?.wireframeVideoSrc as string | undefined;
+let resolvedWireframeVideoSrc2 = projectData?.wireframeVideoSrc2 as string | undefined;
 
 if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
   resolvedVideoSrc = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedVideoSrc}.mp4`;
@@ -34,6 +35,10 @@ if (resolvedVideoSrc && !resolvedVideoSrc.startsWith("/")) {
 
 if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
   resolvedWireframeVideoSrc = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedWireframeVideoSrc}.mp4`;
+}
+
+if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
+  resolvedWireframeVideoSrc2 = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${resolvedWireframeVideoSrc2}.mp4`;
 }
 ---
 
@@ -599,6 +604,79 @@ if (resolvedWireframeVideoSrc && !resolvedWireframeVideoSrc.startsWith("/")) {
                   <img 
                     src={projectData["styleframes-breakdown"]["layout-images"][3].src} 
                     alt={projectData["styleframes-breakdown"]["layout-images"][3].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {projectData?.["styleframes-breakdown"]?.["layout-images-2"] && projectData["styleframes-breakdown"]["layout-images-2"].length >= 4 && (
+            <div class="breakdown-layout">
+              <!-- Row 1: Two images (Matched Height) -->
+              <div class="breakdown-row-top">
+                <div class="breakdown-item-large">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images-2"][0].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images-2"][0].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+                <div class="breakdown-item-tall">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images-2"][1].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images-2"][1].alt} 
+                    class="breakdown-media breakdown-media-2" 
+                  />
+                </div>
+              </div>
+              
+              <!-- Row 2: Full Width Video (Wireframe) or Image Fallback -->
+              {(projectData.wireframeVideoSrc2 || projectData["styleframes-breakdown"]["layout-images-2"][4]) && (
+                <div class="breakdown-item-full">
+                  {projectData.wireframeVideoSrc2 ? (
+                    <video
+                      src={resolvedWireframeVideoSrc2}
+                      class="breakdown-media"
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      preload="metadata"
+                      style="object-fit: cover;"
+                      oncontextmenu="return false;"
+                    ></video>
+                  ) : (
+                    projectData["styleframes-breakdown"]["layout-images-2"][4].src.startsWith("/") ? (
+                      <img 
+                        src={projectData["styleframes-breakdown"]["layout-images-2"][4].src} 
+                        alt={projectData["styleframes-breakdown"]["layout-images-2"][4].alt} 
+                        class="breakdown-media" 
+                      />
+                    ) : (
+                      <CldImage
+                        src={projectData["styleframes-breakdown"]["layout-images-2"][4].src}
+                        alt={projectData["styleframes-breakdown"]["layout-images-2"][4].alt}
+                        class="breakdown-media" 
+                      />
+                    )
+                  )}
+                </div>
+              )}
+              
+              <!-- Row 3: Two equal side-by-side images -->
+              <div class="breakdown-row-bottom">
+                <div class="breakdown-item-half">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images-2"][2].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images-2"][2].alt} 
+                    class="breakdown-media" 
+                  />
+                </div>
+                <div class="breakdown-item-half">
+                  <img 
+                    src={projectData["styleframes-breakdown"]["layout-images-2"][3].src} 
+                    alt={projectData["styleframes-breakdown"]["layout-images-2"][3].alt} 
                     class="breakdown-media" 
                   />
                 </div>

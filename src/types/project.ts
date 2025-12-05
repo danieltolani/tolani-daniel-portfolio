@@ -30,6 +30,7 @@ export interface StyleframesBreakdown {
   "grid-media"?: ProjectImage[];
   "side-images"?: ProjectImage[];
   "layout-images"?: ProjectImage[];
+  "layout-images-2"?: ProjectImage[];
 }
 
 export interface MotionProcessImages {
@@ -52,6 +53,7 @@ export interface ProjectData {
   videoId?: string;
   videoSrc?: string;
   wireframeVideoSrc?: string;
+  wireframeVideoSrc2?: string;
   videoTitle?: string;
   metadata?: ProjectMetadata;
   styleframes: ProjectImage[];

@@ -1,56 +1,110 @@
 {
     "project": "faramovelaunch",
-    "title": "Faramove Launch",
-    "description1": "Description coming soon.",
-    "videoId": "",
-    "videoTitle": "",
+    "title": "FARAM<span class='special-o'>O</span>VE <span class='special-o'>02</span>",
+    "description1": "To maintain the buzz from the teaser, the launch video tells the story of everyday delivery needs while revealing more of app’s interfaces. The goal was to connect the product to real use cases and prompt immediate action.",
+    "videoSrc": "002_FRMV_LAUNCH",
+    "wireframeVideoSrc": "002_OPSIN_Wired",
+    "wireframeVideoSrc2": "002_OPSIN_Wired",
+    "videoTitle": "Faramove Launch",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2023",
+        "role": "Sound & Motion Designer",
+        "tools": "Figma, Adobe AE Suites & Blender",
+        "type": "Launch Announcement"
     },
-    "styleframes": [],
+    "styleframes": [
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-0.png", "alt": "Faramove Launch Styleframe 1" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-1.png", "alt": "Faramove Launch Styleframe 2" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-2.png", "alt": "Faramove Launch Styleframe 3" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-3.png", "alt": "Faramove Launch Styleframe 4" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-4.png", "alt": "Faramove Launch Styleframe 5" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-5.png", "alt": "Faramove Launch Styleframe 6" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-6.png", "alt": "Faramove Launch Styleframe 7" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-7.png", "alt": "Faramove Launch Styleframe 8" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-8.png", "alt": "Faramove Launch Styleframe 9" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-9.png", "alt": "Faramove Launch Styleframe 10" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-10.png", "alt": "Faramove Launch Styleframe 11" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-11.png", "alt": "Faramove Launch Styleframe 12" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-12.png", "alt": "Faramove Launch Styleframe 13" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-13.png", "alt": "Faramove Launch Styleframe 14" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-14.png", "alt": "Faramove Launch Styleframe 15" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-15.png", "alt": "Faramove Launch Styleframe 16" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-16.png", "alt": "Faramove Launch Styleframe 17" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/STY-FRMV-LAUNCH/FRMV-LAUNCH-SF-17.png", "alt": "Faramove Launch Styleframe 18" }
+    ],
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
-        "top-images": [],
+        "top-images": [
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-Before.png", "alt": "Faramove pointer select animation" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Pixel-Insp.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-After.png", "alt": "Faramove Truck UI Style Frame" }
+        ],
         "top-text": {
-            "title": "",
-            "content": []
+            "title": "Finding the Story Beneath the Script",
+            "content": [
+                "The idea formed from a mix of real-life experience and unexpected references. While going through mood-setters online, I came across an image of a laptop with sticky notes - around the same time Faramove had actually sent me a laptop, and I’d had a real fear of it breaking. That emotional tension became my anchor.",
+                "Then  at the timme, I stumbled on a “It’s a gift” UI button from a course I purchased, and it clicked — I could merge both moments into a story about someone sending a cherished item as a gift… only for something to go wrong. That tension became the heartbeat of the concept.",
+                "I pulled inspiration heavily from references during this stage. For exaample, Instead of showing a traditionally cracked screen, I created a pixel-style face that shifts from happy to sad at the moment of impact. This gave personality to the laptop without relying on clichés, inspired by a reference I had seen."
+            ]
         },
-        "layout-images": []
+        "layout-images": [
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-NAIRA-NOTES-VAR.png", "alt": "Faramove logo" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-REAL-100-note.png", "alt": "Aerial road view" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-UI-SCREEN.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-UI-SCREEN-REF.png", "alt": "Faramove unused style frame 2" }
+        ],
+        "layout-images-2": [
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-DVD-SCREEN.png", "alt": "Faramove logo" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-DVD-SCREEN-REF.png", "alt": "Faramove logo" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-STICK-NOTE.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-STICK-NOTE-REF.png", "alt": "Faramove unused style frame 2" }
+        ]
     },
-    "design-process-title": "Design Process Title",
-    "design-process-par": "Design process description coming soon.",
-    "design-process-images": [],
-    "design-text-block-1": "Content coming soon.",
-    "design-text-block-2": "Content coming soon.",
-    "design-challenge-title": "Challenge Title",
-    "motion-process-title": "Motion Process Title",
-    "motion-process-par": "Motion process description coming soon.",
+    "design-process-title": "connecting the dots",
+    "design-process-par": "This phase was about understanding the emotional core of the project. I wasn’t just trying to communicate logistics or “send & receive” features - I wanted the story to feel human. So I sat with the script, searched for references, and hunted for a mood that didn’t just explain the service, but made someone feel why it mattered.",
+    "design-process-images": [
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-MOODBOARD.png", "alt": "Storyboard sketch final" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-SCRIPT.png", "alt": "Moodboard final" },
+        { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-STORYBOARD.png", "alt": "Freewriting sketch" }
+    ],
+    "design-text-block-1": "I had a script that I couldn’t deviate from, but the story forming in my head needed room to breathe. The challenge was merging a new emotional narrative into a pre-defined script - without rewriting or reshaping what the team had approved. My tension wasn’t only in the story; it was in figuring out how to fit the story inside the script’s structure.",
+    "design-text-block-2": "Working tightly within the script threaded my idea. Where the script mentioned a feature - I'd transition smoothly to the visual that covered it without breaking the storyline. For instance, transitioning from the broken laptop to visuals of Naira notes. I fused the narrative and the script while keeping the emotional arc intact.",
+    "design-challenge-title": "shaping a story",
+    "motion-challenge-title": "deliberate compromises",
+    "motion-process-title": "Breathing Life into the Frames",
+    "motion-process-par": "With the look established, the next step was bringing the story to life. But not everything goes as planned in production - and this is where decisions, compromises, and improvisations shape the final outcome.",
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": [
+            { "src": "/GIF/OPSIN/OPS-text-wired-full-frame.gif", "alt": "Faramove parcel pickup animation" },
+            { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
+            { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
+        ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "Content coming soon.",
-    "motion-text-block-2": "Content coming soon.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
+    "motion-text-block-1": "Some of the planned motion - especially around the 3D vehicle animation hit a wall due to time constraints. The goal was to rig and animate Faramove’s vehicle models, but the timeline wouldn’t allow for proper rigging and realistic motion. We had to rethink quickly without breaking the visual consistency.",
+    "motion-text-block-2": "Since we couldn’t animate the vehicles realistically, we would stylize their movement instead. So instead of driving, the vehicles were spun, showcased, and transitioned with match-cuts. This preserved visual interest, stayed on-brand, and matched the design’s tone without sacrificing production time.",
     "sound-design": {
-        "title": "",
-        "description": "",
-        "audio-caption": "",
-        "channel-image": "",
-        "main-image": ""
+        "title": "The final layer",
+        "description": "For this project, we worked with a voice-over artist. I spent time cleaning, leveling, and shaping the vocal track so it fit into the pacing of the animation. Then came the sound effects: subtle impacts, transitions, emotional cues, and supporting ambience. Each effect was tuned to match the visual beats and maintain consistency across scenes.",
+        "audio-caption": "UI_Mic_Off-Mastered.wav",
+        "channel-image": "/png/EDA/EDA-UI_OFF__PP.png",
+        "main-image": "/png/EDA/EDA-Music_PP-Audio-Stacks.png"
     },
-    "credits": [],
+    "credits": [
+        { "role": "client", "name": "faramove" },
+        { "role": "creative direction", "name": "daniel tolani" },
+        { "role": "Script", "name": "faith adeoye" },
+        { "role": "producer", "name": "Iyanu Odunewu" },
+        { "role": "design & motion", "name": "daniel tolani" },
+        { "role": "3D MODEL & ANIMATION", "name": "Olawole Adaja" },
+        { "role": "sound design", "name": "daniel tolani" }
+        
+    ],
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
-        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
+        { "role": "REF IMAGES", "entity": "are.na, pinterest, dribbble" }
     ]
 }
