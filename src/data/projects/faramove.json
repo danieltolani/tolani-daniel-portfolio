@@ -55,9 +55,9 @@
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
         "top-images": [
-            { "src": "/png/Faramove-APMF-Style-Frame_B&W.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove APMF Style Frame B&W" },
             { "src": "/GIF/Farmove-pointer-select.gif", "alt": "Faramove pointer select animation" },
-            { "src": "/png/Faramove-Truck-UI-Style-Frame.png", "alt": "Faramove Truck UI Style Frame" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-Truck-UI-Style-Frame.png", "alt": "Faramove Truck UI Style Frame" }
         ],
         "top-text": {
             "title": "creating walls to crack",
@@ -68,10 +68,10 @@
             ]
         },
         "layout-images": [
-            { "src": "/png/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
-            { "src": "/png/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
-            { "src": "/png/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
-            { "src": "/png/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
         ]
     },
     "motion-process-title": "Making it look 3d.",
@@ -80,14 +80,14 @@
     "motion-process-images-sets": {
         "set1": [
             { "src": "/GIF/farmove-pointer-parcel-pickup-loop.gif", "alt": "Faramove parcel pickup animation" },
-            { "src": "/png/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/faramove-box-unwrapped.png", "alt": "Faramove box unwrapped" },
             { "src": "/GIF/farmove-box-spin-loop.gif", "alt": "Faramove box spin animation" }
         ],
         "banner": "/GIF/farmove-arrow-loop.gif",
         "set2": [
             { "src": "/GIF/farmove-pointer-ariel-loop.gif", "alt": "Faramove pointer animation" },
             { "src": "/GIF/farmove-arrow-loop-wide.gif", "alt": "Faramove arrow loop animation" },
-            { "src": "/png/Faramove-cc-bend-it-ss.png", "alt": "Faramove CC Bend It effect" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-cc-bend-it-ss.png", "alt": "Faramove CC Bend It effect" }
         ]
     },
     "motion-process-text-blocks": [
@@ -102,8 +102,8 @@
         "title": "noises",
         "description": "When you decide to open a teaser with the brand logo sitting on screen for 5 seconds, you need something extra to keep viewers from hitting the skip button: sound. Staying true to my “DO NOTs” and avoiding any heavy UI cues, I pushed this idea through the audio. I chose a sound that felt deliberately unexpected—using a tom and snare to open an app video where clicks, bells, notifications, and swooshes are what you’d normally expect.",
         "audio-caption": "Tom_and_Snare_Fill-Mastered.wav",
-        "channel-image": "/png/Faramove-Tom&Hat_PP-Audio-Channel.png",
-        "main-image": "/png/Faramove-Music_PP-Audio-Stacks.png"
+        "channel-image": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-Tom&Hat_PP-Audio-Channel.png",
+        "main-image": "/png/FARAMOVE/FARAMOVE_Teaser/Faramove-Music_PP-Audio-Stacks.png"
     },
     "credits": [
         { "role": "client", "name": "faramove" },

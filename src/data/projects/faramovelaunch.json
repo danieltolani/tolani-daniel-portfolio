@@ -3,8 +3,8 @@
     "title": "FARAM<span class='special-o'>O</span>VE <span class='special-o'>02</span>",
     "description1": "To maintain the buzz from the teaser, the launch video tells the story of everyday delivery needs while revealing more of app’s interfaces. The goal was to connect the product to real use cases and prompt immediate action.",
     "videoSrc": "002_FRMV_LAUNCH",
-    "wireframeVideoSrc": "002_OPSIN_Wired",
-    "wireframeVideoSrc2": "002_OPSIN_Wired",
+    "wireframeVideoSrc": "002-FRMV-LAUNCH-Animatic",
+    "wireframeVideoSrc2": "002-FRMV-LAUNCH-WIRED",
     "videoTitle": "Faramove Launch",
     "metadata": {
         "year": "2023",
@@ -37,7 +37,8 @@
         "top-images": [
             { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-Before.png", "alt": "Faramove pointer select animation" },
             { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Pixel-Insp.png", "alt": "Faramove APMF Style Frame B&W" },
-            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-After.png", "alt": "Faramove Truck UI Style Frame" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-After.png", "alt": "Faramove Truck UI Style Frame" },
+            { "src": "/GIF/FARAMOVE/LANCH/FRMV-Launch-ChatBubbles.gif", "alt": "Faramove Truck UI Style Frame" }
         ],
         "top-text": {
             "title": "Finding the Story Beneath the Script",
@@ -75,7 +76,7 @@
     "motion-process-par": "With the look established, the next step was bringing the story to life. But not everything goes as planned in production - and this is where decisions, compromises, and improvisations shape the final outcome.",
     "motion-process-images-sets": {
         "set1": [
-            { "src": "/GIF/OPSIN/OPS-text-wired-full-frame.gif", "alt": "Faramove parcel pickup animation" },
+            { "src": "002-FRMV-VehicleSpin", "alt": "Faramove parcel pickup animation" },
             { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
             { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
         ]
