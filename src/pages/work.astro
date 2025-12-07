@@ -12,6 +12,27 @@ const projects = data;
 const getPreviewSrc = (project: any) => {
   return project["preview-media"]?.src || "";
 };
+
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+// Helper to determine media type and src
+const getMediaInfo = (project: any) => {
+  const src = project["preview-media"]?.src || "";
+  if (!src) return { type: 'image', url: '' };
+  
+  // If it starts with /, it's a local file (image/gif)
+  if (src.startsWith('/')) {
+    return { type: 'image', url: src };
+  }
+  
+  // Otherwise assume it's a Cloudinary video ID
+  return { 
+    type: 'video', 
+    url: `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${src}.mp4` 
+  };
+};
+
+const firstProjectMedia = getMediaInfo(projects[0]);
 ---
 
 <Layout title="Work | Portfolio">
@@ -47,13 +68,24 @@ const getPreviewSrc = (project: any) => {
         <!-- Right: Preview (Sticky) -->
         <div class="project-preview-column">
           <div class="project-preview-sticky">
-            <div class="preview-media-wrapper">
-               <img 
-                id="preview-image" 
-                src={projects[0]?.["preview-media"]?.src || ""} 
-                alt="Project Preview" 
-                class="preview-media-element" 
-              />
+            <div class="preview-media-wrapper" id="preview-media-container" data-cloud-name={cloudName}>
+              {firstProjectMedia.type === 'video' ? (
+                <video
+                  src={firstProjectMedia.url}
+                  class="preview-media-element"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  oncontextmenu="return false;"
+                ></video>
+              ) : (
+                <img 
+                  src={firstProjectMedia.url} 
+                  alt="Project Preview" 
+                  class="preview-media-element" 
+                />
+              )}
             </div>
             
             <div class="preview-info">
@@ -92,7 +124,9 @@ const getPreviewSrc = (project: any) => {
 
 <script>
   const listItems = document.querySelectorAll('.project-list-item');
-  const previewImage = document.getElementById('preview-image') as HTMLImageElement;
+  const previewContainer = document.getElementById('preview-media-container');
+  const cloudName = previewContainer?.dataset.cloudName || "";
+  
   const previewTitle = document.getElementById('preview-title');
   const previewDescription = document.getElementById('preview-description');
   const previewYear = document.getElementById('preview-year');
@@ -110,11 +144,36 @@ const getPreviewSrc = (project: any) => {
       // Update preview
       const projectData = JSON.parse(item.getAttribute('data-project') || '{}');
       
-      if (previewImage) {
+      if (previewContainer) {
         const src = projectData["preview-media"]?.src || "";
-        // Handle cloud vs local logic if needed, assuming src is usable url
-        previewImage.src = src;
-        // Simple fade effect could be added here
+        
+        // Clear current content
+        previewContainer.innerHTML = '';
+        
+        if (src) {
+            let mediaElement;
+            
+            if (src.startsWith('/')) {
+                // It's a local image/gif
+                mediaElement = document.createElement('img');
+                mediaElement.src = src;
+                mediaElement.alt = "Project Preview";
+                mediaElement.className = "preview-media-element";
+            } else {
+                // It's a Cloudinary video ID
+                mediaElement = document.createElement('video');
+                mediaElement.src = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${src}.mp4`;
+                mediaElement.className = "preview-media-element";
+                mediaElement.autoplay = true;
+                mediaElement.loop = true;
+                mediaElement.muted = true;
+                mediaElement.playsInline = true;
+                // Prevent right click
+                mediaElement.oncontextmenu = (e) => e.preventDefault();
+            }
+            
+            previewContainer.appendChild(mediaElement);
+        }
       }
 
       if (previewTitle) previewTitle.innerHTML = projectData.title || "";
