@@ -12,7 +12,7 @@ import eigendaxmantle from './eigendaxmantle.json';
 import opsin from './opsin.json';
 import dako from './dako.json';
 import norebase from './norebase.json';
-import autocomply from './auto-comply.json';
+import mintle from './mintle.json';
 import pinataaudio from './pinataaudio.json';
 import franklintempleton from './franklintempleton.json';
 
@@ -30,7 +30,7 @@ const projects: ProjectData[] = [
   opsin as ProjectData,
   dako as ProjectData,
   norebase as ProjectData,
-  autocomply as ProjectData,
+  mintle as ProjectData,
   pinataaudio as ProjectData,
   franklintempleton as ProjectData
 ];

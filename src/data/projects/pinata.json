@@ -1,14 +1,14 @@
 {
-    "project": "pinata",
-    "title": "PI<span class='special-o'>N</span>ATA",
+    "project": "bwi",
+    "title": "BELIE<span class='special-o'>V</span>E WH<span class='special-o'>A</span>T<span class='special-o'>'</span>S IN<span class='special-o'>S</span>I<span class='special-o'>D</span>E",
     "description1": "Redefining data availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
     "videoId": "",
     "videoTitle": "",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2025",
+        "role": "Motion Designer",
+        "tools": "Adobe After Effects",
+        "type": "Key Visual Launch"
     },
     "styleframes": [
         { "src": "EDA-DA-SF-0", "alt": "Hello 1" },
@@ -67,5 +67,6 @@
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
-    ]
+    ],
+    "inProduction": true
 }
