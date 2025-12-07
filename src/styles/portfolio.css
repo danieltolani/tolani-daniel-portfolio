@@ -1626,6 +1626,11 @@ object-position: top left;
   width: 100%;
 }
 
+/* If only one child (no left column), make it full width */
+.sound-design-bottom:has(> :only-child) {
+  grid-template-columns: 1fr;
+}
+
 /* Left Column: Image + Caption */
 .sound-bottom-left {
   display: flex;

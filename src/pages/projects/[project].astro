@@ -556,11 +556,30 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
             {projectData?.["styleframes-breakdown"]?.["top-images"] && (
               <div class="breakdown-images">
                 {projectData["styleframes-breakdown"]["top-images"].map((img) => (
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    class="breakdown-image"
-                  />
+                  !img.src.startsWith("/") && !img.src.includes(".") ? (
+                    <video
+                      src={`https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${img.src}.mp4`}
+                      class="breakdown-image"
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      style="object-fit: cover;"
+                      oncontextmenu="return false;"
+                    ></video>
+                  ) : img.src.startsWith("/") ? (
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      class="breakdown-image"
+                    />
+                  ) : (
+                    <CldImage
+                      src={img.src}
+                      alt={img.alt}
+                      class="breakdown-image"
+                    />
+                  )
                 ))}
               </div>
             )}
@@ -908,16 +927,20 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
         <!-- Bottom: Split Layout -->
         <div class="sound-design-bottom">
           <!-- Left: Image + Caption -->
-          <div class="sound-bottom-left">
-            {projectData["sound-design"]["channel-image"] && (
-              <div class="sound-channel-image">
-                <img src={projectData["sound-design"]["channel-image"]} alt="Audio Channel" />
-              </div>
-            )}
-            <p class="sound-caption">
-              {projectData["sound-design"]["audio-caption"]}
-            </p>
-          </div>
+          {(projectData["sound-design"]["channel-image"] || projectData["sound-design"]["audio-caption"]) && (
+            <div class="sound-bottom-left">
+              {projectData["sound-design"]["channel-image"] && (
+                <div class="sound-channel-image">
+                  <img src={projectData["sound-design"]["channel-image"]} alt="Audio Channel" />
+                </div>
+              )}
+              {projectData["sound-design"]["audio-caption"] && (
+                <p class="sound-caption">
+                  {projectData["sound-design"]["audio-caption"]}
+                </p>
+              )}
+            </div>
+          )}
           
           <!-- Right: Text Content -->
           <div class="sound-bottom-right">

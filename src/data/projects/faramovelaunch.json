@@ -3,7 +3,7 @@
     "title": "FARAM<span class='special-o'>O</span>VE <span class='special-o'>02</span>",
     "description1": "To maintain the buzz from the teaser, the launch video tells the story of everyday delivery needs while revealing more of app’s interfaces. The goal was to connect the product to real use cases and prompt immediate action.",
     "videoSrc": "002_FRMV_LAUNCH",
-    "wireframeVideoSrc": "002-FRMV-LAUNCH-Animatic",
+    "wireframeVideoSrc": "003-FRMV-Cash_Flip",
     "wireframeVideoSrc2": "002-FRMV-LAUNCH-WIRED",
     "videoTitle": "Faramove Launch",
     "metadata": {
@@ -37,8 +37,8 @@
         "top-images": [
             { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-Before.png", "alt": "Faramove pointer select animation" },
             { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Pixel-Insp.png", "alt": "Faramove APMF Style Frame B&W" },
-            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-Sad-Face-After.png", "alt": "Faramove Truck UI Style Frame" },
-            { "src": "/GIF/FARAMOVE/LANCH/FRMV-Launch-ChatBubbles.gif", "alt": "Faramove Truck UI Style Frame" }
+            { "src": "/GIF/FARAMOVE/LANCH/FRMV-Launch-PC-SCREEN.gif", "alt": "Faramove Truck UI Style Frame" },
+            { "src": "002-FRMV-Launch-Screen-ChatBubbles", "alt": "Faramove Truck UI Style Frame" }
         ],
         "top-text": {
             "title": "Finding the Story Beneath the Script",
@@ -68,6 +68,11 @@
         { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-SCRIPT.png", "alt": "Moodboard final" },
         { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-STORYBOARD.png", "alt": "Freewriting sketch" }
     ],
+    "preview-media": {
+        "src": "002-FRMV-Launch-PREVIEW",
+        "alt": "Faramove Launch Preview",
+        "type": "webp"
+    },
     "design-text-block-1": "I had a script that I couldn’t deviate from, but the story forming in my head needed room to breathe. The challenge was merging a new emotional narrative into a pre-defined script - without rewriting or reshaping what the team had approved. My tension wasn’t only in the story; it was in figuring out how to fit the story inside the script’s structure.",
     "design-text-block-2": "Working tightly within the script threaded my idea. Where the script mentioned a feature - I'd transition smoothly to the visual that covered it without breaking the storyline. For instance, transitioning from the broken laptop to visuals of Naira notes. I fused the narrative and the script while keeping the emotional arc intact.",
     "design-challenge-title": "shaping a story",
@@ -77,8 +82,8 @@
     "motion-process-images-sets": {
         "set1": [
             { "src": "002-FRMV-VehicleSpin", "alt": "Faramove parcel pickup animation" },
-            { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
-            { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-3D-VEHICLE-UNFTD.png", "alt": "Faramove box spin animation" },
+            { "src": "002-FRMV-LAUNCH-VEHICLE-SHADOW", "alt": "Faramove box unwrapped" }
         ]
     },
     "motion-process-text-blocks": [
@@ -90,9 +95,7 @@
     "sound-design": {
         "title": "The final layer",
         "description": "For this project, we worked with a voice-over artist. I spent time cleaning, leveling, and shaping the vocal track so it fit into the pacing of the animation. Then came the sound effects: subtle impacts, transitions, emotional cues, and supporting ambience. Each effect was tuned to match the visual beats and maintain consistency across scenes.",
-        "audio-caption": "UI_Mic_Off-Mastered.wav",
-        "channel-image": "/png/EDA/EDA-UI_OFF__PP.png",
-        "main-image": "/png/EDA/EDA-Music_PP-Audio-Stacks.png"
+        "main-image": "/png/FARAMOVE/FARAMOVE_Launch/FRMV-LAUNCH-AUDIO-STACKS.png"
     },
     "credits": [
         { "role": "client", "name": "faramove" },
