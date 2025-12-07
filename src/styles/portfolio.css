@@ -1626,9 +1626,13 @@ object-position: top left;
   width: 100%;
 }
 
-/* If only one child (no left column), make it full width */
+/* If only one child (no left column), make it start left but limit width */
 .sound-design-bottom:has(> :only-child) {
   grid-template-columns: 1fr;
+}
+
+.sound-design-bottom:has(> :only-child) .sound-bottom-right {
+  max-width: 60%;
 }
 
 /* Left Column: Image + Caption */
@@ -1701,6 +1705,10 @@ object-position: top left;
   
   .sound-bottom-left, 
   .sound-bottom-right {
+    max-width: 100%;
+  }
+
+  .sound-design-bottom:has(> :only-child) .sound-bottom-right {
     max-width: 100%;
   }
 }
