@@ -978,17 +978,15 @@ object-position: top left;
 }
 
 /* Override layout-4 for Faramove Campaign: 2x2 grid of squares */
-@media (min-width: 769px) {
-  .project-faramove-campaign .layout-4 {
-    grid-template-columns: 1fr 1fr !important;
-  }
+.project-faramove-campaign .layout-4 {
+  grid-template-columns: 1fr 1fr !important;
+}
 
-  .project-faramove-campaign .layout-4 .dynamic-sketch-item:nth-child(n) {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    aspect-ratio: 1 / 1 !important;
-    height: auto !important;
-  }
+.project-faramove-campaign .layout-4 .dynamic-sketch-item:nth-child(n) {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  aspect-ratio: 1 / 1 !important;
+  height: auto !important;
 }
 
 /* Specific container and positioning for OPSIN OPS-text-wired-full-frame.gif */
