@@ -730,18 +730,60 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
               <!-- Row 3: Two equal side-by-side images -->
               <div class="breakdown-row-bottom">
                 <div class="breakdown-item-half">
-                  <img 
-                    src={projectData["styleframes-breakdown"]["layout-images-2"][2].src} 
-                    alt={projectData["styleframes-breakdown"]["layout-images-2"][2].alt} 
-                    class="breakdown-media" 
-                  />
+                  {!projectData["styleframes-breakdown"]["layout-images-2"][2].src.startsWith("/") && !projectData["styleframes-breakdown"]["layout-images-2"][2].src.includes(".") ? (
+                    <video
+                      src={`https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${projectData["styleframes-breakdown"]["layout-images-2"][2].src}.mp4`}
+                      class="breakdown-media"
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      style="object-fit: cover;"
+                      oncontextmenu="return false;"
+                      disablePictureInPicture
+                      disableRemotePlayback
+                    ></video>
+                  ) : projectData["styleframes-breakdown"]["layout-images-2"][2].src.startsWith("/") ? (
+                    <img 
+                      src={projectData["styleframes-breakdown"]["layout-images-2"][2].src} 
+                      alt={projectData["styleframes-breakdown"]["layout-images-2"][2].alt} 
+                      class="breakdown-media" 
+                    />
+                  ) : (
+                    <CldImage
+                      src={projectData["styleframes-breakdown"]["layout-images-2"][2].src}
+                      alt={projectData["styleframes-breakdown"]["layout-images-2"][2].alt}
+                      class="breakdown-media"
+                    />
+                  )}
                 </div>
                 <div class="breakdown-item-half">
-                  <img 
-                    src={projectData["styleframes-breakdown"]["layout-images-2"][3].src} 
-                    alt={projectData["styleframes-breakdown"]["layout-images-2"][3].alt} 
-                    class="breakdown-media" 
-                  />
+                  {!projectData["styleframes-breakdown"]["layout-images-2"][3].src.startsWith("/") && !projectData["styleframes-breakdown"]["layout-images-2"][3].src.includes(".") ? (
+                    <video
+                      src={`https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${projectData["styleframes-breakdown"]["layout-images-2"][3].src}.mp4`}
+                      class="breakdown-media"
+                      autoplay
+                      loop
+                      muted
+                      playsinline
+                      style="object-fit: cover;"
+                      oncontextmenu="return false;"
+                      disablePictureInPicture
+                      disableRemotePlayback
+                    ></video>
+                  ) : projectData["styleframes-breakdown"]["layout-images-2"][3].src.startsWith("/") ? (
+                    <img 
+                      src={projectData["styleframes-breakdown"]["layout-images-2"][3].src} 
+                      alt={projectData["styleframes-breakdown"]["layout-images-2"][3].alt} 
+                      class="breakdown-media" 
+                    />
+                  ) : (
+                    <CldImage
+                      src={projectData["styleframes-breakdown"]["layout-images-2"][3].src}
+                      alt={projectData["styleframes-breakdown"]["layout-images-2"][3].alt}
+                      class="breakdown-media"
+                    />
+                  )}
                 </div>
               </div>
             </div>

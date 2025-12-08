@@ -32,12 +32,32 @@
     ],
     "styleframes-title": "Design.",
     "styleframes-breakdown": {
-        "top-images": [],
+        "top-images": [
+            { "src": "/png/BWI/BWI-PATTERN-UNUSED-1.png", "alt": "Faramove APMF Style Frame B&W" },
+            { "src": "/png/BWI/BWI-MOOD-FLUT-REF.png", "alt": "Faramove pointer select animation" },
+            { "src": "/png/BWI/BWI-PATTERN-UNUSED-2.png", "alt": "Faramove Truck UI Style Frame" }
+        ],
         "top-text": {
-            "title": "",
-            "content": []
+            "title": "Crafting Pinata’s Organized Discord",
+            "content": [
+                "To express Pinata's bold 1970s psychedelic energy, we warped geometric shapes, used concentric distortions, and flowing color waves to convey constant motion, even in still images. The palette is high-contrast and joyful—purples, yellows, greens, and warm pastels—stacked in ways that feel lively but never chaotic. Across characters, posters, and abstract frames, the style maintains a sense of harmonious cacophony: busy, rhythmic, full of personality, yet always balanced and intentional.",
+                 "The theatrical, slightly absurd edge is inspired by flamboyant fashion, music culture, and playful installations. Overall, the aesthetic is a contemporary take on psychedelic maximalism—fun, human, confident, and expressive."
+            ]
         },
-        "layout-images": []
+        "layout-images": [
+            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
+            { "src": "/png/BWI/BWI-oelhan-mascaras-ref.png", "alt": "Aerial road view" },
+            { "src": "/GIF/BWI/BWI-PINNIE-TEST-MULTI-II.gif", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/BWI/BWI-Tame-Impala-ref.png", "alt": "Faramove unused style frame 2" },
+            { "src": "/png/OPSIN/TF-logo-extrude.png", "alt": "Faramove unused style frame 1" }
+        ],
+        "layout-images-2": [
+            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
+            { "src": "/png/BWI/BWI-oelhan-mascaras-ref.png", "alt": "Aerial road view" },
+            { "src": "/GIF/BWI/BWI-PATTERN-LOOP-2.gif", "alt": "Faramove unused style frame 1" },
+            { "src": "/GIF/BWI/BWI-PATTERN-LOOP-3.gif", "alt": "Faramove unused style frame 2" },
+            { "src": "/GIF/BWI/BWI-PATTERN-LOOP-1.gif", "alt": "Faramove unused style frame 1" }
+        ]
     },
     "design-process-title": "The Cacophonic Harmony",
     "design-process-par": "Pinata’s style is not meant to be clean or quiet - it’s intentional noise - which could be in form of sound, words, or images. This phase focused on building a visual world that feels spontaneous but is actually precisely shaped. The frames needed to feel alive, unpredictable, and full of personality without ever becoming overwhelming or performative.",
@@ -59,9 +79,11 @@
         { "src": "PIN-MOTION-PROCESS-03", "alt": "Process 3" }
     ],
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": [
+            { "src": "PNT-BWI_PATTERN-2-LOOP-WIRED", "alt": "Faramove parcel pickup animation" },
+            { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
+            { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
+        ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
