@@ -1,7 +1,7 @@
 {
     "project": "bwi",
     "title": "BELIE<span class='special-o'>V</span>E WH<span class='special-o'>A</span>T<span class='special-o'>'</span>S IN<span class='special-o'>S</span>I<span class='special-o'>D</span>E",
-    "description1": "Redefining data availability for Ethereum rollups, EigenDA needed to explain a complex idea in a way that felt both human and intelligent — reflecting its sharp, obsessive, genius-like persona.",
+    "description1": "For the Key Visual motion; “Believe What’s Inside”. We translated the Pinata brand's worldview into motion, one made of unexpected twists, organized discordance, and delightful surprises.",
     "videoSrc": "PNT-BWI_Launch_Video",
     "videoTitle": "BWI Launch Video",
     "metadata": {
@@ -39,14 +39,20 @@
         },
         "layout-images": []
     },
-    "design-process-title": "Design Process Title",
-    "design-process-par": "Design process description coming soon.",
-    "design-process-images": [],
-    "design-text-block-1": "Content coming soon.",
-    "design-text-block-2": "Content coming soon.",
-    "design-challenge-title": "Challenge Title",
+    "design-process-title": "The Cacophonic Harmony",
+    "design-process-par": "Pinata’s style is not meant to be clean or quiet - it’s intentional noise - which could be in form of sound, words, or images. This phase focused on building a visual world that feels spontaneous but is actually precisely shaped. The frames needed to feel alive, unpredictable, and full of personality without ever becoming overwhelming or performative.",
+    "design-process-images": [
+        { "src": "/png/BWI/BWI-MOOD-VIBE.png", "alt": "Storyboard sketch final" },
+        { "src": "/png/BWI/BWI-MOOD-VIBE-II.png", "alt": "Moodboard final" },
+        { "src": "/png/BWI/BWI-MOOD-VIBE-III.png", "alt": "Freewriting sketch" },
+        { "src": "/png/BWI/BWI-MOOD-VIBE-IV.png", "alt": "3D brand asset" }
+    ],
+    "design-text-block-1": "Pinata is flamboyant, yes. The campaign needed visuals that matched the “70s-but-now” vibe as soft psychedelia, chunky shapes, warm textures, unpredictable layering, and a confident color story filled frames edge-to-edge. A kind of harmonious busyness.",
+    "design-text-block-2": "Frames were constructed with warping shapes, stretched transitions, and warm grain, layering elements in ways that almost contradict each other: bold shapes, high contrast paired with no textures, busy yet admirable clusters sitting beside calm negative space all feeling synced.",
+    "design-challenge-title": "rhythm and emotional pacing",
+    "motion-challenge-title": "Engineering the Joyful Chaos",
     "motion-process-title": "Motion Process",
-    "motion-process-par": "Add description about the motion process.",
+    "motion-process-par": "Imagine contemporary motion design… but filtered through the 70s. A psychedelic looseness. A playful rhythm. A confident weirdness that feels effortless.",
     "motion-process-images": [
         { "src": "PIN-MOTION-PROCESS-01", "alt": "Process 1" },
         { "src": "PIN-MOTION-PROCESS-02", "alt": "Process 2" },
