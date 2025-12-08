@@ -16,21 +16,21 @@ import pinataaudio from './pinataaudio.json';
 import franklintempleton from './franklintempleton.json';
 
 const projects: ProjectData[] = [
-  faramove as ProjectData,
-  eigenda as ProjectData,
-  pinata as ProjectData,
-  faramovecampaign as ProjectData,
   faramovelaunch as ProjectData,
-  adi as ProjectData,
+  opsin as ProjectData,
+  faramove as ProjectData,
+  pinata as ProjectData,
   rootstock as ProjectData,
   mezo as ProjectData,
   eigendaxmantle as ProjectData,
-  opsin as ProjectData,
+  eigenda as ProjectData,
+  mintle as ProjectData,
+  franklintempleton as ProjectData,
+  faramovecampaign as ProjectData,
+  adi as ProjectData,
   dako as ProjectData,
   norebase as ProjectData,
-  mintle as ProjectData,
-  pinataaudio as ProjectData,
-  franklintempleton as ProjectData
+  pinataaudio as ProjectData
 ];
 
 export default projects;
