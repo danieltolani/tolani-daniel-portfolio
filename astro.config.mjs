@@ -6,7 +6,7 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tolani-daniel-portfolio.vercel.app',
+  site: 'https://tolanidaniel.me',
   output: 'static',
   adapter: vercel(),
   integrations: [react()]

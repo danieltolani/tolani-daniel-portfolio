@@ -7,9 +7,8 @@ interface Props {
 const { title = "DT —— Designer", description = "Portfolio of Daniel Tolani - Motion & Interaction Designer" } = Astro.props;
 
 // Get the site URL from environment or construct from request
-// Remove trailing slash if present to avoid double slashes
-const siteUrl = (Astro.site?.href || Astro.url.origin).replace(/\/$/, '');
-const metaImage = `${siteUrl}/png/META-IMAGE.png`;
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto/META-IMAGE_qlrqtf.png`;
 ---
 
 <!doctype html>
@@ -19,24 +18,26 @@ const metaImage = `${siteUrl}/png/META-IMAGE.png`;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content={description} />
-		<title>{title}</title>
 		
+		<!-- Primary Meta Tags -->
+		<title>{title}</title>
+		<meta name="title" content={title} />
+		<meta name="description" content={description} />
+
 		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="website" />
+		<meta property="og:url" content={Astro.url.href} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={metaImage} />
-		<meta property="og:image:alt" content="Daniel Tolani - Motion & Interaction Designer Portfolio" />
-		<meta property="og:url" content={Astro.url.href} />
-		
-		<!-- Twitter -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={metaImage} />
-		<meta name="twitter:image:alt" content="Daniel Tolani - Motion & Interaction Designer Portfolio" />
-		
+
+		<!-- X (Twitter) -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={Astro.url.href} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={metaImage} />
+
 		<link rel="stylesheet" href="/font/stylesheet.css">
 	</head>
 	<body>
