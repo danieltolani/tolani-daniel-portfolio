@@ -752,16 +752,18 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   )}
 
   <!-- CHALLENGE SECTION -->
-  {projectData?.["motion-process-title"] && (
+  {(projectData?.["motion-process-title"] || (projectData?.["motion-process-images-sets"]?.set1 && projectData["motion-process-images-sets"].set1.length > 0) || projectData?.["motion-text-block-1"]) && (
     <section class="process-section motion-process-section">
       <div class="process-container">
         <!-- Header -->
-        <div class="process-header">
-          <h2 class="process-title">{projectData?.["motion-process-title"]}</h2>
-          <div class="process-description">
-            <p set:html={projectData?.["motion-process-par"] || "Add motion process description"} />
+        {(projectData?.["motion-process-title"] || projectData?.["motion-process-par"]) && (
+          <div class="process-header">
+            <h2 class="process-title">{projectData?.["motion-process-title"]}</h2>
+            <div class="process-description">
+              <p set:html={projectData?.["motion-process-par"] || "Add motion process description"} />
+            </div>
           </div>
-        </div>
+        )}
 
         <!-- Decorative Lines with Image Containers -->
         <div class="decorative-lines">
