@@ -1044,6 +1044,20 @@ object-position: top left;
   grid-template-columns: 3fr 1fr 1fr;
 }
 
+/* Override for Faramove Campaign: Simple 4-column grid on Desktop */
+@media (min-width: 769px) {
+  .project-faramove-campaign .layout-4 {
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-rows: 1fr !important;
+  }
+
+  .project-faramove-campaign .layout-4 .dynamic-sketch-item:nth-child(n) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+
 .layout-4 .dynamic-sketch-item:nth-child(2) {
   grid-column: 2;
   grid-row: span 2; /* Tall item spanning full height */
@@ -1059,18 +1073,6 @@ object-position: top left;
 .layout-4 .dynamic-sketch-item:nth-child(4) {
   grid-column: 3;
   grid-row: 2;
-  aspect-ratio: 1 / 1;
-}
-
-/* Faramove Campaign: Simple 2x2 grid (2 columns, 2 rows) with square items */
-.project-faramove-campaign .layout-4 {
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-}
-
-.project-faramove-campaign .layout-4 .dynamic-sketch-item {
-  grid-column: auto;
-  grid-row: auto;
   aspect-ratio: 1 / 1;
 }
 
