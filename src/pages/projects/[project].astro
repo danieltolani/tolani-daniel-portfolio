@@ -778,7 +778,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
           <div class="sketch-container-wrapper">
             <div class="sketch-container-grid">
               <!-- Row 1: Dynamic Design Process Grid -->
-              <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set1 || []).length}`}>
+              <div class={`design-sketch-grid layout-${(projectData?.["motion-process-images-sets"]?.set1 || []).length}`} id={project === "faramove-campaign" ? "faramove-campaign-motion-grid" : undefined}>
                 {(projectData?.["motion-process-images-sets"]?.set1 || []).map((img) => (
                   <div class={`sketch-container dynamic-sketch-item ${img.src === "/GIF/OPSIN/OPS-text-wired-full-frame.gif" ? "opsin-wired-container" : ""}`}>
                     {!img.src.startsWith("/") && !img.src.includes(".") ? (
