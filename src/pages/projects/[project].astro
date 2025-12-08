@@ -550,7 +550,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 
       <!-- Styleframes Breakdown Section -->
       {projectData?.["styleframes-breakdown"] && (
-        <div class="styleframes-breakdown">
+        <div class="styleframes-breakdown" style={projectData.project === "faramove-campaign" ? "margin-top: 0; padding-top: 0;" : ""}>
           <!-- Top: Flex with images (left) and text (right) -->
           <div class="breakdown-top">
             {projectData?.["styleframes-breakdown"]?.["top-images"] && (

@@ -60,16 +60,16 @@
         "title": "SOUND DESIGN",
         "description": "For the sound design, we started by selecting a base track that would work across the entire campaign series. From there, the focus shifted to finding the right SFX for each vehicle. For example, a {sound name} was used when the bike decelerated, while a different {sound name} matched the braking of a truck. Each sound was chosen to feel specific, intentional and true to the motion on screen.",
         "audio-caption": "",
-        "channel-image": "",
-        "main-image": ""
+        "channel-image": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-AUDIO-BIKE-TOURING.png",
+        "main-image": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-AUDIO-STACKS.png"
     },
     "credits": [
-        { "role": "Client", "entity": "Faramove" },
-        { "role": "3D Models", "entity": "Olawole Adaja" },
-        { "role": "3D Animation", "entity": "Olawole Adaja" },
-        { "role": "Creative Direction", "entity": "Daniel Tolani" },
-        { "role": "Motion Design", "entity": "Daniel Tolani" },
-        { "role": "Sound Design", "entity": "Daniel Tolani" }
+        { "role": "Client", "name": "Faramove" },
+        { "role": "3D Models", "name": "Olawole Adaja" },
+        { "role": "3D Animation", "name": "Olawole Adaja" },
+        { "role": "Creative Direction", "name": "Daniel Tolani" },
+        { "role": "Motion Design", "name": "Daniel Tolani" },
+        { "role": "Sound Design", "name": "Daniel Tolani" }
     ],
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
