@@ -1062,6 +1062,18 @@ object-position: top left;
   aspect-ratio: 1 / 1;
 }
 
+/* Faramove Campaign: Simple 2x2 grid (2 columns, 2 rows) with square items */
+.project-faramove-campaign .layout-4 {
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.project-faramove-campaign .layout-4 .dynamic-sketch-item {
+  grid-column: auto;
+  grid-row: auto;
+  aspect-ratio: 1 / 1;
+}
+
 /* Mobile Overrides */
 @media (max-width: 768px) {
   .design-sketch-grid,
