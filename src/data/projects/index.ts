@@ -7,7 +7,6 @@ import faramovelaunch from './faramovelaunch.json';
 import adi from './adi.json';
 import rootstock from './rootstock.json';
 import mezo from './mezo.json';
-import pinatakv from './pinatakv.json';
 import eigendaxmantle from './eigendaxmantle.json';
 import opsin from './opsin.json';
 import dako from './dako.json';
@@ -25,7 +24,6 @@ const projects: ProjectData[] = [
   adi as ProjectData,
   rootstock as ProjectData,
   mezo as ProjectData,
-  pinatakv as ProjectData,
   eigendaxmantle as ProjectData,
   opsin as ProjectData,
   dako as ProjectData,

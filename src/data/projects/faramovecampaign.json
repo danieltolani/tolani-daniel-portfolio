@@ -2,7 +2,7 @@
     "project": "faramove-campaign",
     "title": "FARAM<span class='special-o'>O</span>VE <span class='special-o'>03</span>",
     "description1": "We crafted an activation campaign that visualized Faramove’s growing reach - highlighting the cities and the fleet of vehicles driving its delivery network.",
-    "videoId": "",
+    "videoSrc": "003-FRMV-CAMPAIGN-MERGED",
     "videoTitle": "Faramove Campaign",
     "metadata": {
         "year": "2023",
@@ -14,52 +14,52 @@
     "styleframes-title": "Styleframes design",
     "styleframes-breakdown": {
         "top-images": [
-            { "src": "/png/Faramove-APMF-Style-Frame_B&W.png", "alt": "Faramove APMF Style Frame B&W" },
-            { "src": "/GIF/Farmove-pointer-select.gif", "alt": "Faramove pointer select animation" },
-            { "src": "/png/Faramove-Truck-UI-Style-Frame.png", "alt": "Faramove Truck UI Style Frame" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-SHORT-BUS.png", "alt": "Faramove pointer select animation" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-BUS-MOCK.png", "alt": "Faramove Truck UI Style Frame" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-3D-PHONE-II.png", "alt": "Faramove APMF Style Frame B&W" }
         ],
         "top-text": {
-            "title": "creating walls to crack",
+            "title": "Where the Angles Came Together",
             "content": [
-                "The goal was to move away from showing too many UI elements, especially since new apps were popping up everywhere post-covid. But somehow - my early frames still included UI components and copy that referenced \"the app.\" This pushed me to create a strict 'DO NOT' list (a technique I learnt from reading 'DESIGN FOR MOTION' by Austin Shaw.",
-                "One key rule was that no actual design components from the real product would appear in the teaser. I stuck to this fully, using only simple, recognizable elements like radio buttons, which could just as easily be interpreted as basic drawn shapes rather than app interface pieces.",
-                "Shortly before this teaser project, I had created a simple Lottie loader animation featuring the logo. It was visually catchy, so opening the video with it felt natural. When I compared it with my free-writing notes—movement, pickup, speed, dropping, location, and more—it aligned perfectly with the themes I wanted to express."
+                "Focusing on the design phase, the first priority was getting the right angles for each vehicle. We moved back and forth between Figma and test renders from Blender to make sure everything fit properly, adjusting whenever something felt off. This part of the process was a bit challenging - I was constantly on calls with the 3D model designer, waiting minutes at a time for each still render, reviewing it, giving feedback, and jumping in hands-on whenever needed."
             ]
         },
         "layout-images": [
-            { "src": "/png/Road_Ariel_STYL-F_Blue.png", "alt": "Faramove logo" },
-            { "src": "/png/aerial-view-road-intersection-roundabout.png", "alt": "Aerial road view" },
-            { "src": "/png/Faramove-AAMF-SF-unused-2.png", "alt": "Faramove unused style frame 1" },
-            { "src": "/png/Faramove-pointer-SF-unused.png", "alt": "Faramove unused style frame 2" }
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-VEH-GPS.png", "alt": "Faramove logo" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-BODIJA.png", "alt": "Aerial road view" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-TRUCK-Filled.png", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-TRUCK-BnW.png", "alt": "Faramove unused style frame 2" }
         ]
     },
     "design-process-title": "you can’t flip a mockup",
-    "design-process-par": "Design process description coming soon.",
+    "design-process-par": "I may never remove the ‘faux’ when I want to introduce myself as a faux-3D motion designer. I may be allergic to dedicated 3D software.",
     "design-process-images": [
         { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-VEHICLE-LINE-UP.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-1" },
         { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-LORRY-BUS-FLIPPED-BLUE.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-2" },
         { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-LUX-BUS-BLUE.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-3" }
     ],
-    "design-text-block-1": "Content coming soon.",
-    "design-text-block-2": "Content coming soon.",
-    "design-challenge-title": "Challenge Title",
+    "design-text-block-1": "Mockups come with limitations when you want to animate them; you can’t rotate them freely, and a flipped vehicle means a flipped logo, which kills the illusion instantly. This is why we needed to re-build the models from scratch.",
+    "design-text-block-2": " Using the mockups as a reference, we switched gears and returned to the 3D models we had built earlier for a pervious video, this time knowing we will be able to rig them properly.",
+    "design-challenge-title": "re-building models",
+    "motion-challenge-title": "re-building models",
     "motion-process-title": "Motion Process Title",
     "motion-process-par": "Motion process description coming soon.",
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": [
+            { "src": "003-FRMV-TRUCK_WEEKEND", "alt": "Faramove parcel pickup animation" },
+            { "src": "003-FRMV-BIKE_NO-SHADOW", "alt": "Faramove parcel pickup animation" },
+            { "src": "003-FRMV-TRUCK-NO_SHADOW", "alt": "Faramove box unwrapped" },
+            { "src": "003-FRMV-TRUCK_SHADOW", "alt": "Faramove box spin animation" }
+        ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "Content coming soon.",
-    "motion-text-block-2": "Content coming soon.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
+    "motion-text-block-1": "Just like in the design phase, this stage involved another round of multiple renders, light compositing tests, and constant checks to see what worked in motion and what needed adjustment. In most cases, shadows will be cut out by frame eges",
+    "motion-text-block-2": "In the end, everything came together. We finalized the motion as a 3D PNG sequence render, separating the vehicle shadows to give us the flexibility we needed to fine-tune and make the final adjustments.",
     "sound-design": {
-        "title": "",
+        "title": "SOUND DESIGN",
         "description": "",
         "audio-caption": "",
         "channel-image": "",

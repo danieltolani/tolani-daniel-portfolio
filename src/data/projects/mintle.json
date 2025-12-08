@@ -2,13 +2,13 @@
     "project": "mintle",
     "title": "MINTLE",
     "description1": "Description coming soon.",
-    "videoId": "",
-    "videoTitle": "",
+    "videoSrc": "001_MINTLE_MAIN",
+    "videoTitle": "DiscoverMintle",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2023",
+        "role": "Design & Motion Designer",
+        "tools": "Figma, Adobe AE Suites & Blender",
+        "type": "Discovery"
     },
     "styleframes": [
         { "src": "/png/MINTLE/MT-SF-0.png", "alt": "Mintle Styleframe 0" },
