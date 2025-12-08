@@ -5,6 +5,10 @@ interface Props {
 }
 
 const { title = "DT —— Designer", description = "Portfolio of Daniel Tolani - Motion & Interaction Designer" } = Astro.props;
+
+// Get the site URL from environment or construct from request
+const siteUrl = Astro.site?.href || (Astro.url.origin);
+const metaImage = `${siteUrl}/png/META-IMAGE.png`;
 ---
 
 <!doctype html>
@@ -21,11 +25,16 @@ const { title = "DT —— Designer", description = "Portfolio of Daniel Tolani 
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
+		<meta property="og:image" content={metaImage} />
+		<meta property="og:image:alt" content="Daniel Tolani - Motion & Interaction Designer Portfolio" />
+		<meta property="og:url" content={Astro.url.href} />
 		
 		<!-- Twitter -->
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={metaImage} />
+		<meta name="twitter:image:alt" content="Daniel Tolani - Motion & Interaction Designer Portfolio" />
 		
 		<link rel="stylesheet" href="/font/stylesheet.css">
 	</head>
