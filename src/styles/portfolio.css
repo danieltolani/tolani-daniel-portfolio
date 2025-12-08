@@ -977,6 +977,20 @@ object-position: top left;
   background-color: #0166FF !important;
 }
 
+/* Override layout-4 for Faramove Campaign: 2x2 grid of squares */
+@media (min-width: 769px) {
+  .project-faramove-campaign .layout-4 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .project-faramove-campaign .layout-4 .dynamic-sketch-item:nth-child(n) {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    height: auto !important;
+  }
+}
+
 /* Specific container and positioning for OPSIN OPS-text-wired-full-frame.gif */
 /* Only apply these specific grid rules on desktop/tablet */
 @media (min-width: 769px) {
@@ -1042,20 +1056,6 @@ object-position: top left;
                                            [ Sq (1fr) ] */
 .layout-4 {
   grid-template-columns: 3fr 1fr 1fr;
-}
-
-/* Override for Faramove Campaign: Simple 4-column grid on Desktop */
-@media (min-width: 769px) {
-  .project-faramove-campaign .layout-4 {
-    grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: 1fr !important;
-  }
-
-  .project-faramove-campaign .layout-4 .dynamic-sketch-item:nth-child(n) {
-    grid-column: auto !important;
-    grid-row: auto !important;
-    aspect-ratio: 1 / 1 !important;
-  }
 }
 
 .layout-4 .dynamic-sketch-item:nth-child(2) {
