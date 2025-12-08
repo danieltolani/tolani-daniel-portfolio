@@ -32,7 +32,7 @@
         ]
     },
     "design-process-title": "you can’t flip a mockup",
-    "design-process-par": "I may never remove the ‘faux’ when I want to introduce myself as a faux-3D motion designer. I may be allergic to dedicated 3D software.",
+    "design-process-par": "I don’t rely heavily on dedicated 3D software at the start of a project. This project, however, made something clear: mockups have real limitations. Working through those constraints brought this project to life, and I break down those lessons in the next section.",
     "design-process-images": [
         { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-VEHICLE-LINE-UP.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-1" },
         { "src": "/png/FARAMOVE/FARAMOVE_Campaign/FRMV-CAMPAIGN-LORRY-BUS-FLIPPED-BLUE.png", "alt": "Faramove 1", "id": "faramove-campaign-vehicle-lineup-2" },
@@ -41,9 +41,7 @@
     "design-text-block-1": "Mockups come with limitations when you want to animate them; you can’t rotate them freely, and a flipped vehicle means a flipped logo, which kills the illusion instantly. This is why we needed to re-build the models from scratch.",
     "design-text-block-2": " Using the mockups as a reference, we switched gears and returned to the 3D models we had built earlier for a pervious video, this time knowing we will be able to rig them properly.",
     "design-challenge-title": "re-building models",
-    "motion-challenge-title": "re-building models",
-    "motion-process-title": "Motion Process Title",
-    "motion-process-par": "Motion process description coming soon.",
+    "motion-challenge-title": "Post Rigging",
     "motion-process-images-sets": {
         "set1": [
             { "src": "003-FRMV-TRUCK_WEEKEND", "alt": "Faramove parcel pickup animation" },
@@ -60,12 +58,19 @@
     "motion-text-block-2": "In the end, everything came together. We finalized the motion as a 3D PNG sequence render, separating the vehicle shadows to give us the flexibility we needed to fine-tune and make the final adjustments.",
     "sound-design": {
         "title": "SOUND DESIGN",
-        "description": "",
+        "description": "For the sound design, we started by selecting a base track that would work across the entire campaign series. From there, the focus shifted to finding the right SFX for each vehicle. For example, a {sound name} was used when the bike decelerated, while a different {sound name} matched the braking of a truck. Each sound was chosen to feel specific, intentional and true to the motion on screen.",
         "audio-caption": "",
         "channel-image": "",
         "main-image": ""
     },
-    "credits": [],
+    "credits": [
+        { "role": "Client", "entity": "Faramove" },
+        { "role": "3D Models", "entity": "Olawole Adaja" },
+        { "role": "3D Animation", "entity": "Olawole Adaja" },
+        { "role": "Creative Direction", "entity": "Daniel Tolani" },
+        { "role": "Motion Design", "entity": "Daniel Tolani" },
+        { "role": "Sound Design", "entity": "Daniel Tolani" }
+    ],
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
