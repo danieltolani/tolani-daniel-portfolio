@@ -3,6 +3,7 @@
     "title": "BELIE<span class='special-o'>V</span>E WH<span class='special-o'>A</span>T<span class='special-o'>'</span>S IN<span class='special-o'>S</span>I<span class='special-o'>D</span>E",
     "description1": "For the Key Visual motion; “Believe What’s Inside”. We translated the Pinata brand's worldview into motion, one made of unexpected twists, organized discordance, and delightful surprises.",
     "videoSrc": "PNT-BWI_Launch_Video",
+    "wireframeVideoSrc": "BWI-WIRED_BWI_lon805",
     "videoTitle": "BWI Launch Video",
     "metadata": {
         "year": "2025",
@@ -40,20 +41,19 @@
         "top-text": {
             "title": "Crafting Pinata’s Organized Discord",
             "content": [
-                "To express Pinata's bold 1970s psychedelic energy, we warped geometric shapes, used concentric distortions, and flowing color waves to convey constant motion, even in still images. The palette is high-contrast and joyful—purples, yellows, greens, and warm pastels—stacked in ways that feel lively but never chaotic. Across characters, posters, and abstract frames, the style maintains a sense of harmonious cacophony: busy, rhythmic, full of personality, yet always balanced and intentional.",
-                 "The theatrical, slightly absurd edge is inspired by flamboyant fashion, music culture, and playful installations. Overall, the aesthetic is a contemporary take on psychedelic maximalism—fun, human, confident, and expressive."
+                "To express Pinata's bold 1970s psychedelic energy, we warped geometric shapes, used concentric distortions, and flowing color waves to convey constant motion, even in still images. The palette is high-contrast and joyful purples, yellows, greens, and warm pastels—stacked in ways that feel lively but never chaotic. Across characters, posters, and abstract frames, the style maintains a sense of harmonious cacophony: busy, rhythmic, full of personality, yet always balanced and intentional.",
+                "The theatrical, slightly absurd edge is inspired by flamboyant fashion, music culture, and playful installations. Overall, the aesthetic is a contemporary take on psychedelic maximalism—fun, human, confident, and expressive."
             ]
         },
         "layout-images": [
-            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
+            { "src": "/png/BWI/BWI-Pinne-Rainbow-star-cornered.png", "alt": "Faramove logo" },
             { "src": "/png/BWI/BWI-oelhan-mascaras-ref.png", "alt": "Aerial road view" },
-            { "src": "/GIF/BWI/BWI-PINNIE-TEST-MULTI-II.gif", "alt": "Faramove unused style frame 1" },
-            { "src": "/png/BWI/BWI-Tame-Impala-ref.png", "alt": "Faramove unused style frame 2" },
-            { "src": "/png/OPSIN/TF-logo-extrude.png", "alt": "Faramove unused style frame 1" }
+            { "src": "/GIF/BWI/BWI-EYE-LOOP.gif", "alt": "Faramove unused style frame 1" },
+            { "src": "/png/BWI/BWI-Tame-Impala-ref.png", "alt": "Faramove unused style frame 2" }
         ],
         "layout-images-2": [
-            { "src": "/png/OPSIN/TF-logo-3D.png", "alt": "Faramove logo" },
-            { "src": "/png/BWI/BWI-oelhan-mascaras-ref.png", "alt": "Aerial road view" },
+            { "src": "/GIF/BWI/BWI-PINNIE-TEST-MULTI-II.gif", "alt": "Faramove logo" },
+            { "src": "/png/BWI/BWI-MOOD-REF-COLORED-SQR.gif", "alt": "Aerial road view" },
             { "src": "/GIF/BWI/BWI-PATTERN-LOOP-2.gif", "alt": "Faramove unused style frame 1" },
             { "src": "/GIF/BWI/BWI-PATTERN-LOOP-3.gif", "alt": "Faramove unused style frame 2" },
             { "src": "/GIF/BWI/BWI-PATTERN-LOOP-1.gif", "alt": "Faramove unused style frame 1" }
@@ -71,7 +71,7 @@
     "design-text-block-2": "Frames were constructed with warping shapes, stretched transitions, and warm grain, layering elements in ways that almost contradict each other: bold shapes, high contrast paired with no textures, busy yet admirable clusters sitting beside calm negative space all feeling synced.",
     "design-challenge-title": "rhythm and emotional pacing",
     "motion-challenge-title": "Engineering the Joyful Chaos",
-    "motion-process-title": "Motion Process",
+    "motion-process-title": "How the Visuals Dance",
     "motion-process-par": "Imagine contemporary motion design… but filtered through the 70s. A psychedelic looseness. A playful rhythm. A confident weirdness that feels effortless.",
     "motion-process-images": [
         { "src": "PIN-MOTION-PROCESS-01", "alt": "Process 1" },
@@ -81,29 +81,34 @@
     "motion-process-images-sets": {
         "set1": [
             { "src": "PNT-BWI_PATTERN-2-LOOP-WIRED", "alt": "Faramove parcel pickup animation" },
-            { "src": "/png/OPSIN/OPS-text-js-script.png", "alt": "Faramove box unwrapped" },
-            { "src": "/GIF/OPSIN/OPS-text_CUTSOMIZABLEgif.gif", "alt": "Faramove box spin animation" }
+            { "src": "/png/BWI/BWI-MOOD-EFFECTS-STACK.png", "alt": "Faramove box unwrapped" },
+            { "src": "/png/BWI/BWI-MOOD-LAYERS-STACK.png", "alt": "Faramove box spin animation" }
         ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "What really helped at this phase was ignoring the approaches to creating a faux-3D box. In the design phase the focus was simply - stack boxes and figure it the rig out later. This is one technique I learnt reading ‘Design for Motion’ by Austin Shaw.",
-    "motion-text-block-2": "The goal here was to keep all three boxes unwrapped in a single composition so there was full control over the content, since this was the only scene that included feature listings. Using the Cinema 4D renderer in AE, once one box was built, the rest was simply duplicating it and adjusting each one to match the styleframe — this time in an actual 3D space.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
+    "motion-text-block-1": "Building the patterns, these weren’t simple, smooth loops. We couldn’t just zoom in, stack layers, and call it a day. Each pattern needed to feel organically irregular: squiggly, non-identical, and constantly shifting without revealing where the transition actually happens.",
+    "motion-text-block-2": "A simple cut-out shape with its keyframes reused across all the other colored shapes in a comp with no BG. After adding offset delays to stagger their movements. The nested comp again had an Echo effect, which produced the hypnotic never ending loop.",
     "sound-design": {
-        "title": "",
-        "description": "",
+        "title": "SOUND DESIGN",
+        "description": "For Pinata, sound is not an accessory, it is part of it's identity. Sound design was handled by an expert (check credits for info), using the references, references; Tati’s playful soundscapes, Freddie Mercury’s theatricality, Beatles-level experimentation, and jazz’s messy charm. \n The direction built on these influences with a playful, rhythmic, slightly chaotic feel that still remained approachable. Small pops, bends, shuffles, and tonal surprises reinforced the motion’s spontaneity. The audio had to be bold enough to carry personality, but subtle enough to avoid feeling like a parody. The result was a blend of sound and motion that embodied Pinata’s optimistic, colorful, confident worldview — a brand that believes in what’s inside, and expresses it joyfully.",
         "audio-caption": "",
         "channel-image": "",
         "main-image": ""
     },
-    "credits": [],
+    "credits": [
+        { "role": "client", "name": "Pinata" },
+        { "role": "motion design", "name": "daniel tolani + Arin Ozmen" },
+        { "role": "Design", "name": "Amelie Özmen + Amanda Eyer" },
+        { "role": "sound design", "name": "Han G" },
+        { "role": "creative direction", "name": "Sixtyne Perez" }
+    ],
     "moreCredits": [
-        { "role": "Music and SFX", "entity": "Artlist.io" },
-        { "role": "REF IMAGES", "entity": "are.na, pinterest" }
+        { "role": "REF I", "entity": "Tame Impala - Feels Like We Only Go Backwards"},
+        { "role": "REF II", "entity": "The Flutterwave story - Flutterwave"},
+        { "role": "ORS", "entity": "cosmos.so/tolanidnx/pinata"}
     ],
     "inProduction": true
 }
