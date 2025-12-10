@@ -107,6 +107,16 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
                     </div>
                   </div>
                 </div>
+              ) : projectData.project === "pinata-audio" ? (
+                <div class="campaign-banner-wrapper">
+                  <div class="campaign-marquee-banner" style="background: none;">
+                    <img 
+                      src="/png/BWI/BWI-HERO-BANNER.png" 
+                      alt="Pinata Audio Banner" 
+                      style="width: 100%; height: 100%; object-fit: cover;"
+                    />
+                  </div>
+                </div>
               ) : (
                 <div class="carousel-wrapper" id="hero-carousel" data-slider>
                   {
@@ -941,7 +951,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
                 <div class="challenge-section">
                   <div class="challenge-badge">
                     <p class="challenge-label">challenge</p>
-                    <p class="challenge-number">TWO</p>
+                    <p class="challenge-number">{projectData.project === 'pinata-audio' ? 'ONE' : 'TWO'}</p>
                   </div>
                 <h2 class="challenge-title">{projectData?.["motion-challenge-title"]}</h2>
                 </div>

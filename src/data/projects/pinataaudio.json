@@ -1,54 +1,38 @@
 {
     "project": "pinata-audio",
     "title": "PIN<span class='special-o'>A</span>TA A<span class='special-o'>U</span>DI<span class='special-o'>O</span>",
-    "description1": "Description coming soon.",
-    "videoId": "",
+    "description1": "Instead of using the typical audio-spectrum effects, I shifted into a motion-branding experiment built entirely around Piñata’s visual language using its repeating patterns.",
+    "videoSrc": "PNT-AUDIO-HERO_h5nxsf",
     "videoTitle": "",
     "metadata": {
-        "year": "",
-        "role": "",
-        "tools": "",
-        "type": ""
+        "year": "2025",
+        "role": "Motion & Visualization Designer",
+        "tools": "Figma, Adobe After Effects",
+        "type": "Audio Visualization"
     },
     "styleframes": [],
-    "styleframes-title": "Styleframes design",
-    "styleframes-breakdown": {
-        "top-images": [],
-        "top-text": {
-            "title": "",
-            "content": []
-        },
-        "layout-images": []
-    },
-    "design-process-title": "Design Process Title",
-    "design-process-par": "Design process description coming soon.",
-    "design-process-images": [],
-    "design-text-block-1": "Content coming soon.",
-    "design-text-block-2": "Content coming soon.",
-    "design-challenge-title": "Challenge Title",
-    "motion-process-title": "Motion Process Title",
+    "motion-process-title": "After Effects simulation",
     "motion-process-par": "Motion process description coming soon.",
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": [
+            { "src": "PNT-AUD-WIRE_uhjzbf", "alt": "Faramove parcel pickup animation" },
+            { "src": "/png/BWI/BWI-WIRE-ILLUSTRATION-II.png", "alt": "Faramove parcel pickup animation" },
+            { "src": "/png/BWI/BWI-WIRE-ILLUSTRATION.png", "alt": "Faramove box unwrapped" }
+        ]
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
         { "paragraph": "SOLUTION" }
     ],
-    "motion-text-block-1": "Content coming soon.",
-    "motion-text-block-2": "Content coming soon.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
-    "sound-design": {
-        "title": "",
-        "description": "",
-        "audio-caption": "",
-        "channel-image": "",
-        "main-image": ""
-    },
-    "credits": [],
+    "motion-text-block-1": "Using the brand pattern introduced its own complexity: each arc had to be driven by its own null with precise offsets, but sound itself only happens once - you can’t fake “echo” or “motion blur” in audio. That meant every arc needed to move quickly and stop instantly whenever the audio paused, all while staying to the structure of the brand pattern.",
+    "motion-text-block-2": "The audio’s L & R channels were converted into keyframes onto a single driver null. Each arc’s top point was then linked to its own control null, which was parented to this audio-driven layer. This makes the entire pattern respond to the sound. To add depth, a duplicate of the null shape pairs introduces slight timing offsets, creating a staggered motion.",
+    "motion-challenge-title": "Updating audio changes",
+    "credits": [
+        { "role": "client", "name": "Pinata" },
+        { "role": "Design", "name": "Amanda Eyer" },
+        { "role": "motion design", "name": "daniel tolani" },
+        { "role": "visualization design", "name": "daniel tolani" }
+    ],
     "moreCredits": [
         { "role": "Music and SFX", "entity": "Artlist.io" },
         { "role": "REF IMAGES", "entity": "are.na, pinterest" }
