@@ -2140,6 +2140,16 @@ object-position: top left;
   color: #7d8484;
 }
 
+.project-name-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.project-name-link:hover .project-name {
+  color: #F72F2F;
+}
+
 .project-name {
   font-family: "Suisse Int'l", sans-serif;
   font-size: clamp(2rem, 3vw, 3.5rem);

@@ -51,7 +51,9 @@ const firstProjectMedia = getMediaInfo(projects[0]);
             >
               <div class="project-item-header">
                 <span class="project-number">{(index + 1).toString().padStart(2, '0')}</span>
-                <h2 class="project-name" set:html={project.title}></h2>
+                <a href={`/projects/${project.project}`} class="project-name-link">
+                  <h2 class="project-name" set:html={project.title}></h2>
+                </a>
               </div>
               <a href={`/projects/${project.project}`} class="project-link-btn">
                 view case study

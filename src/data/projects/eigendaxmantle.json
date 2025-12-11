@@ -47,9 +47,7 @@
     "motion-process-title": "Motion Process Title",
     "motion-process-par": "Motion process description coming soon.",
     "motion-process-images-sets": {
-        "set1": [],
-        "banner": "",
-        "set2": []
+        "set1": []
     },
     "motion-process-text-blocks": [
         { "paragraph": "PROBLEM" },
@@ -57,8 +55,6 @@
     ],
     "motion-text-block-1": "Content coming soon.",
     "motion-text-block-2": "Content coming soon.",
-    "motion-text-block-3": "Content coming soon.",
-    "motion-text-block-4": "Content coming soon.",
     "sound-design": {
         "title": "",
         "description": "",
