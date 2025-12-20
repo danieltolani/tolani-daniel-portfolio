@@ -25,12 +25,12 @@ const projects: ProjectData[] = [
   eigendaxmantle as ProjectData,
   eigenda as ProjectData,
   mintle as ProjectData,
-  franklintempleton as ProjectData,
+  // franklintempleton as ProjectData,
   faramovecampaign as ProjectData,
-  adi as ProjectData,
-  dako as ProjectData,
-  norebase as ProjectData,
-  pinataaudio as ProjectData
+  // adi as ProjectData,
+  // dako as ProjectData,
+  // norebase as ProjectData,
+  // pinataaudio as ProjectData
 ];
 
 export default projects;
