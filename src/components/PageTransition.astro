@@ -1,0 +1,167 @@
+---
+---
+
+<div id="page-transition-overlay" class="page-transition-overlay" aria-hidden="true" transition:persist>
+  <div id="blocks-container" class="blocks-container"></div>
+</div>
+
+<style>
+  .page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    display: block; /* Always visible for cursor trail */
+  }
+
+  .blocks-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  // Configuration
+  const TARGET_BLOCK_SIZE = 20; // Aim for roughly 20px blocks
+  const SECONDARY_COLOR = "#E5EAF4";
+  const BLOCK_COLOR = "#f72f2f";
+  
+  let currentBlockSize = TARGET_BLOCK_SIZE;
+
+  const overlay = document.getElementById("page-transition-overlay");
+  const container = document.getElementById("blocks-container");
+  
+  let animationPromise = null;
+
+  // --- Grid Generation ---
+  
+  function generateGrid() {
+    // Only calculate block size
+    if (!container) return;
+    
+    // Clear existing blocks
+    container.innerHTML = "";
+    blockQueue.length = 0; // Clear queue
+    
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Calculate columns and rows to fill screen
+    const cols = Math.ceil(width / TARGET_BLOCK_SIZE);
+    
+    // Calculate exact block size to fill width perfectly
+    const blockSize = width / cols;
+    currentBlockSize = blockSize;
+    
+  }
+
+  // --- Cursor Tracking & Trail Logic ---
+
+  let lastGridCol = -1;
+  let lastGridRow = -1;
+  const blockQueue: HTMLElement[] = [];
+  const MAX_TRAIL_LENGTH = 30;
+
+  function onCursorMove(e: MouseEvent) {
+    if (!container) return;
+
+    const col = Math.floor(e.clientX / currentBlockSize);
+    const row = Math.floor(e.clientY / currentBlockSize);
+    
+    // Only create if moved to new grid cell
+    if (col !== lastGridCol || row !== lastGridRow) {
+      createTrailBlock(col, row);
+      lastGridCol = col;
+      lastGridRow = row;
+    }
+  }
+
+  function createTrailBlock(col: number, row: number) {
+    if (!container) return;
+
+    const block = document.createElement("div");
+    // Random variant assignment
+    const isSecondary = Math.random() < 0.4;
+    block.className = `transition-block ${isSecondary ? "variant-secondary" : "variant-primary"}`;
+    
+    block.style.width = `${currentBlockSize}px`;
+    block.style.height = `${currentBlockSize}px`;
+    block.style.backgroundColor = BLOCK_COLOR;
+    block.style.opacity = "0"; 
+    block.style.position = "absolute";
+    block.style.left = `${col * currentBlockSize}px`;
+    block.style.top = `${row * currentBlockSize}px`;
+    
+    container.appendChild(block);
+    blockQueue.push(block);
+
+    // Manage queue length
+    if (blockQueue.length > MAX_TRAIL_LENGTH) {
+      const oldest = blockQueue.shift();
+      if (oldest) {
+        gsap.killTweensOf(oldest);
+        if (oldest.parentNode) oldest.parentNode.removeChild(oldest);
+      }
+    }
+    
+    // Animate immediately
+    animateBlock(block);
+  }
+
+  function animateBlock(block: HTMLElement) {
+      // Determine if this block moves
+     const moves = Math.random() < 0.4;
+     const yOffset = moves ? (Math.random() < 0.5 ? -currentBlockSize : currentBlockSize) : 0;
+     
+     // Color sequence depends on variant, but currently both use same logic
+     // You can differentiate if needed based on class
+     const colors = [BLOCK_COLOR, SECONDARY_COLOR, BLOCK_COLOR, BLOCK_COLOR];
+
+     gsap.to(block, {
+        keyframes: {
+           // Starting slow (hold first ON state longer), then speed up
+           opacity:         [0, 1, 0, 1], 
+           backgroundColor: colors,
+           y:               [0, 0, yOffset, yOffset]
+        },
+        duration: 0.35, 
+        ease: "expo.inOut",
+        onComplete: () => {
+            // Remove block after animation completes naturally
+            if (block.parentNode) {
+                block.parentNode.removeChild(block);
+            }
+            // Remove from queue if it's still there
+            const index = blockQueue.indexOf(block);
+            if (index > -1) {
+                blockQueue.splice(index, 1);
+            }
+        }
+     });
+  }
+  
+  // --- Event Listeners ---
+  
+  // Initial setup
+  generateGrid();
+  
+  // Resize handler (debounced)
+  let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(generateGrid, 200);
+  });
+  
+  // Cursor tracking
+  window.addEventListener("mousemove", onCursorMove);
+  
+</script>
