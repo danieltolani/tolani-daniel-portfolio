@@ -7,6 +7,7 @@ interface Props {
 const { title = "DT —— Motion Designer", description = "Portfolio of Daniel Tolani - Motion & Interaction Designer" } = Astro.props;
 
 import { ClientRouter } from 'astro:transitions';
+import PageTransition from '../components/PageTransition.astro';
 
 // Get the site URL from environment or construct from request
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -44,6 +45,7 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<ClientRouter />
 	</head>
 	<body>
+		<PageTransition />
 		<slot />
 	</body>
 </html>
