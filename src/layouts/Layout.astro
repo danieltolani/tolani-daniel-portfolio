@@ -42,7 +42,7 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<meta property="twitter:image" content={metaImage} />
 
 		<link rel="stylesheet" href="/font/stylesheet.css">
-		<ClientRouter />
+		<ClientRouter fallback="swap" />
 	</head>
 	<body>
 		<PageTransition />
