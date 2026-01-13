@@ -6,13 +6,13 @@ const isHomePage = currentPath === '/';
 ---
 
 <header class="header" id="main-header" transition:persist>
-	<a href="/" class={`header-logo ${isHomePage ? 'active' : ''}`}>
+	<a href="/" class={`header-logo ${isHomePage ? 'active' : ''}`} data-astro-reload>
         <svg xmlns="http://www.w3.org/2000/svg" width="73" height="60" fill="none"><path fill="#F72F2F" d="M30.732 10v39.295h-8.943v-3.902c-.904 1.518-2.187 2.674-3.849 3.469C16.278 49.62 14.58 50 12.845 50c-3.794 0-6.883-1.373-9.268-4.12C1.192 43.136 0 39.414 0 34.716c0-4.697 1.192-8.4 3.577-11.11 2.385-2.747 5.474-4.12 9.268-4.12 1.735 0 3.433.398 5.095 1.192 1.662.76 2.945 1.898 3.849 3.415V10h8.943Zm-19.62 18.645c-1.23 1.445-1.844 3.469-1.844 6.07 0 2.602.615 4.644 1.843 6.125 1.229 1.482 2.782 2.222 4.661 2.222 1.915 0 3.47-.668 4.662-2.005 1.192-1.373 1.788-3.487 1.788-6.342 0-2.854-.596-4.95-1.788-6.287-1.193-1.337-2.747-2.005-4.662-2.005-1.879 0-3.432.74-4.66 2.222Z"/><path fill="#F72F2F" d="M30.732 18.13H22.84V10h29.843v8.13H40.054v31.165h-9.322V18.13ZM48.888 49.295v-9.647H58.97v9.647H48.89Z"/><path fill="#F72F2F" d="M52.803 49.295v-9.647h10.081v9.647H52.803Z"/></svg>
 	</a>
 	<nav class="nav">
-		<a href="/work" class={currentPath.startsWith('/work') ? 'active' : ''}>PRJT.WORK</a>
-		<a href="/about" class={currentPath.startsWith('/about') ? 'active' : ''}>AB.ME</a>
-		<a href="/contact" class={currentPath.startsWith('/contact') ? 'active' : ''}>CT.MAIL</a>
+		<a href="/work" class={currentPath.startsWith('/work') ? 'active' : ''} data-astro-reload>PRJT.WORK</a>
+		<a href="/about" class={currentPath.startsWith('/about') ? 'active' : ''} data-astro-reload>AB.ME</a>
+		<a href="/contact" class={currentPath.startsWith('/contact') ? 'active' : ''} data-astro-reload>CT.MAIL</a>
 	</nav>
 </header>
 

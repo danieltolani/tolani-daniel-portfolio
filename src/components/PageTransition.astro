@@ -36,7 +36,7 @@
   const BLOCK_COLOR = "#f72f2f";
   
   let currentBlockSize = TARGET_BLOCK_SIZE;
-
+  
   const overlay = document.getElementById("page-transition-overlay");
   const container = document.getElementById("blocks-container");
   
@@ -88,16 +88,16 @@
   function createTrailBlock(col: number, row: number) {
     if (!container) return;
 
-    const block = document.createElement("div");
+      const block = document.createElement("div");
     // Random variant assignment
     const isSecondary = Math.random() < 0.4;
     block.className = `transition-block ${isSecondary ? "variant-secondary" : "variant-primary"}`;
     
     block.style.width = `${currentBlockSize}px`;
     block.style.height = `${currentBlockSize}px`;
-    block.style.backgroundColor = BLOCK_COLOR;
-    block.style.opacity = "0"; 
-    block.style.position = "absolute";
+      block.style.backgroundColor = BLOCK_COLOR;
+      block.style.opacity = "0"; 
+      block.style.position = "absolute";
     block.style.left = `${col * currentBlockSize}px`;
     block.style.top = `${row * currentBlockSize}px`;
     
@@ -111,8 +111,8 @@
         gsap.killTweensOf(oldest);
         if (oldest.parentNode) oldest.parentNode.removeChild(oldest);
       }
-    }
-    
+  }
+
     // Animate immediately
     animateBlock(block);
   }
@@ -139,7 +139,7 @@
             // Remove block after animation completes naturally
             if (block.parentNode) {
                 block.parentNode.removeChild(block);
-            }
+        }
             // Remove from queue if it's still there
             const index = blockQueue.indexOf(block);
             if (index > -1) {
@@ -148,7 +148,7 @@
         }
      });
   }
-  
+
   // --- Event Listeners ---
   
   // Initial setup
