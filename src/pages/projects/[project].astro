@@ -428,11 +428,13 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
       }
 
       // Run when DOM is ready
-      document.addEventListener("DOMContentLoaded", () => {
+      function initVideoScripts() {
         hideVimeoSideDock();
         setupVideoOverlayFade();
         setupVideoPlayHelper();
-      });
+      }
+
+      document.addEventListener("astro:page-load", initVideoScripts);
     </script>
 
     <!-- VIDEO MODAL -->
@@ -1538,27 +1540,14 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   }
 
   // Call after grid generation and on resize
-  window.addEventListener("DOMContentLoaded", () => {
-    setTimeout(() => {
-      generateGridLines();
-      updateSVGHeight();
-    }, 100);
-  });
-
-  // Also try to initialize immediately if DOM is already loaded
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        generateGridLines();
-        updateSVGHeight();
-      }, 100);
-    });
-  } else {
+  function initGridLines() {
     setTimeout(() => {
       generateGridLines();
       updateSVGHeight();
     }, 100);
   }
+
+  document.addEventListener("astro:page-load", initGridLines);
 
   // Update on resize
   let resizeTimeout: ReturnType<typeof setTimeout>;
@@ -1592,169 +1581,197 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   });
 
   // ==================== HERO CAROUSEL WITH SMOOOTHY ====================
-  const heroCarouselElement = document.getElementById(
-    "hero-carousel"
-  ) as HTMLElement;
   let heroCarouselInstance: any;
+  let thumbsCarousel: any;
+  let heroAutoScrollSpeed = -0.003; // Slower speed for hero carousel
+  let heroIsPaused = false;
+  let updateHeroTicker: (() => void) | undefined;
+  let updatePreviewTicker: (() => void) | undefined;
 
-  // Check if the hero carousel actually exists (might be replaced by marquee banner)
-  if (heroCarouselElement) {
-    console.log("Hero carousel found:", heroCarouselElement);
-
-    // Initialize Smooothy for hero carousel
-    heroCarouselInstance = new Smooothy(heroCarouselElement, {
-      infinite: true,
-      snap: false,
-      dragSensitivity: 0.019,
-      lerpFactor: 0.35,
-      scrollInput: true,
-      onUpdate: (instance) => {
-        // Force viewport to think we're on a 1512px screen
-        if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
-          instance.viewport.wrapperWidth = 1512;
-        }
-      },
-    });
-
-    // Auto-scroll functionality for hero carousel
-    let heroAutoScrollSpeed = -0.003; // Slower speed for hero carousel
-    let heroIsPaused = false;
-
-    // Pause on hover for hero carousel
-    heroCarouselElement.addEventListener("mouseenter", () => {
-      heroIsPaused = true;
-    });
-
-    heroCarouselElement.addEventListener("mouseleave", () => {
-      heroIsPaused = false;
-    });
-
-    // Animation loop for hero carousel auto-scroll using GSAP ticker
-    function updateHero() {
-      if (!heroIsPaused) {
-        heroCarouselInstance.target += heroAutoScrollSpeed;
-      }
+  function initCarousels() {
+    // Cleanup previous instances if they exist
+    if (heroCarouselInstance) {
+      if (updateHeroTicker) gsap.ticker.remove(updateHeroTicker);
+      gsap.ticker.remove(heroCarouselInstance.update.bind(heroCarouselInstance));
+      heroCarouselInstance = null;
+    }
+    if (thumbsCarousel) {
+      if (updatePreviewTicker) gsap.ticker.remove(updatePreviewTicker);
+      gsap.ticker.remove(thumbsCarousel.update.bind(thumbsCarousel));
+      thumbsCarousel = null;
     }
 
-    // Use GSAP ticker for smooth updates
-    gsap.ticker.add(updateHero);
-    gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
-  } else {
-    console.log("Hero carousel not found in DOM (likely replaced by custom banner)");
-  }
-
-  // ==================== STYLEFRAMES THUMBS WITH SMOOOTHY ====================
-  // Find the second carousel (styleframes thumbs) - it's the second .carousel-wrapper
-  const carouselWrappers = document.querySelectorAll(".carousel-wrapper");
-  const thumbsRail = carouselWrappers[1] as HTMLElement; // Second carousel is the thumbs rail
-  let thumbsCarousel: any;
-
-  console.log("Total carousel wrappers found:", carouselWrappers.length);
-  console.log("First carousel (hero):", carouselWrappers[0]);
-  console.log("Second carousel (thumbs):", carouselWrappers[1]);
-
-  // Get styleframeSet from data attribute
-  const previewContainer = document.querySelector(
-    ".styleframes-preview"
-  ) as HTMLElement;
-  const styleframeSet = previewContainer
-    ? JSON.parse(previewContainer.getAttribute("data-styleframes") || "[]")
-    : [];
-
-  if (thumbsRail) {
-    console.log("Thumbs rail found:", thumbsRail);
-
-    // Initialize Smooothy for thumbs rail - DRAG ONLY, NO AUTO-SCROLL
-    thumbsCarousel = new Smooothy(thumbsRail, {
-      infinite: false, // No infinite loop - this naturally prevents over-scrolling
-      snap: true, // Enable snapping for smooth drag-to-stop behavior
-      dragSensitivity: 0.019, // Same drag sensitivity as hero
-      lerpFactor: 0.35, // Same lerp factor as hero
-      scrollInput: true,
-      onUpdate: (instance) => {
-        // Force viewport to think we're on a 1512px screen
-        if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
-          console.log("Forcing viewport to 1512px");
-          instance.viewport.wrapperWidth = 1512;
-        }
-        // Let Smooothy handle bounds naturally with infinite: false
-      },
-    });
-
-    // NO auto-scroll functionality - drag only
-    // But we still need GSAP ticker for drag animations
-    gsap.ticker.add(thumbsCarousel.update.bind(thumbsCarousel));
-    console.log("Styleframes carousel initialized - drag only, no auto-scroll");
-
-    // ==================== DYNAMIC PREVIEW IMAGE SYSTEM ====================
-    // Get all carousel items and preview image
-    const carouselItems = thumbsRail.querySelectorAll(".carousel-item-inner");
-    const previewImage = document.getElementById(
-      "current-styleframe"
-    ) as HTMLImageElement;
-    const detector = document.getElementById("styleframe-detector");
-    const counterNumber = document.querySelector(
-      ".counter-number.current"
+    const heroCarouselElement = document.getElementById(
+      "hero-carousel"
     ) as HTMLElement;
 
-    function updatePreviewImage() {
-      if (!detector || !previewImage) return;
+    // Check if the hero carousel actually exists (might be replaced by marquee banner)
+    if (heroCarouselElement) {
+      console.log("Hero carousel found:", heroCarouselElement);
 
-      const detectorRect = detector.getBoundingClientRect();
-      const detectorLeft = detectorRect.left;
-      const detectorRight = detectorRect.right;
-
-      carouselItems.forEach((item, index) => {
-        const rect = item.getBoundingClientRect();
-        const centerX = (rect.left + rect.right) / 2;
-
-        // Check if item center intersects with detector
-        if (centerX >= detectorLeft && centerX <= detectorRight) {
-          // Get the image from this carousel item
-          const carouselImage = item.querySelector(
-            ".carousel-image2"
-          ) as HTMLImageElement;
-          if (carouselImage && carouselImage.src) {
-            (previewImage as HTMLImageElement).src = carouselImage.src;
-            (previewImage as HTMLImageElement).alt =
-              carouselImage.alt || "Current Styleframe";
-
-            // Update the counter to show current item number (1-based)
-            if (counterNumber) {
-              counterNumber.textContent = (index + 1).toString();
-            }
-
-            console.log(
-              "Preview updated with:",
-              carouselImage.src,
-              "Counter:",
-              index + 1
-            );
+      // Initialize Smooothy for hero carousel
+      heroCarouselInstance = new Smooothy(heroCarouselElement, {
+        infinite: true,
+        snap: false,
+        dragSensitivity: 0.019,
+        lerpFactor: 0.35,
+        scrollInput: true,
+        onUpdate: (instance) => {
+          // Force viewport to think we're on a 1512px screen
+          if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
+            instance.viewport.wrapperWidth = 1512;
           }
-        }
+        },
       });
+
+      // Auto-scroll functionality for hero carousel
+      heroIsPaused = false;
+
+      // Pause on hover for hero carousel
+      heroCarouselElement.addEventListener("mouseenter", () => {
+        heroIsPaused = true;
+      });
+
+      heroCarouselElement.addEventListener("mouseleave", () => {
+        heroIsPaused = false;
+      });
+
+      // Animation loop for hero carousel auto-scroll using GSAP ticker
+      function updateHero() {
+        if (!heroIsPaused && heroCarouselInstance) {
+          heroCarouselInstance.target += heroAutoScrollSpeed;
+        }
+      }
+      updateHeroTicker = updateHero;
+
+      // Use GSAP ticker for smooth updates
+      gsap.ticker.add(updateHero);
+      gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
+    } else {
+      console.log("Hero carousel not found in DOM (likely replaced by custom banner)");
     }
 
-    // Update on scroll/drag
-    gsap.ticker.add(updatePreviewImage);
+    // ==================== STYLEFRAMES THUMBS WITH SMOOOTHY ====================
+    // Find the second carousel (styleframes thumbs) - it's the second .carousel-wrapper
+    const carouselWrappers = document.querySelectorAll(".carousel-wrapper");
+    // Ensure we have enough wrappers before trying to access index 1
+    if (carouselWrappers.length < 2) {
+       console.log("Not enough carousel wrappers found for styleframes thumbs");
+       return;
+    }
+    const thumbsRail = carouselWrappers[1] as HTMLElement; // Second carousel is the thumbs rail
 
-    // Initial update
-    updatePreviewImage();
-  } else {
-    console.error("Thumbs rail (second carousel) not found in DOM");
+    console.log("Total carousel wrappers found:", carouselWrappers.length);
+    console.log("First carousel (hero):", carouselWrappers[0]);
+    console.log("Second carousel (thumbs):", carouselWrappers[1]);
+
+    // Get styleframeSet from data attribute
+    const previewContainer = document.querySelector(
+      ".styleframes-preview"
+    ) as HTMLElement;
+    const styleframeSet = previewContainer
+      ? JSON.parse(previewContainer.getAttribute("data-styleframes") || "[]")
+      : [];
+
+    if (thumbsRail) {
+      console.log("Thumbs rail found:", thumbsRail);
+
+      // Initialize Smooothy for thumbs rail - DRAG ONLY, NO AUTO-SCROLL
+      thumbsCarousel = new Smooothy(thumbsRail, {
+        infinite: false, // No infinite loop - this naturally prevents over-scrolling
+        snap: true, // Enable snapping for smooth drag-to-stop behavior
+        dragSensitivity: 0.019, // Same drag sensitivity as hero
+        lerpFactor: 0.35, // Same lerp factor as hero
+        scrollInput: true,
+        onUpdate: (instance) => {
+          // Force viewport to think we're on a 1512px screen
+          if (instance.viewport && instance.viewport.wrapperWidth > 1512) {
+            console.log("Forcing viewport to 1512px");
+            instance.viewport.wrapperWidth = 1512;
+          }
+          // Let Smooothy handle bounds naturally with infinite: false
+        },
+      });
+
+      // NO auto-scroll functionality - drag only
+      // But we still need GSAP ticker for drag animations
+      gsap.ticker.add(thumbsCarousel.update.bind(thumbsCarousel));
+      console.log("Styleframes carousel initialized - drag only, no auto-scroll");
+
+      // ==================== DYNAMIC PREVIEW IMAGE SYSTEM ====================
+      // Get all carousel items and preview image
+      const carouselItems = thumbsRail.querySelectorAll(".carousel-item-inner");
+      const previewImage = document.getElementById(
+        "current-styleframe"
+      ) as HTMLImageElement;
+      const detector = document.getElementById("styleframe-detector");
+      const counterNumber = document.querySelector(
+        ".counter-number.current"
+      ) as HTMLElement;
+
+      function updatePreviewImage() {
+        if (!detector || !previewImage) return;
+
+        const detectorRect = detector.getBoundingClientRect();
+        const detectorLeft = detectorRect.left;
+        const detectorRight = detectorRect.right;
+
+        carouselItems.forEach((item, index) => {
+          const rect = item.getBoundingClientRect();
+          const centerX = (rect.left + rect.right) / 2;
+
+          // Check if item center intersects with detector
+          if (centerX >= detectorLeft && centerX <= detectorRight) {
+            // Get the image from this carousel item
+            const carouselImage = item.querySelector(
+              ".carousel-image2"
+            ) as HTMLImageElement;
+            if (carouselImage && carouselImage.src) {
+              (previewImage as HTMLImageElement).src = carouselImage.src;
+              (previewImage as HTMLImageElement).alt =
+                carouselImage.alt || "Current Styleframe";
+
+              // Update the counter to show current item number (1-based)
+              if (counterNumber) {
+                counterNumber.textContent = (index + 1).toString();
+              }
+            }
+          }
+        });
+      }
+      updatePreviewTicker = updatePreviewImage;
+
+      // Update on scroll/drag
+      gsap.ticker.add(updatePreviewImage);
+
+      // Initial update
+      updatePreviewImage();
+    } else {
+      console.error("Thumbs rail (second carousel) not found in DOM");
+    }
   }
+
+  document.addEventListener("astro:page-load", initCarousels);
 
   // ==================== MOTION DIVIDER BANNER LOGIC ====================
   function initMotionDivider() {
     const banner = document.querySelector(".motion-divider-banner") as HTMLElement;
     if (!banner) return;
-
+    
+    // ... existing initialization logic ...
+    
     const bannerSrc = banner.getAttribute('data-banner-src');
     // If banner src not provided, hide or return
     if (!bannerSrc) {
         banner.style.display = 'none';
         return;
     }
+    
+    // Check if we've already initialized this specific banner element
+    if (banner.hasAttribute('data-initialized')) {
+        return;
+    }
+    banner.setAttribute('data-initialized', 'true');
 
     // Helper to populate banner
     const populateBanner = () => {
@@ -1841,55 +1858,56 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     });
   }
 
-  // Initialize motion divider
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initMotionDivider);
-  } else {
-    initMotionDivider();
-  }
+  document.addEventListener("astro:page-load", initMotionDivider);
 
   // ==================== READ MORE TOGGLE ====================
-  const readMoreButton = document.querySelector(".read-more-button");
-  const heroDescriptionWrapper = document.querySelector(".hero-description-wrapper");
+  function initToggles() {
+    const readMoreButton = document.querySelector(".read-more-button");
+    const heroDescriptionWrapper = document.querySelector(".hero-description-wrapper");
 
-  if (readMoreButton && heroDescriptionWrapper) {
-    readMoreButton.addEventListener("click", () => {
-      const isExpanded = heroDescriptionWrapper.classList.contains("expanded");
-      
-      if (isExpanded) {
-        heroDescriptionWrapper.classList.remove("expanded");
-        readMoreButton.textContent = "Read more";
-        readMoreButton.setAttribute("aria-expanded", "false");
-      } else {
-        heroDescriptionWrapper.classList.add("expanded");
-        readMoreButton.textContent = "Read less";
-        readMoreButton.setAttribute("aria-expanded", "true");
-      }
-    });
+    if (readMoreButton && heroDescriptionWrapper) {
+      // Clean up old listener if it exists (though cloning node is safer if we didn't store reference)
+      // Since we re-run this on page load, the new DOM elements don't have listeners yet.
+      readMoreButton.addEventListener("click", () => {
+        const isExpanded = heroDescriptionWrapper.classList.contains("expanded");
+        
+        if (isExpanded) {
+          heroDescriptionWrapper.classList.remove("expanded");
+          readMoreButton.textContent = "Read more";
+          readMoreButton.setAttribute("aria-expanded", "false");
+        } else {
+          heroDescriptionWrapper.classList.add("expanded");
+          readMoreButton.textContent = "Read less";
+          readMoreButton.setAttribute("aria-expanded", "true");
+        }
+      });
+    }
+
+    // ==================== MORE CREDITS TOGGLE ====================
+    const moreCCButton = document.querySelector('.more-cc-button');
+    const moreCCContainer = document.querySelector('.more-cc-container');
+
+    if (moreCCButton && moreCCContainer) {
+      moreCCButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const isExpanded = moreCCButton.getAttribute('aria-expanded') === 'true';
+        
+        // Toggle state
+        moreCCButton.setAttribute('aria-expanded', (!isExpanded).toString());
+        moreCCContainer.classList.toggle('active');
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (moreCCContainer.classList.contains('active') && 
+            !moreCCContainer.contains(e.target as Node)) {
+          moreCCButton.setAttribute('aria-expanded', 'false');
+          moreCCContainer.classList.remove('active');
+        }
+      });
+    }
   }
 
-  // ==================== MORE CREDITS TOGGLE ====================
-  const moreCCButton = document.querySelector('.more-cc-button');
-  const moreCCContainer = document.querySelector('.more-cc-container');
-
-  if (moreCCButton && moreCCContainer) {
-    moreCCButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const isExpanded = moreCCButton.getAttribute('aria-expanded') === 'true';
-      
-      // Toggle state
-      moreCCButton.setAttribute('aria-expanded', (!isExpanded).toString());
-      moreCCContainer.classList.toggle('active');
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (moreCCContainer.classList.contains('active') && 
-          !moreCCContainer.contains(e.target as Node)) {
-        moreCCButton.setAttribute('aria-expanded', 'false');
-        moreCCContainer.classList.remove('active');
-      }
-    });
-  }
+  document.addEventListener("astro:page-load", initToggles);
 </script>
