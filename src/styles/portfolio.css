@@ -1,3 +1,9 @@
+/* Barba Container Styles */
+.barba-container {
+  opacity: 1; /* Ensure visible by default */
+  width: 100%;
+}
+
 /* Import Footer Styles */
 @import './footer.css';
 

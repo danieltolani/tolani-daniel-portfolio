@@ -43,17 +43,20 @@ function initBarba() {
           // Reset scroll
           window.scrollTo(0, 0);
           
-          // Fade in
+          // Ensure new container is transparent before transition starts
           if (data.next.container) {
             data.next.container.style.opacity = '0';
-            data.next.container.style.transition = 'none'; // Prepare for fade in
-            
-            // Wait a frame
-            await delay(10);
-            
-            data.next.container.style.transition = 'opacity 0.5s ease';
-            data.next.container.style.opacity = '1';
           }
+        },
+        async afterEnter(data) {
+           // Fade in new content
+           if (data.next.container) {
+             // Force reflow to ensure opacity: 0 applies before transition
+             data.next.container.getBoundingClientRect(); 
+             
+             data.next.container.style.transition = 'opacity 0.5s ease';
+             data.next.container.style.opacity = '1';
+           }
         },
         async after(data) {
           // Re-initialize scripts
