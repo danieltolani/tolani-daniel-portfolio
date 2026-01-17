@@ -7,6 +7,7 @@ interface Props {
 const { title = "DT —— Motion Designer", description = "Portfolio of Daniel Tolani - Motion & Interaction Designer" } = Astro.props;
 
 import PageTransition from '../components/PageTransition.astro';
+import Header from '../components/Header.astro';
 
 // Get the site URL from environment or construct from request
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -41,8 +42,10 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<meta property="twitter:image" content={metaImage} />
     
 		<link rel="stylesheet" href="/font/stylesheet.css">
+		<link rel="stylesheet" href="/styles/header.css">
 	</head>
 	<body data-barba="wrapper">
+		<Header />
 		<PageTransition />
     <div data-barba="container" data-barba-namespace="default">
 		  <slot />
