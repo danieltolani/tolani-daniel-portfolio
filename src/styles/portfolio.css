@@ -644,13 +644,20 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 162px;
-  height: 162px;
+  width: 130px; /* Reduced size for filled circle */
+  height: 130px;
   /* Initial state: hidden and centered (will be moved by JS) */
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.8);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  mix-blend-mode: difference; /* Make it visible against light/dark backgrounds */
+  mix-blend-mode: difference; /* Restored mix-blend-mode */ 
+  /* Prevent initial animation on page load */
+  will-change: opacity, transform;
+}
+
+/* Disable transition during page load to prevent flash */
+.video-play-helper.no-transition {
+  transition: none !important;
 }
 
 /* Show when hovering video section (and JS sets active class) */
@@ -672,8 +679,20 @@ body {
 .play-helper-circle {
   width: 100%;
   height: 100%;
-  animation: rotateCircle 10s linear infinite;
+  position: relative;
 }
+
+.circle-bg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #F72F2F;
+}
+
+/* Remove old rotation animation if not needed, or keep for other elements */
+/* .play-helper-circle {
+  animation: rotateCircle 10s linear infinite; 
+} */
 
 .play-circle-svg {
   width: 100%;

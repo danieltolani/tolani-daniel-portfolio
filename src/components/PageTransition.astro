@@ -28,10 +28,6 @@
 </style>
 
 <script>
-  // Extend Window interface for TypeScript
-  // In an Astro script tag, type declarations need to be handled carefully or in a .d.ts file
-  // For simplicity here, we'll cast window to any when assigning
-  
   import { gsap } from "gsap";
 
   // Configuration
@@ -92,70 +88,8 @@
   function createTrailBlock(col: number, row: number) {
     if (!container) return;
 
-    const block = document.createElement("div");
+      const block = document.createElement("div");
     // Random variant assignment
-    const isSecondary = Math.random() < 0.4;
-    block.className = `transition-block ${isSecondary ? "variant-secondary" : "variant-primary"}`;
-    
-    block.style.width = `${currentBlockSize}px`;
-    block.style.height = `${currentBlockSize}px`;
-    block.style.backgroundColor = BLOCK_COLOR;
-    block.style.opacity = "0"; 
-    block.style.position = "absolute";
-    block.style.left = `${col * currentBlockSize}px`;
-    block.style.top = `${row * currentBlockSize}px`;
-    
-    container.appendChild(block);
-    blockQueue.push(block);
-
-    // Manage queue length
-    if (blockQueue.length > MAX_TRAIL_LENGTH) {
-      const oldest = blockQueue.shift();
-      if (oldest) {
-        gsap.killTweensOf(oldest);
-        if (oldest.parentNode) oldest.parentNode.removeChild(oldest);
-      }
-    }
-    
-    // Animate immediately
-    animateBlock(block);
-  }
-
-  // Expose these for Barba
-  (window as any).pageTransition = {
-    animateTrailExit: () => {
-      // Logic to flood screen with blocks or similar
-      // For now, we can just ensure the overlay is visible
-      if (overlay) overlay.style.display = 'block';
-      // Maybe trigger a "fill" animation?
-      return new Promise<void>(resolve => setTimeout(() => resolve(), 500));
-    },
-    animateTrailEnter: () => {
-      // Logic to clear/reveal
-      if (overlay) overlay.style.display = 'block'; // Keep visible until clear
-      // Reverse fill
-      if (overlay) overlay.style.display = 'none'; // Eventually hide
-      return Promise.resolve();
-    }
-  };
-
-  // Expose these for Barba
-  window.pageTransition = {
-    animateTrailExit: () => {
-      // Logic to flood screen with blocks or similar
-      // For now, we can just ensure the overlay is visible
-      if (overlay) overlay.style.display = 'block';
-      // Maybe trigger a "fill" animation?
-      return new Promise(resolve => setTimeout(resolve, 500));
-    },
-    animateTrailEnter: () => {
-      // Logic to clear/reveal
-      if (overlay) overlay.style.display = 'block'; // Keep visible until clear
-      // Reverse fill
-      if (overlay) overlay.style.display = 'none'; // Eventually hide
-      return Promise.resolve();
-    }
-  };
     const isSecondary = Math.random() < 0.4;
     block.className = `transition-block ${isSecondary ? "variant-secondary" : "variant-primary"}`;
     

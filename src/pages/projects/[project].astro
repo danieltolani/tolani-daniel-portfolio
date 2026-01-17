@@ -3,6 +3,7 @@ import { CldImage } from "astro-cloudinary";
 import data from "../../data/projects/index";
 import type { ProjectData } from "../../types/project";
 import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import "../../styles/portfolio.css";
 
@@ -43,6 +44,8 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 
 <Layout>
   <div class={`page-container scroll-container project-${project}`}>
+    <!-- Header Navigation -->
+    <Header />
 
     <!-- Hero Section -->
     <main class="hero-section snap-section">
@@ -290,6 +293,21 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
         const clickOverlay = document.querySelector('.video-click-overlay') as HTMLElement;
         
         if (!videoSection || !helper) return;
+
+        // Disable transitions temporarily during initialization
+        helper.classList.add('no-transition');
+        
+        // Reset helper state to ensure proper initialization
+        helper.style.opacity = '0';
+        helper.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        
+        // Force a reflow to ensure CSS is applied
+        void helper.offsetHeight;
+        
+        // Re-enable transitions after a short delay
+        setTimeout(() => {
+          helper.classList.remove('no-transition');
+        }, 50);
 
         // Cursor following
         videoSection.addEventListener('mousemove', (e) => {

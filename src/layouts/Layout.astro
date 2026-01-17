@@ -6,8 +6,8 @@ interface Props {
 
 const { title = "DT —— Motion Designer", description = "Portfolio of Daniel Tolani - Motion & Interaction Designer" } = Astro.props;
 
+import { ClientRouter } from 'astro:transitions';
 import PageTransition from '../components/PageTransition.astro';
-import Header from '../components/Header.astro';
 
 // Get the site URL from environment or construct from request
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -40,53 +40,15 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
 		<meta property="twitter:image" content={metaImage} />
-    
+
 		<link rel="stylesheet" href="/font/stylesheet.css">
-		<link rel="stylesheet" href="/styles/header.css">
+		<ClientRouter fallback="swap" />
 	</head>
-	<body data-barba="wrapper">
-		<Header />
+	<body>
 		<PageTransition />
-    <div data-barba="container" data-barba-namespace="default">
-		  <slot />
-    </div>
+		<slot />
 	</body>
 </html>
-
-<script>
-  // @ts-ignore
-  import barba from '@barba/core';
-  import { gsap } from "gsap";
-
-  barba.init({
-    // @ts-ignore
-    prevent: ({ el }) => el.classList && el.classList.contains('prevent-barba'),
-    transitions: [{
-      name: 'default-transition',
-      // @ts-ignore
-      async leave(data) {
-        // Trigger exit animation
-        if ((window as any).pageTransition) {
-           await (window as any).pageTransition.animateTrailExit();
-        }
-        return gsap.to(data.current.container, { opacity: 0, duration: 0.5 });
-      },
-      // @ts-ignore
-      enter(data) {
-        if ((window as any).pageTransition) {
-           (window as any).pageTransition.animateTrailEnter();
-        }
-        return gsap.from(data.next.container, { opacity: 0, duration: 0.5 });
-      },
-      afterEnter() {
-        // Re-initialize scripts that depend on page load
-        // We might need to dispatch a custom event or call init functions directly
-        // Dispatch 'astro:page-load' to reuse existing logic
-        document.dispatchEvent(new Event('astro:page-load'));
-      }
-    }]
-  });
-</script>
 
 <style is:global>
 	*, *::before, *::after {
