@@ -648,16 +648,13 @@ body {
   height: 130px;
   /* Initial state: hidden and centered (will be moved by JS) */
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.8);
+  /* Change initial scale to 1 to prevent small appearance on load */
+  transform: translate(-50%, -50%) scale(1);
   transition: opacity 0.3s ease, transform 0.3s ease;
   mix-blend-mode: difference; /* Restored mix-blend-mode */ 
-  /* Prevent initial animation on page load */
-  will-change: opacity, transform;
-}
-
-/* Disable transition during page load to prevent flash */
-.video-play-helper.no-transition {
-  transition: none !important;
+  /* Force initial size to be consistent */
+  min-width: 130px;
+  min-height: 130px;
 }
 
 /* Show when hovering video section (and JS sets active class) */
@@ -673,7 +670,8 @@ body {
 /* Hide when video is playing (class added by JS) */
 .video-section.is-playing:hover .video-play-helper {
   opacity: 1 !important;
-  transform: translate(-50%, -50%) scale(0.66) !important;
+  /* Keep scale at 1 even when playing to avoid shrinking issue */
+  transform: translate(-50%, -50%) scale(1) !important;
 }
 
 .play-helper-circle {

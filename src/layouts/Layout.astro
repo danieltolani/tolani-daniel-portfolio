@@ -40,13 +40,15 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<meta property="twitter:title" content={title} />
 		<meta property="twitter:description" content={description} />
 		<meta property="twitter:image" content={metaImage} />
-
+    
 		<link rel="stylesheet" href="/font/stylesheet.css">
-		<ClientRouter fallback="swap" />
 	</head>
-	<body>
+	<body data-barba="wrapper">
 		<PageTransition />
-		<slot />
+		<div data-barba="container" data-barba-namespace="home">
+			<slot />
+		</div>
+		<script src="../scripts/barba.ts"></script>
 	</body>
 </html>
 

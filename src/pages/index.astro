@@ -9,9 +9,10 @@ import '../styles/footer.css';
 ---
 
 <Layout>
-  <Header />
-  
-  <main class="hero-page">
+  <div data-barba="container" data-barba-namespace="home">
+    <Header />
+    
+    <main class="hero-page">
     <div class="hero-availability-wrapper">
       <AvailabilityTime />
     </div>
@@ -35,5 +36,6 @@ import '../styles/footer.css';
   </main>
 
   <Footer />
+  </div>
 </Layout>
 
