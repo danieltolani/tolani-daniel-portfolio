@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.4.0",
+    "@barba/core": "^2.10.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "astro": "^5.14.4",
