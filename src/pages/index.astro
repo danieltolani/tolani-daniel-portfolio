@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import AvailabilityTime from '../components/AvailabilityTime.astro';
 import '../styles/hero.css';
@@ -9,10 +8,8 @@ import '../styles/footer.css';
 ---
 
 <Layout>
-  <div data-barba="container" data-barba-namespace="home">
-    <Header />
-    
-    <main class="hero-page">
+  
+  <main class="hero-page">
     <div class="hero-availability-wrapper">
       <AvailabilityTime />
     </div>
@@ -36,6 +33,5 @@ import '../styles/footer.css';
   </main>
 
   <Footer />
-  </div>
 </Layout>
 

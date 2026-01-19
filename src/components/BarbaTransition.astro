@@ -1,0 +1,132 @@
+---
+import BlockTransition from './BlockTransition.astro';
+---
+
+<BlockTransition />
+
+<script>
+  import barba from '@barba/core';
+  import gsap from 'gsap';
+
+  // Helper to re-initialize scripts
+  function reinitScripts() {
+    // Trigger any custom initialization logic
+    const event = new Event('astro:page-load');
+    document.dispatchEvent(event);
+  }
+
+  // Initialize Barba
+  barba.init({
+    preventRunning: true, // Allow Barba to handle navigation
+    debug: true,
+    transitions: [{
+      name: 'default-transition',
+      once(data: any) {
+        // Initial load
+        reinitScripts();
+      },
+      async beforeEnter(data: any) {
+        // Parse the incoming HTML
+        const parser = new DOMParser();
+        const nextDoc = parser.parseFromString(data.next.html, 'text/html');
+        
+        // Update Stylesheets (Link tags)
+        const currentLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]')) as HTMLLinkElement[];
+        const nextLinks = Array.from(nextDoc.querySelectorAll('link[rel="stylesheet"]')) as HTMLLinkElement[];
+        
+        const currentHrefs = new Set(currentLinks.map(link => link.href));
+        
+        nextLinks.forEach(link => {
+          if (!currentHrefs.has(link.href)) {
+            const newLink = link.cloneNode(true);
+            document.head.appendChild(newLink);
+          }
+        });
+
+        // Update Styles (Style tags - typically for component scoped styles)
+        const currentStyles = Array.from(document.querySelectorAll('style')) as HTMLStyleElement[];
+        const nextStyles = Array.from(nextDoc.querySelectorAll('style')) as HTMLStyleElement[];
+        
+        // Simple content comparison for style tags
+        const currentStyleContents = new Set(currentStyles.map(style => style.innerHTML));
+        
+        nextStyles.forEach(style => {
+          if (!currentStyleContents.has(style.innerHTML)) {
+            const newStyle = style.cloneNode(true);
+            document.head.appendChild(newStyle);
+          }
+        });
+
+        // Optional: Update Title
+        const newTitle = nextDoc.querySelector('title');
+        if (newTitle) {
+          document.title = newTitle.innerText;
+        }
+      },
+      async leave(data: any) {
+        // Animate out current container (Cover screen with blocks)
+        const done = (this as any).async();
+        
+        // Call BlockTransition enter (covers screen)
+        if ((window as any).blockTransition) {
+          await (window as any).blockTransition.enter();
+        } else {
+          // Fallback
+          await gsap.to(data.current.container, {
+            opacity: 0,
+            duration: 0.5
+          });
+        }
+        
+        // We don't need to fade out the container if blocks cover it,
+        // but for safety/cleanliness we can hide it.
+        gsap.set(data.current.container, { display: 'none' });
+
+        done();
+      },
+      async enter(data: any) {
+        // Ensure new container is visible but hidden by blocks
+        gsap.set(data.next.container, { opacity: 1, display: 'block' });
+
+        // Animate in new container (Reveal screen by removing blocks)
+        if ((window as any).blockTransition) {
+          await (window as any).blockTransition.leave();
+        } else {
+          // Fallback
+          gsap.from(data.next.container, {
+            opacity: 0,
+            duration: 0.5
+          });
+        }
+      },
+      after(data: any) {
+        // Re-initialize scripts after transition
+        reinitScripts();
+        
+        // Scroll to top
+        window.scrollTo(0, 0);
+      }
+    }],
+    views: [
+      {
+        namespace: 'default',
+        beforeEnter() {
+          // General setup
+        }
+      },
+      {
+        namespace: 'project',
+        afterEnter() {
+          // Project specific re-init is handled by dispatching astro:page-load
+        }
+      }
+    ],
+    prevent: ({ el }: any) => {
+      // Prevent header links from being handled if they have specific attributes
+      return el.hasAttribute('data-barba-prevent');
+    }
+  });
+
+  // Expose Barba to window
+  (window as any).barba = barba;
+</script>

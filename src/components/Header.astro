@@ -5,7 +5,7 @@ const isProjectPage = currentPath.startsWith('/projects/');
 const isHomePage = currentPath === '/';
 ---
 
-<header class="header" id="main-header" transition:persist>
+<header class="header" id="main-header" data-barba-prevent="all">
 	<a href="/" class={`header-logo ${isHomePage ? 'active' : ''}`}>
         <svg xmlns="http://www.w3.org/2000/svg" width="73" height="60" fill="none"><path fill="#F72F2F" d="M30.732 10v39.295h-8.943v-3.902c-.904 1.518-2.187 2.674-3.849 3.469C16.278 49.62 14.58 50 12.845 50c-3.794 0-6.883-1.373-9.268-4.12C1.192 43.136 0 39.414 0 34.716c0-4.697 1.192-8.4 3.577-11.11 2.385-2.747 5.474-4.12 9.268-4.12 1.735 0 3.433.398 5.095 1.192 1.662.76 2.945 1.898 3.849 3.415V10h8.943Zm-19.62 18.645c-1.23 1.445-1.844 3.469-1.844 6.07 0 2.602.615 4.644 1.843 6.125 1.229 1.482 2.782 2.222 4.661 2.222 1.915 0 3.47-.668 4.662-2.005 1.192-1.373 1.788-3.487 1.788-6.342 0-2.854-.596-4.95-1.788-6.287-1.193-1.337-2.747-2.005-4.662-2.005-1.879 0-3.432.74-4.66 2.222Z"/><path fill="#F72F2F" d="M30.732 18.13H22.84V10h29.843v8.13H40.054v31.165h-9.322V18.13ZM48.888 49.295v-9.647H58.97v9.647H48.89Z"/><path fill="#F72F2F" d="M52.803 49.295v-9.647h10.081v9.647H52.803Z"/></svg>
 	</a>
@@ -43,7 +43,11 @@ const isHomePage = currentPath === '/';
 
     // Update active state: remove from all, add to correct element
     allNavElements.forEach((element) => {
-        if (element) element.classList.remove("active");
+        if (element) {
+          element.classList.remove("active");
+          element.classList.remove("is-clicking");
+          element.classList.remove("is-exiting");
+        }
     });
     if (shouldBeActive) {
       shouldBeActive.classList.add("active");
@@ -68,25 +72,32 @@ const isHomePage = currentPath === '/';
         // Recalculate on resize
         window.addEventListener('resize', updateNavScales);
         
-        // Click Animation & Navigation Handling
-        navLinks.forEach(link => {
+        // Click Animation with Barba Integration
+        const allLinks = document.querySelectorAll('.nav a, .header-logo');
+        allLinks.forEach(link => {
           link.addEventListener('click', (e) => {
+            e.preventDefault(); // Prevent immediate navigation
             const target = e.currentTarget as HTMLElement;
             const href = target.getAttribute('href');
             
-            // Check if it's an internal link
-            if (href && href.startsWith('/') && !href.startsWith('//')) {
-                // Add clicking class to trigger "scale down from right" animation
-                target.classList.add('is-clicking');
-                
-                // Barba will handle the delay via its transition hook based on this class
-                // We don't need to preventDefault if Barba is initialized correctly
-                
-                // Remove class after animation completes (roughly 900ms total cycle)
-                setTimeout(() => {
-                  target.classList.remove('is-clicking');
-                }, 900); 
+            // Add clicking class to trigger "scale down from right"
+            target.classList.add('is-clicking');
+
+            // Handle exiting animation for the currently active link
+            const currentActive = document.querySelector('.nav a.active');
+            if (currentActive && currentActive !== target) {
+              currentActive.classList.add('is-exiting');
             }
+            
+            // Wait for animation (0.17s) + small buffer before navigating
+            setTimeout(() => {
+              // Proceed with Barba navigation
+              if (href && (window as any).barba) {
+                (window as any).barba.go(href);
+              } else if (href) {
+                window.location.href = href;
+              }
+            }, 0);  
           });
         });
 
@@ -95,6 +106,11 @@ const isHomePage = currentPath === '/';
     }
   }
 
-  // Run on initial load and after view transitions
-  document.addEventListener('astro:page-load', init);
+  // Initial load
+  init();
+  
+  // Listen for custom astro:page-load event dispatched by BarbaTransition
+  document.addEventListener('astro:page-load', () => {
+      init();
+  });
 </script>

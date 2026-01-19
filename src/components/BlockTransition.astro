@@ -1,0 +1,319 @@
+---
+// This is the frontmatter section, empty as we don't need server-side logic here.
+---
+
+<!-- The overlay container that holds the transition grid -->
+<div id="block-transition-overlay" class="block-transition-overlay" aria-hidden="true" transition:persist>
+  <!-- The inner container where the JavaScript will generate the blocks -->
+  <div id="block-transition-container" class="block-transition-container"></div>
+</div>
+
+<style>
+  /* Styles for the main overlay wrapper */
+  .block-transition-overlay {
+    position: fixed; /* Fixes the overlay to the viewport so it doesn't scroll */
+    top: 0; /* Aligns to top of screen */
+    left: 0; /* Aligns to left of screen */
+    width: 100%; /* Covers full width */
+    height: 100%; /* Covers full height */
+    z-index: 10000; /* Ensure this is on top of everything, including other transitions */
+    pointer-events: none; /* Allows clicks to pass through when blocks are not present */
+    display: flex; /* Uses flexbox for layout */
+    flex-direction: column-reverse; /* Stacks children from bottom to top */
+  }
+
+  /* Styles for the inner container */
+  .block-transition-container {
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    position: relative; /* establishes a positioning context for absolute children (blocks) */
+  }
+</style>
+
+<script>
+  // Import GSAP for high-performance animations
+  import { gsap } from "gsap";
+
+  // --- CONFIGURATION SETTINGS ---
+  // Controls the approximate pixel size of each square. 
+  // - Larger number = bigger blocks, fewer total blocks (better performance).
+  // - Smaller number = smaller blocks, more detailed grid (heavier performance).
+  const TARGET_BLOCK_SIZE = 20; 
+
+  // The primary color of the blocks (Red).
+  const BLOCK_COLOR = "#f72f2f";
+  
+  // The secondary color for the flashing effect (Light Blue/Grey).
+  const SECONDARY_COLOR = "#E5EAF4";
+
+  // --- GLOBAL VARIABLES ---
+  // Reference to the DOM element container
+  let container: HTMLElement | null = null;
+  // Audio element for sound effect
+  let transitionAudio: HTMLAudioElement | null = null;
+  // 2D Array to store references to created block elements [row][column]
+  let blocks: HTMLElement[][] = []; 
+  // Total number of rows calculated based on screen height
+  let rows = 0;
+  // Total number of columns calculated based on screen width
+  let cols = 0;
+
+  // Function to initialize the transition component
+  function init() {
+    // Get the container element from the DOM
+    container = document.getElementById("block-transition-container");
+    
+    // Initialize Audio
+    transitionAudio = new Audio('/assets/sfx/Transition.wav');
+    transitionAudio.volume = 0.5; // Set volume (adjust as needed)
+
+    // Expose control methods to the 'window' object so Barba.js can call them.
+    // This allows the transition to be triggered from other files.
+    (window as any).blockTransition = {
+      enter: performEnterAnimation, // Function to run when leaving the current page (Covers screen)
+      leave: performLeaveAnimation  // Function to run when entering the new page (Reveals screen)
+    };
+  }
+
+  // Function to calculate grid dimensions and create DOM elements for blocks
+  function createGrid() {
+    // Safety check: if container is missing, stop
+    if (!container) return;
+    
+    // Clear any existing blocks from the container
+    container.innerHTML = "";
+    // Reset the blocks array
+    blocks = [];
+
+    // Get current viewport dimensions
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    
+    // Calculate how many columns fit in the width
+    cols = Math.ceil(width / TARGET_BLOCK_SIZE);
+    // Calculate how many rows fit in the height
+    rows = Math.ceil(height / TARGET_BLOCK_SIZE);
+    
+    // Calculate the exact pixel width for each block to fill the screen perfectly without gaps
+    const blockSize = width / cols; 
+
+    // Loop through rows to create the grid
+    for (let r = 0; r < rows; r++) {
+      // Initialize the array for this row
+      blocks[r] = [];
+      
+        // Loop through columns for this row
+        for (let c = 0; c < cols; c++) {
+          // --- SHAPE LOGIC: Slim "Lightning Strike" (Narrow consistent width) ---
+          
+          // Base width: Just 2% - 8% of the screen width (very slim)
+          let widthFactor = 0.02; // Reduced from 0.05
+          
+          // Add organic noise to create a jagged path
+          // Allow it to shift slightly left/right or get slightly wider/narrower
+          widthFactor += (Math.random() * 0.02); // Reduced noise amplitude 
+          
+          // Determine if this block is within the central beam
+          const center = cols / 2;
+          // Add some horizontal wandering to the center point for a lightning feel
+          const wanderingCenter = center + ((Math.random() * 10) - 5);
+          
+          const maxDist = cols * widthFactor; // Total width of the beam
+          const dist = Math.abs(c - wanderingCenter);
+          
+          // Create a new DIV element for the block
+          const block = document.createElement("div");
+          
+          // Mark block type for animation timing
+          if (dist <= maxDist) {
+            // "Wide spacing": Randomly demote some funnel blocks to side blocks
+            // This makes the initial fast climb look sparse and glitchy (like scattered pixels)
+            if (Math.random() > 0.4) { 
+               block.dataset.type = "funnel";
+            } else {
+               block.dataset.type = "side";
+            }
+          } else {
+            block.dataset.type = "side";
+          }
+
+          // Set the size and position of the block
+        
+        // Set the size and position of the block
+        block.style.width = `${blockSize}px`;
+        block.style.height = `${blockSize}px`;
+        block.style.position = "absolute"; // Absolute positioning allows precise placement
+        block.style.left = `${c * blockSize}px`; // X position
+        block.style.bottom = `${r * blockSize}px`; // Y position (drawing from bottom up)
+        
+        // Set initial visual properties
+        block.style.backgroundColor = BLOCK_COLOR; // Start with red
+        block.style.opacity = "0"; // Start invisible
+        
+        // Add the block to the DOM container
+        container.appendChild(block);
+        // Store reference in our array
+        blocks[r].push(block);
+      }
+    }
+  }
+
+  // --- ENTER ANIMATION (Cover the screen) ---
+  // This runs when the user clicks a link, before the page changes.
+  function performEnterAnimation() {
+    // Return a Promise so Barba waits for this animation to finish
+    return new Promise<void>(resolve => {
+      // Play sound effect
+      if (transitionAudio) {
+        transitionAudio.currentTime = 0; // Reset to start
+        transitionAudio.play().catch(e => console.error("Audio play failed:", e));
+      }
+
+      // Generate the grid freshly based on current screen size
+      createGrid();
+      
+      // If no blocks were created (e.g., error), finish immediately
+      if (!blocks.length) {
+        resolve();
+        return;
+      }
+
+      // Create a GSAP timeline to sequence the animations
+      const tl = gsap.timeline({
+        onComplete: resolve // When the whole sequence finishes, tell Barba we are done
+      });
+
+      // Animate row by row, starting from the bottom (row 0)
+      for (let r = 0; r < rows; r++) {
+        const rowBlocks = blocks[r];
+        const funnelBlocks = rowBlocks.filter(b => b.dataset.type === "funnel");
+        const sideBlocks = rowBlocks.filter(b => b.dataset.type === "side");
+        
+        // Common animation config
+        const animConfig = {
+          keyframes: {
+            opacity: [0, 1, 0, 1, 1], 
+            backgroundColor: [SECONDARY_COLOR, BLOCK_COLOR, SECONDARY_COLOR, BLOCK_COLOR, BLOCK_COLOR], 
+            ease: "steps(4)" 
+          },
+          duration: 1, 
+          stagger: {
+             amount: 0.7, 
+             from: "random" as const
+          }
+        };
+
+        // 1. Animate Funnel (Main Shape)
+        if (funnelBlocks.length > 0) {
+          // Top to Bottom "Strike" effect:
+          // Use keyframes to fade IN then OUT immediately (trail effect)
+          
+          // Custom config for the trail
+          const trailConfig = {
+            keyframes: {
+               opacity: [0, 1, 0], // Quick flash ON then OFF
+               backgroundColor: [SECONDARY_COLOR, BLOCK_COLOR, BLOCK_COLOR], 
+            },
+            duration: 0.1, // Super fast pulse per block
+            stagger: {
+               amount: 0.1, 
+               from: "random" as const
+            }
+          };
+
+          tl.to(funnelBlocks, trailConfig, (rows - r) * 0.005); 
+        }
+
+        // 2. Animate Sides (Fill in later)
+        // Overlap: Start the buildup while the lightning is still striking down.
+        // Reduced delay from 0.3s to 0.1s to create the overlap.
+        if (rowBlocks.length > 0) {
+           // Filter approx 15% of blocks for variation
+           const variantBlocks = rowBlocks.filter(() => Math.random() < 0.05);
+           const standardBlocks = rowBlocks.filter(b => !variantBlocks.includes(b));
+           
+           // Standard: Main stays Red, maybe slight flickers but ends Red
+           const standardConfig = {
+             ...animConfig,
+             keyframes: {
+               opacity: [0, 1, 0, 1, 1],
+               backgroundColor: [BLOCK_COLOR, BLOCK_COLOR, BLOCK_COLOR], // Pure Red mostly
+               ease: "steps(4)"
+             }
+           };
+
+           // Variant: Flashes the secondary color (White/Blue) but MUST end in Red
+           // Crucial: Align SECONDARY_COLOR with opacity: 1 (indexes 1 and 3) to be visible!
+           const variantConfig = {
+             ...animConfig,
+             keyframes: {
+               opacity: [0, 1, 0, 1, 1], 
+               // Visible at indices 1, 3, 4. 
+               // Index 1=Secondary, Index 3=Secondary, Index 4=Red (Hold)
+               backgroundColor: [BLOCK_COLOR, SECONDARY_COLOR, BLOCK_COLOR, SECONDARY_COLOR, BLOCK_COLOR], 
+               ease: "steps(4)" 
+             }
+           };
+
+           if (standardBlocks.length > 0) {
+             tl.to(standardBlocks, standardConfig, (r * 0.02) + 0.05); 
+           }
+           if (variantBlocks.length > 0) {
+             tl.to(variantBlocks, variantConfig, (r * 0.02) + 0.05); 
+           }
+        }
+      }
+    });
+  }
+
+  // --- LEAVE ANIMATION (Reveal the new screen) ---
+  // This runs after the new page content has loaded.
+  function performLeaveAnimation() {
+    return new Promise<void>(resolve => {
+      // If no blocks exist, nothing to animate out, finish immediately
+      if (!blocks.length) {
+        resolve();
+        return;
+      }
+
+      // Create a GSAP timeline
+      const tl = gsap.timeline({
+        onComplete: () => {
+          // Clean up DOM to save memory
+          if (container) container.innerHTML = ""; 
+          blocks = []; // Clear array
+          resolve(); // Tell Barba we are done
+        }
+      });
+
+      // Animate row by row, starting from bottom (0) going up
+      for (let r = 0; r < rows; r++) {
+        const rowBlocks = blocks[r];
+        
+        // Add animation for this row
+        tl.to(rowBlocks, {
+          // Fade out to invisible
+          opacity: 0,
+          // DURATION of the fade out for a single block.
+          // Lower = disappears faster.
+          duration: 0.001, 
+          
+          // STAGGER within the row
+          stagger: {
+            // Total random spread of fade-out start times in this row.
+            // Higher = more "glitchy" uneven disappearance.
+            amount: 0.2,
+            from: "random"
+          }
+        // TIMELINE OFFSET: Delay per row.
+        // 'r * 0.04' means the reveal moves up the screen much slower than the cover.
+        // Changing 0.04 to a lower number (e.g. 0.01) would make the reveal faster.
+        }, r * 0.002); 
+      }
+    });
+  }
+
+  // Initialize on script load
+  init();
+  
+</script>

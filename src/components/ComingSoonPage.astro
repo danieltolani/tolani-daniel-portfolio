@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from './Header.astro';
 import Footer from './Footer.astro';
 import '../styles/hero.css'; // Reuse hero variables
 import '../styles/header.css';
@@ -14,10 +13,8 @@ const { title } = Astro.props;
 ---
 
 <Layout>
-  <div data-barba="container" data-barba-namespace="page">
-    <Header />
-    
-    <main class="coming-soon-page">
+  
+  <main class="coming-soon-page">
     <div class="coming-soon-content">
       <h1 class="coming-soon-text">
         <span class="red-text"><span class="special-o">CO</span>MIN<span class="special-o">G</span></span> <span class="special-o">SOO</span>N
@@ -26,7 +23,6 @@ const { title } = Astro.props;
   </main>
 
   <Footer />
-  </div>
 </Layout>
 
 <style>

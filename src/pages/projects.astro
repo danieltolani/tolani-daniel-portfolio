@@ -1,6 +1,5 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import data from "../data/projects/index";
 import "../styles/portfolio.css";
@@ -36,8 +35,7 @@ const firstProjectMedia = getMediaInfo(projects[0]);
 ---
 
 <Layout title="Projects | Portfolio">
-  <div class="page-container" data-barba="container" data-barba-namespace="work">
-    <Header />
+  <div class="page-container">
 
     <main class="projects-overview-section">
       <div class="projects-overview-container">

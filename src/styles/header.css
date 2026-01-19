@@ -115,7 +115,7 @@
   mix-blend-mode: none !important;
 }
 
-/* Click Animation State */
+/* Click and Exit Animation States */
 .nav a.is-clicking::after {
   transform-origin: right center;
   transform: translate(0, -50%) scaleX(0);
@@ -123,7 +123,13 @@
   transition: transform 0.17s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.nav a:not(.is-clicking)::after {
-  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+.nav a.is-exiting::after {
+  transform-origin: left center;
+  transform: translate(0, -50%) scaleX(0);
+  left: calc(1rem - 10px);
+  transition: transform .25s ease-in-out;
 }
 
+.nav a:not(.is-clicking):not(.is-exiting)::after {
+  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
