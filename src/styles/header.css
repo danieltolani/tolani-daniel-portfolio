@@ -126,10 +126,10 @@
 .nav a.is-exiting::after {
   transform-origin: left center;
   transform: translate(0, -50%) scaleX(0);
-  left: calc(1rem - 10px);
-  transition: transform .25s ease-in-out;
+  /* left: calc(1rem - 10px); Keep position */
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .nav a:not(.is-clicking):not(.is-exiting)::after {
-  transition: transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 }

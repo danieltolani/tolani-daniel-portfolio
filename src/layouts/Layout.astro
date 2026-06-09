@@ -82,8 +82,10 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 
 	/* Hide the page until the staggered entrance starts, so the first paint isn't
 	   the rest state (which caused a flicker on refresh). staggerEnter() reveals it.
-	   The matching dark body underneath means this reads as dark, not blank. */
-	html.js-enter [data-barba="container"] {
+	   Scoped to the home (default) namespace only — project pages run their own
+	   ScrollTrigger intro and are masked by the red cover, so they must not be
+	   pre-hidden (otherwise they can get stuck invisible). */
+	html.js-enter [data-barba="container"][data-barba-namespace="default"] {
 		opacity: 0;
 	}
 </style>

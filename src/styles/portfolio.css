@@ -44,6 +44,11 @@ body {
   /* Disable bouncy scroll effect */
 }
 
+::selection {
+  background-color: #F72F2F;
+  color: white;
+}
+
 .page-container {
   min-height: 100vh;
   position: relative;
@@ -636,30 +641,29 @@ body {
 
 /* Video Play Helper */
 .video-play-helper {
-  position: fixed;
-  top: 0;
-  left: 0;
+  position: absolute; /* Changed from fixed to absolute */
+  top: 50%;
+  left: 50%;
   z-index: 20;
   pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 130px; /* Reduced size for filled circle */
-  height: 130px;
-  /* Initial state: hidden and centered (will be moved by JS) */
+  width: 200px; /* Reduced size for filled circle */
+  height: 80px;
+  /* Initial state: hidden and centered */
   opacity: 0;
-  /* Change initial scale to 1 to prevent small appearance on load */
   transform: translate(-50%, -50%) scale(1);
   transition: opacity 0.3s ease, transform 0.3s ease;
-  mix-blend-mode: difference; /* Restored mix-blend-mode */ 
+  mix-blend-mode: normal; /* Restored mix-blend-mode */ 
   /* Force initial size to be consistent */
-  min-width: 130px;
-  min-height: 130px;
+  min-width: 200px;
+  min-height: 80px;
 }
 
 /* Show when hovering video section (and JS sets active class) */
 .video-section:hover {
-  cursor: none; /* Hide default cursor when hovering over video */
+  cursor: pointer; /* Restore cursor since helper is static */
 }
 
 .video-section:hover .video-play-helper {
@@ -674,7 +678,20 @@ body {
   transform: translate(-50%, -50%) scale(1) !important;
 }
 
-.play-helper-circle {
+.block-pattern-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.helper-block {
+  pointer-events: none;
+}
+
+/* .play-helper-circle {
   width: 100%;
   height: 100%;
   position: relative;
@@ -685,18 +702,18 @@ body {
   height: 100%;
   border-radius: 50%;
   background-color: #F72F2F;
-}
+} */
 
 /* Remove old rotation animation if not needed, or keep for other elements */
 /* .play-helper-circle {
   animation: rotateCircle 10s linear infinite; 
 } */
 
-.play-circle-svg {
+/* .play-circle-svg {
   width: 100%;
   height: 100%;
   display: block;
-}
+} */
 
 .play-helper-text {
   position: absolute;
@@ -709,6 +726,8 @@ body {
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  z-index: 2; /* Ensure text is above blocks */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3); /* Optional: add shadow for better readability */
 }
 
 @keyframes rotateCircle {

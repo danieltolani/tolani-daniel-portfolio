@@ -177,11 +177,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
         <div class="video-embed-wrapper">
           <!-- Video Play Helper (Follows Cursor) -->
           <div class="video-play-helper">
-            <div class="play-helper-circle">
-              <!-- Filled circle background -->
-              <div class="circle-bg"></div>
-              <!-- Optional: Keep SVG for border rotation if desired, or remove -->
-            </div>
+            <div class="block-pattern-container"></div>
             <span class="play-helper-text">UNMUTE</span>
           </div>
           <!-- Click Overlay for Restart/Unmute -->
@@ -200,7 +196,6 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
           ) : (
             <video
               src={resolvedVideoSrc}
-              controls
               autoplay
               muted
               loop
@@ -976,30 +971,194 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     observer.observe(videoSection);
   }
 
-  // Video Play Helper Logic
-  function setupVideoPlayHelper() {
-    const videoSection = document.querySelector('.video-section') as HTMLElement;
-    const helper = document.querySelector('.video-play-helper') as HTMLElement;
-    const clickOverlay = document.querySelector('.video-click-overlay') as HTMLElement;
-    
-    if (!videoSection || !helper) return;
+      // Video Play Helper Logic
+      function setupVideoPlayHelper() {
+        const videoSection = document.querySelector('.video-section') as HTMLElement;
+        const helper = document.querySelector('.video-play-helper') as HTMLElement;
+        const blockContainer = document.querySelector('.block-pattern-container') as HTMLElement;
+        const clickOverlay = document.querySelector('.video-click-overlay') as HTMLElement;
+        
+        if (!videoSection || !helper || !blockContainer) return;
 
-    // Cursor following
-    videoSection.addEventListener('mousemove', (e) => {
-      helper.style.opacity = '1';
-      helper.style.transform = `translate(-50%, -50%) scale(1)`;
-      helper.style.left = `${e.clientX}px`;
-      helper.style.top = `${e.clientY}px`;
-    });
+        // --- Block Pattern Logic ---
+        const BLOCK_SIZE = 20;
+        const CONTAINER_WIDTH = 200;
+        const CONTAINER_HEIGHT = 80;
+        const COLS = Math.ceil(CONTAINER_WIDTH / BLOCK_SIZE);
+        const ROWS = Math.ceil(CONTAINER_HEIGHT / BLOCK_SIZE);
+        
+        const BLOCK_COLOR = "#f72f2f";
+        const SECONDARY_COLOR = "#E5EAF4";
 
-    // Hide when leaving
-    videoSection.addEventListener('mouseleave', () => {
-      helper.style.opacity = '0';
-      // Don't shrink when hiding, just fade out
-      helper.style.transform = `translate(-50%, -50%) scale(1)`;
-    });
+        let isAnimating = false;
 
-    // Video Play State Detection
+        function generateBlockPattern() {
+            blockContainer.innerHTML = '';
+            
+            // Define Tetris-like patterns or Border pattern
+            // For now, let's create a border pattern and random internal blocks
+            // The text sits in the center, so we need blocks underneath it too as per request?
+            // "Where text sits, there must be a block underneath with full visibility."
+            // Center is roughly rows 1-2 (0-indexed 0-3 rows for 80px height)
+            
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const block = document.createElement('div');
+                    block.className = 'helper-block';
+                    block.style.width = `${BLOCK_SIZE}px`;
+                    block.style.height = `${BLOCK_SIZE}px`;
+                    block.style.position = 'absolute';
+                    block.style.left = `${c * BLOCK_SIZE}px`;
+                    block.style.top = `${r * BLOCK_SIZE}px`;
+                    
+                    // Initial state
+                    block.style.opacity = '0';
+                    block.style.backgroundColor = BLOCK_COLOR; // Default
+                    
+                    blockContainer.appendChild(block);
+                }
+            }
+        }
+
+        function flickerBlocks(isHoverMove = false) {
+            if (isAnimating && !isHoverMove) return; // Allow overlapping for move updates? Or blocking?
+            // If we are strictly animating the intro, we might block. 
+            // But for move updates, we want responsiveness. 
+            // Let's keep the blocking to prevent chaos, but maybe shorten the duration/lock.
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            const blocks = Array.from(blockContainer.querySelectorAll('.helper-block')) as HTMLElement[];
+            
+            // Define center region for text (approx middle rows/cols)
+            // 200x80 -> 10 cols x 4 rows
+            // Text is roughly in the middle
+            const centerRows = [1, 2]; // Middle 2 rows
+            const centerCols = [2, 3, 4, 5, 6, 7]; // Middle 6 cols
+            
+            // Pre-calculate visibility map with constraints
+            const visibilityMap = Array(ROWS).fill(null).map(() => Array(COLS).fill(false));
+            
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    const isCenter = centerRows.includes(r) && centerCols.includes(c);
+                    const isBorder = r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1;
+                    
+                    let visible = false;
+                    
+                    if (isCenter) {
+                        visible = true;
+                    } else if (isBorder) {
+                        // Check constraints for border: No more than 3 consecutive visible blocks
+                        // Horizontal check (for top/bottom rows)
+                        let consecutiveH = 0;
+                        if (c > 0 && visibilityMap[r][c-1]) consecutiveH++;
+                        if (c > 1 && visibilityMap[r][c-2]) consecutiveH++;
+                        if (c > 2 && visibilityMap[r][c-3]) consecutiveH++;
+                        
+                        // Vertical check (for left/right columns)
+                        let consecutiveV = 0;
+                        if (r > 0 && visibilityMap[r-1][c]) consecutiveV++;
+                        if (r > 1 && visibilityMap[r-2][c]) consecutiveV++;
+                        if (r > 2 && visibilityMap[r-3][c]) consecutiveV++;
+                        
+                        // If we already have 3 consecutive blocks, force this one hidden
+                        if (consecutiveH >= 3 || consecutiveV >= 3) {
+                            visible = false;
+                        } else {
+                            visible = Math.random() > 0.4;
+                        }
+                    } else {
+                        visible = Math.random() > 0.7;
+                    }
+                    
+                    visibilityMap[r][c] = visible;
+                }
+            }
+
+            blocks.forEach((block, i) => {
+                const r = Math.floor(i / COLS);
+                const c = i % COLS;
+                
+                const isCenter = centerRows.includes(r) && centerCols.includes(c);
+                
+                // If this is a hover move update and this is a center block, keep it solid and skip animation
+                if (isHoverMove && isCenter) {
+                    gsap.set(block, { opacity: 1, backgroundColor: BLOCK_COLOR });
+                    return;
+                }
+
+                // For non-center blocks or intro animation:
+                gsap.set(block, { opacity: 0 });
+                
+                // Use pre-calculated visibility
+                const staysVisible = visibilityMap[r][c];
+                
+                // Color variation
+                const color = Math.random() > 0.8 ? SECONDARY_COLOR : BLOCK_COLOR;
+                block.style.backgroundColor = color;
+
+                // Animation sequence
+                const finalOpacity = staysVisible ? 1 : 0;
+                
+                // Keyframes for flicker
+                // We ensure it ends with the BLOCK_COLOR (Red) even if it flickered with SECONDARY_COLOR
+                const keyframes = {
+                    opacity: [0, 1, 0, 1, finalOpacity],
+                    backgroundColor: [color, color, color, color, BLOCK_COLOR] 
+                };
+
+                gsap.to(block, {
+                    keyframes: keyframes,
+                    duration: 0.1 + Math.random() * 0.2, // Super fast duration 0.1-0.3s
+                    delay: Math.random() * 0.05, // Minimal start delay
+                    ease: "steps(4)", // Strict steps for 5 keyframes (4 segments)
+                    onComplete: () => {
+                        if (i === blocks.length - 1) isAnimating = false;
+                    }
+                });
+            });
+        }
+
+        generateBlockPattern();
+
+        let flickerTimer: number | null = null;
+
+        function scheduleNextFlicker() {
+            if (flickerTimer) clearTimeout(flickerTimer);
+            // Random interval between 2s and 5s
+            const delay = 2000 + Math.random() * 3000;
+            flickerTimer = window.setTimeout(() => {
+                flickerBlocks(true);
+                scheduleNextFlicker();
+            }, delay);
+        }
+
+        // Cursor following - REMOVED (Static center position)
+        // videoSection.addEventListener('mousemove', (e) => {
+        //   helper.style.opacity = '1';
+        //   // Position logic removed
+        // });
+
+        // Trigger flicker on hover enter (intro) and start loop
+        videoSection.addEventListener('mouseenter', () => {
+            helper.style.opacity = '1'; // Ensure visible
+            flickerBlocks(false);
+            scheduleNextFlicker();
+        });
+
+        // Hide when leaving and stop loop
+        videoSection.addEventListener('mouseleave', () => {
+          helper.style.opacity = '0';
+          
+          if (flickerTimer) {
+              clearTimeout(flickerTimer);
+              flickerTimer = null;
+          }
+        });
+
+        // Video Play State Detection
     const iframe = videoSection.querySelector('iframe');
     const video = videoSection.querySelector('video');
 
@@ -1034,47 +1193,51 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     // Track mute state (start as true due to autoplay muted)
     let isMuted = true;
 
-    // Function to handle play state
-    const setPlaying = (playing: boolean) => {
-      const helperText = helper.querySelector('.play-helper-text');
-      if (playing) {
-        videoSection.classList.add('is-playing');
-        if (helperText) {
-          if (isMuted) {
-            scrambleText(helperText, 'UNMUTE');
+        // Function to handle play state
+        const setPlaying = (playing: boolean) => {
+          const helperText = helper.querySelector('.play-helper-text');
+          if (playing) {
+            videoSection.classList.add('is-playing');
+            if (helperText) {
+              if (isMuted) {
+                scrambleText(helperText, 'UNMUTE');
+              } else {
+                scrambleText(helperText, 'PAUSE');
+              }
+            }
           } else {
-            scrambleText(helperText, 'PAUSE');
+            videoSection.classList.remove('is-playing');
+            if (helperText) scrambleText(helperText, 'PLAY');
           }
-        }
-      } else {
-        videoSection.classList.remove('is-playing');
-        if (helperText) scrambleText(helperText, 'PLAY');
-      }
-    };
+          // Flicker blocks on state change
+          flickerBlocks();
+        };
 
-    // Handle Restart & Unmute interaction
-    const handleUnmuteInteraction = () => {
-      isMuted = false;
-      if (clickOverlay) clickOverlay.style.display = 'none'; // Remove overlay to allow normal interaction
-      
-      if (iframe) {
-        // Vimeo
-        // @ts-ignore
-        if (typeof Vimeo !== 'undefined') {
-          // @ts-ignore
-          const player = new Vimeo.Player(iframe);
-          player.setCurrentTime(0);
-          player.setMuted(false);
-          player.play();
-        }
-      } else if (video) {
-        video.currentTime = 0;
-        video.muted = false;
-        video.play();
-      }
-      // Force update text immediately
-      setPlaying(true);
-    };
+        // Handle Restart & Unmute interaction
+        const handleUnmuteInteraction = () => {
+          isMuted = false;
+          if (clickOverlay) clickOverlay.style.display = 'none'; // Remove overlay to allow normal interaction
+          
+          if (iframe) {
+            // Vimeo
+            // @ts-ignore
+            if (typeof Vimeo !== 'undefined') {
+              // @ts-ignore
+              const player = new Vimeo.Player(iframe);
+              player.setCurrentTime(0);
+              player.setMuted(false);
+              player.play();
+            }
+          } else if (video) {
+            video.currentTime = 0;
+            video.muted = false;
+            video.play();
+          }
+          // Force update text immediately
+          setPlaying(true);
+          // Flicker blocks on interaction
+          flickerBlocks();
+        };
     
     if (clickOverlay) {
       clickOverlay.addEventListener('click', handleUnmuteInteraction);
@@ -1115,9 +1278,8 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
       }
     } else if (video) {
       // HTML5 Video
-      // Sync initial state
       isMuted = video.muted;
-      
+
       video.addEventListener('play', () => setPlaying(true));
       video.addEventListener('pause', () => setPlaying(false));
       video.addEventListener('ended', () => setPlaying(false));
@@ -1125,6 +1287,12 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
         isMuted = video.muted;
         setPlaying(!video.paused);
       });
+
+      // autoplay attribute only fires on initial HTML parse, not when Barba dynamically
+      // injects the container — call play() explicitly so it works on every navigation.
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
     }
   }
 
@@ -1135,157 +1303,138 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     setupVideoPlayHelper();
   }
 
-  // GSAP Parallax Effect - Hero Content Wrapper
-  const heroContentWrapper = document.querySelector(".hero-content-wrapper");
-  const videoSection = document.querySelector(".video-section");
-  const scrollContainer = document.querySelector(".scroll-container");
-
-  // Use GSAP matchMedia for responsive animations
+  // ==================== SCROLL ANIMATIONS ====================
+  // Kept in a function so they re-apply on every Barba navigation with the current DOM.
   let mm = gsap.matchMedia();
 
-  // Desktop animations only (min-width: 901px)
-  mm.add("(min-width: 901px)", () => {
-  if (heroContentWrapper && videoSection) {
-    // Ease-out for fast start, slow end when scrolling back
-    const easeOut = "power2.out"; // Fast start, slow end - perfect for scroll back
+  function initScrollAnimations() {
+    // Revert matchMedia context first (undoes tweens + kills their ScrollTriggers),
+    // then kill any remaining triggers created outside the mm context (process sections).
+    mm.revert();
+    ScrollTrigger.getAll().forEach(t => t.kill());
+    mm = gsap.matchMedia();
 
-    // Calculate distance based on viewport height (since hero is 80vh)
-    // Move it by 100vh to ensure it's completely out of view
-    const moveDistance = -(window.innerHeight * 0.15); // Move by full viewport height
+    const heroContentWrapper = document.querySelector(".hero-content-wrapper");
+    const videoSection = document.querySelector(".video-section");
+    const scrollContainer = document.querySelector(".scroll-container");
 
-    console.log("Hero move distance:", moveDistance, "vh");
+    mm.add("(min-width: 901px)", () => {
+      if (heroContentWrapper && videoSection) {
+        const moveDistance = -(window.innerHeight * 0.15);
 
-    // Move up animation with ease-out and depth effect - responsive when scrolling back
-    gsap.to(heroContentWrapper, {
-      y: moveDistance,
-      scale: 0.85, // Slight scale down for depth as it moves away
-      ease: easeOut,
-      scrollTrigger: {
-        trigger: ".video-section",
-        start: "top bottom-=300", // Start even earlier (200px before main sketch)
-        end: "center center", // End when center of process section hits center of viewport (halfway through)
-        scrub: 0.2, // Faster response for quicker return when scrolling back
-        markers: false,
-      },
+        gsap.to(heroContentWrapper, {
+          y: moveDistance,
+          scale: 0.85,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: ".video-section",
+            start: "top bottom-=300",
+            end: "center center",
+            scrub: 0.2,
+            markers: false,
+          },
+        });
+
+        gsap.to(heroContentWrapper, {
+          opacity: 0,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: ".hero-section",
+            start: "center top",
+            end: () => `+=${(videoSection as HTMLElement).offsetTop}`,
+            scrub: 0,
+            markers: false,
+          },
+        });
+      }
+
+      if (scrollContainer && videoSection) {
+        ScrollTrigger.scrollerProxy(scrollContainer, {
+          scrollTop(value?: number) {
+            if (arguments.length && value !== undefined) {
+              (scrollContainer as HTMLElement).scrollTop = value;
+            }
+            return (scrollContainer as HTMLElement).scrollTop;
+          },
+          getBoundingClientRect() {
+            return { top: 0, left: 0, width: window.innerWidth, height: window.innerHeight };
+          },
+        });
+
+        ScrollTrigger.create({
+          trigger: ".video-section",
+          scroller: scrollContainer,
+          start: "top 60%",
+          end: "top 40%",
+          onEnter: () => {
+            gsap.to(scrollContainer, {
+              scrollTop: (videoSection as HTMLElement).offsetTop,
+              duration: 0.8,
+              ease: "power2.inOut",
+              overwrite: true,
+            });
+          },
+          onEnterBack: () => {
+            gsap.to(scrollContainer, {
+              scrollTop: (videoSection as HTMLElement).offsetTop - window.innerHeight,
+              duration: 0.8,
+              ease: "power2.inOut",
+              overwrite: true,
+            });
+          },
+          markers: false,
+        });
+
+        ScrollTrigger.refresh();
+      }
     });
 
-    // Enhanced fade out with custom ease
-    gsap.to(heroContentWrapper, {
-      opacity: 0,
-      ease: "power3.out", // More dramatic ease curve
-      scrollTrigger: {
-        trigger: ".hero-section",
-        start: "center top", // Starts later - when center of hero hits top
-        end: () => `+=${(videoSection as HTMLElement).offsetTop}`, // Match the movement end
-        scrub: 0, // Slightly slower for smoother fade
-        markers: false,
-      },
+    // Process sections parallax
+    document.querySelectorAll(".process-section").forEach((section) => {
+      const mainSketch = section.querySelector(".main-sketch");
+      if (mainSketch) {
+        gsap.from(mainSketch, {
+          y: -350,
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "center center",
+            scrub: 1,
+            markers: false,
+          },
+        });
+      }
+
+      const mobileSketch1 = section.querySelector(".mobile-sketch-1");
+      const mobileSketch2 = section.querySelector(".mobile-sketch-2");
+
+      if (mobileSketch1) {
+        gsap.from(mobileSketch1, {
+          y: 350,
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom-=100",
+            end: "center center",
+            scrub: 1,
+            markers: false,
+          },
+        });
+      }
+
+      if (mobileSketch2) {
+        gsap.from(mobileSketch2, {
+          y: 350,
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom-=500",
+            end: "center center",
+            scrub: 1,
+            markers: false,
+          },
+        });
+      }
     });
   }
-
-  // GSAP Snap Scrolling for Video Section
-  if (scrollContainer && videoSection) {
-    // Use ScrollTrigger.scrollerProxy for custom scroll container
-    ScrollTrigger.scrollerProxy(scrollContainer, {
-      scrollTop(value?: number) {
-        if (arguments.length && value !== undefined) {
-          scrollContainer.scrollTop = value;
-        }
-        return scrollContainer.scrollTop;
-      },
-      getBoundingClientRect() {
-        return {
-          top: 0,
-          left: 0,
-          width: window.innerWidth,
-          height: window.innerHeight,
-        };
-      },
-    });
-
-    // Create snap point at video section
-    ScrollTrigger.create({
-      trigger: ".video-section",
-      scroller: scrollContainer,
-      start: "top 60%",
-      end: "top 40%",
-      onEnter: () => {
-        gsap.to(scrollContainer, {
-          scrollTop: (videoSection as HTMLElement).offsetTop,
-          duration: 0.8,
-          ease: "power2.inOut",
-          overwrite: true,
-          
-        });
-      },
-      onEnterBack: () => {
-        gsap.to(scrollContainer, {
-          scrollTop:
-            (videoSection as HTMLElement).offsetTop - window.innerHeight,
-          duration: 0.8,
-          ease: "power2.inOut",
-          overwrite: true,
-        });
-      },
-      markers: false,
-    });
-
-    // Refresh ScrollTrigger after setup
-    ScrollTrigger.refresh();
-  }
-  });
-
-
-  // Process sections parallax animations - loop through all sections
-  const processSections = document.querySelectorAll(".process-section");
-
-  processSections.forEach((section) => {
-    // Main Sketch parallax animation
-    const mainSketch = section.querySelector(".main-sketch");
-
-    if (mainSketch) {
-      gsap.from(mainSketch, {
-        y: -350, // Move down 350px as you scroll
-        scrollTrigger: {
-          trigger: section, // Trigger when this specific process section enters viewport
-          start: "top bottom", // Start when top of process section hits bottom of viewport
-          end: "center center", // End when center of process section hits center of viewport (halfway through)
-          scrub: 1, // Smooth parallax effect tied to scroll
-          markers: false,
-        },
-      });
-    }
-
-    // Mobile Sketch containers - reverse movement with offset
-    const mobileSketch1 = section.querySelector(".mobile-sketch-1");
-    const mobileSketch2 = section.querySelector(".mobile-sketch-2");
-
-    if (mobileSketch1) {
-      gsap.from(mobileSketch1, {
-        y: 350, // Start below and move up (reverse of main sketch)
-        scrollTrigger: {
-          trigger: section, // Trigger when this specific process section enters viewport
-          start: "top bottom-=100", // Start earlier (100px before main sketch)
-          end: "center center", // End when center of process section hits center of viewport (halfway through)
-          scrub: 1, // Smooth parallax effect tied to scroll
-          markers: false,
-        },
-      });
-    }
-
-    if (mobileSketch2) {
-      gsap.from(mobileSketch2, {
-        y: 350, // Start below and move up (reverse of main sketch)
-        scrollTrigger: {
-          trigger: section, // Trigger when this specific process section enters viewport
-          start: "top bottom-=500", // Start even earlier (200px before main sketch)
-          end: "center center", // End when center of process section hits center of viewport (halfway through)
-          scrub: 1, // Smooth parallax effect tied to scroll
-          markers: false,
-        },
-      });
-    }
-  });
 
   // Initialize Swiper Hero Carousel
   const heroCarousel = document.getElementById("hero-carousel") as HTMLElement;
@@ -1589,22 +1738,27 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   // ==================== HERO CAROUSEL WITH SMOOOTHY ====================
   let heroCarouselInstance: any;
   let thumbsCarousel: any;
-  let heroAutoScrollSpeed = -0.003; // Slower speed for hero carousel
+  let heroAutoScrollSpeed = -0.003;
   let heroIsPaused = false;
   let updateHeroTicker: (() => void) | undefined;
   let updatePreviewTicker: (() => void) | undefined;
+  // Store bound update functions so we can remove the exact same reference from the ticker
+  let heroUpdateBound: ((...args: any[]) => void) | undefined;
+  let thumbsUpdateBound: ((...args: any[]) => void) | undefined;
 
   function initCarousels() {
     // Cleanup previous instances if they exist
     if (heroCarouselInstance) {
       if (updateHeroTicker) gsap.ticker.remove(updateHeroTicker);
-      gsap.ticker.remove(heroCarouselInstance.update.bind(heroCarouselInstance));
+      if (heroUpdateBound) gsap.ticker.remove(heroUpdateBound);
       heroCarouselInstance = null;
+      heroUpdateBound = undefined;
     }
     if (thumbsCarousel) {
       if (updatePreviewTicker) gsap.ticker.remove(updatePreviewTicker);
-      gsap.ticker.remove(thumbsCarousel.update.bind(thumbsCarousel));
+      if (thumbsUpdateBound) gsap.ticker.remove(thumbsUpdateBound);
       thumbsCarousel = null;
+      thumbsUpdateBound = undefined;
     }
 
     const heroCarouselElement = document.getElementById(
@@ -1651,8 +1805,9 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
       updateHeroTicker = updateHero;
 
       // Use GSAP ticker for smooth updates
+      heroUpdateBound = heroCarouselInstance.update.bind(heroCarouselInstance);
       gsap.ticker.add(updateHero);
-      gsap.ticker.add(heroCarouselInstance.update.bind(heroCarouselInstance));
+      gsap.ticker.add(heroUpdateBound);
     } else {
       console.log("Hero carousel not found in DOM (likely replaced by custom banner)");
     }
@@ -1701,7 +1856,8 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 
       // NO auto-scroll functionality - drag only
       // But we still need GSAP ticker for drag animations
-      gsap.ticker.add(thumbsCarousel.update.bind(thumbsCarousel));
+      thumbsUpdateBound = thumbsCarousel.update.bind(thumbsCarousel);
+      gsap.ticker.add(thumbsUpdateBound);
       console.log("Styleframes carousel initialized - drag only, no auto-scroll");
 
       // ==================== DYNAMIC PREVIEW IMAGE SYSTEM ====================
@@ -1915,15 +2071,31 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     }
   }
 
-  // Run on initial load and after view transitions (Barba)
-  // We use astro:page-load as a custom event dispatched by Barba after transition
+  // Called by BarbaTransition directly (via window.__dtProjectInit) on every
+  // page enter — both initial direct load and subsequent Barba navigations.
   const initAll = () => {
-    initVideoScripts();
-    initGridLines();
-    initCarousels();
-    initMotionDivider();
-    initToggles();
+    // Run each setup in isolation so a throw in one (e.g. video) doesn't abort the
+    // rest (carousels, toggles, etc.) — which previously left interactions dead until
+    // a full refresh. Errors are logged so the culprit is visible.
+    const run = (name: string, fn: () => void) => {
+      try { fn(); } catch (e) { console.error(`[project init] ${name} failed:`, e); }
+    };
+    run("video", initVideoScripts);
+    run("scrollAnimations", initScrollAnimations);
+    run("gridLines", initGridLines);
+    run("carousels", initCarousels);
+    run("motionDivider", initMotionDivider);
+    run("toggles", initToggles);
+
+    // Force-play every autoplay video — the autoplay attribute fires only on initial
+    // HTML parse, so after a Barba swap the video stays paused without this.
+    document.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach(v => {
+      if (v.paused) v.play().catch(() => {});
+    });
   };
 
-  document.addEventListener("astro:page-load", initAll);
+  // Expose initAll so BarbaTransition can call it directly after each navigation.
+  // Event-dispatch alone is unreliable because Astro compiles this script to an
+  // external module file that Barba hasn't loaded yet on the first navigation.
+  (window as any).__dtProjectInit = initAll;
 </script>

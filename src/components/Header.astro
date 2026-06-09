@@ -74,6 +74,43 @@ const isHomePage = currentPath === '/';
         
         // Click Animation with Barba Integration
         const allLinks = document.querySelectorAll('.nav a, .header-logo');
+        const navContainer = document.querySelector('.nav');
+
+        // Handle hover interactions for exiting state
+        if (navContainer) {
+          navContainer.addEventListener('mouseenter', (e) => {
+             // When hovering over the nav container (which contains links)
+             // If there is an active link that is NOT the one being hovered...
+             // Wait, mouseenter on nav container is too broad.
+             // We want: When hovering ANY link, check if there is another ACTIVE link.
+          });
+        }
+
+        const navLinksList = document.querySelectorAll('.nav a');
+        navLinksList.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                // Find currently active link
+                const activeLink = document.querySelector('.nav a.active');
+                
+                // If there is an active link and it's not the one we're hovering
+                if (activeLink && activeLink !== link) {
+                    activeLink.classList.add('is-exiting');
+                }
+            });
+
+            link.addEventListener('mouseleave', () => {
+                 // When leaving a link, we might want to restore the active link?
+                 // But wait, the user said "when we hover on another".
+                 // So if I hover Link A (inactive), Active Link B should exit.
+                 // When I stop hovering Link A, Active Link B should return to normal.
+                 
+                 const activeLink = document.querySelector('.nav a.active');
+                 if (activeLink && activeLink !== link) {
+                     activeLink.classList.remove('is-exiting');
+                 }
+            });
+        });
+
         allLinks.forEach(link => {
           link.addEventListener('click', (e) => {
             e.preventDefault(); // Prevent immediate navigation

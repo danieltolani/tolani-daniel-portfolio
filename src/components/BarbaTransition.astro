@@ -19,8 +19,11 @@ import MosaicTransition from './MosaicTransition.astro';
   // when the event fires after a Barba navigation.
   function callProjectInit() {
     const isProject = !!document.querySelector('[data-barba-namespace="project"]');
-    if (isProject && typeof (window as any).__dtProjectInit === 'function') {
+    if (!isProject) return;
+    if (typeof (window as any).__dtProjectInit === 'function') {
       (window as any).__dtProjectInit();
+    } else {
+      console.warn('[barba] project page but __dtProjectInit not ready — interactions skipped');
     }
   }
 
@@ -68,6 +71,13 @@ import MosaicTransition from './MosaicTransition.astro';
       rows.push({ el, bucket: rowIndex });
     }
     return { rows, maxRow: rowIndex };
+  }
+
+  // Project pages run their own intricate intro + ScrollTrigger animations. A
+  // transform on the container/sections mismeasures those triggers (the hero gets
+  // pinned to opacity 0), so we skip the transform entrance there and just reveal.
+  function isProject(next: HTMLElement): boolean {
+    return next.getAttribute('data-barba-namespace') === 'project';
   }
 
   // Page-to-page entrance: rows slide up into rest, staggered.
@@ -129,7 +139,9 @@ import MosaicTransition from './MosaicTransition.astro';
           if ((window as any).blockTransition?.loadIntro) {
             (window as any).blockTransition.loadIntro();
           }
-          loadEntrance(next);
+          // Project pages: reveal without the transform entrance (keeps ScrollTrigger sane).
+          if (isProject(next)) next.style.opacity = '1';
+          else loadEntrance(next);
         };
         const enterBtn = document.getElementById('mosaic-enter-btn');
         if (enterBtn) {
@@ -167,11 +179,21 @@ import MosaicTransition from './MosaicTransition.astro';
         });
 
         // ── JS: load any module scripts the next page has that we don't yet ──
-        // Use getAttribute('src') — the .src property on DOMParser elements
-        // resolves relative to about:blank, giving wrong absolute URLs.
-        const currentSrcs = new Set(
+        // Identity key = pathname + query, ignoring only the HMR cache-bust (?v=) and
+        // our own ?__reinit=. Pathname alone is too loose in dev: it conflates a file's
+        // ?type=script with its ?type=style, and index=0 with index=1.
+        const keyOf = (u: string) => {
+          try {
+            const url = new URL(u, window.location.href);
+            const p = url.searchParams;
+            p.delete('v'); p.delete('__reinit');
+            const q = Array.from(p.entries()).sort().map(([k, val]) => `${k}=${val}`).join('&');
+            return url.pathname + (q ? `?${q}` : '');
+          } catch { return u; }
+        };
+        const currentKeys = new Set(
           Array.from(document.querySelectorAll('script[src]'))
-            .map(s => (s as HTMLScriptElement).src) // already absolute in live document
+            .map(s => keyOf((s as HTMLScriptElement).src))
         );
 
         const loads: Promise<void>[] = [];
@@ -184,15 +206,7 @@ import MosaicTransition from './MosaicTransition.astro';
             resolved = new URL(rawSrc, window.location.href).href;
           } catch { return; }
 
-          // Skip if pathname already loaded (handles ?v= HMR cache-bust differences)
-          const alreadyLoaded = resolved === window.location.href
-            ? false
-            : Array.from(currentSrcs).some(s => {
-                try { return new URL(s).pathname === new URL(resolved).pathname; }
-                catch { return false; }
-              });
-
-          if (alreadyLoaded) return;
+          if (resolved !== window.location.href && currentKeys.has(keyOf(resolved))) return;
 
           loads.push(new Promise<void>((resolve) => {
             const el = document.createElement('script');
@@ -227,8 +241,9 @@ import MosaicTransition from './MosaicTransition.astro';
         const next = data.next.container as HTMLElement;
         gsap.set(next, { opacity: 1, display: 'block' });
 
-        // Staggered row entrance, concurrently with the red reveal.
-        const entranceMs = staggerEnter(next);
+        // Staggered row entrance, concurrently with the red reveal — but skip the
+        // transform on project pages so it doesn't break their ScrollTrigger setup.
+        const entranceMs = isProject(next) ? 0 : staggerEnter(next);
 
         if ((window as any).blockTransition) {
           await (window as any).blockTransition.leave();
@@ -238,16 +253,18 @@ import MosaicTransition from './MosaicTransition.astro';
       },
 
       after(_data: any) {
-        // Directly call project page init (set by the project page's module script
-        // once it was loaded in beforeEnter). Then dispatch astro:page-load for
-        // other listeners like Header.
-        callProjectInit();
-        reinitScripts();
-
-        // Scroll to top — project pages use a custom .scroll-container
+        // Reset scroll FIRST so carousels (Smooothy) and ScrollTrigger measure against
+        // the settled top-of-page layout — project pages use a custom .scroll-container.
         window.scrollTo(0, 0);
         const sc = document.querySelector('.scroll-container') as HTMLElement | null;
         if (sc) sc.scrollTop = 0;
+
+        // Dispatch astro:page-load for listeners like Header.
+        reinitScripts();
+
+        // Init project interactions on the next frame, once the swapped container is
+        // laid out (measurement-based widgets need correct dimensions).
+        requestAnimationFrame(() => callProjectInit());
       }
     }],
 
