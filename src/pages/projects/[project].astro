@@ -1807,7 +1807,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
       // Use GSAP ticker for smooth updates
       heroUpdateBound = heroCarouselInstance.update.bind(heroCarouselInstance);
       gsap.ticker.add(updateHero);
-      gsap.ticker.add(heroUpdateBound);
+      gsap.ticker.add(heroUpdateBound!);
     } else {
       console.log("Hero carousel not found in DOM (likely replaced by custom banner)");
     }
@@ -1857,7 +1857,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
       // NO auto-scroll functionality - drag only
       // But we still need GSAP ticker for drag animations
       thumbsUpdateBound = thumbsCarousel.update.bind(thumbsCarousel);
-      gsap.ticker.add(thumbsUpdateBound);
+      gsap.ticker.add(thumbsUpdateBound!);
       console.log("Styleframes carousel initialized - drag only, no auto-scroll");
 
       // ==================== DYNAMIC PREVIEW IMAGE SYSTEM ====================
