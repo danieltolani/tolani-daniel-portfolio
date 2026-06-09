@@ -22,7 +22,10 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-		
+		<!-- Runs before first paint: marks that JS is on, so the page-enter pre-hide
+		     only applies when JS can reveal it (no-JS users always see content). -->
+		<script is:inline>document.documentElement.classList.add('js-enter');</script>
+
 		<!-- Primary Meta Tags -->
 		<title>{title}</title>
 		<meta name="title" content={title} />
@@ -72,5 +75,15 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		font-family: 'Suisse Int\'l', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+		/* Static dark underlay so the page-enter slide reveals no gap — only the
+		   content reads as moving, the (matching) background stays put. */
+		background-color: #141417;
+	}
+
+	/* Hide the page until the staggered entrance starts, so the first paint isn't
+	   the rest state (which caused a flicker on refresh). staggerEnter() reveals it.
+	   The matching dark body underneath means this reads as dark, not blank. */
+	html.js-enter [data-barba="container"] {
+		opacity: 0;
 	}
 </style>

@@ -1,132 +1,263 @@
 ---
-import BlockTransition from './BlockTransition.astro';
+import MosaicTransition from './MosaicTransition.astro';
 ---
 
-<BlockTransition />
+<MosaicTransition />
 
 <script>
   import barba from '@barba/core';
   import gsap from 'gsap';
 
-  // Helper to re-initialize scripts
+  // Dispatch astro:page-load for components like Header that listen for it
   function reinitScripts() {
-    // Trigger any custom initialization logic
-    const event = new Event('astro:page-load');
-    document.dispatchEvent(event);
+    document.dispatchEvent(new Event('astro:page-load'));
   }
 
-  // Initialize Barba
+  // Call the project-page init function if it has been registered and we are
+  // currently on a project page. This is more reliable than dispatching an event
+  // because module scripts compiled by Astro/Vite may not have been evaluated yet
+  // when the event fires after a Barba navigation.
+  function callProjectInit() {
+    const isProject = !!document.querySelector('[data-barba-namespace="project"]');
+    if (isProject && typeof (window as any).__dtProjectInit === 'function') {
+      (window as any).__dtProjectInit();
+    }
+  }
+
+  // iOS Sheet-style entrance, staggered by row (top rows land first). 500ms
+  // (intentionally over the 300ms guideline) with the iOS sheet presentation bezier.
+  // Used on both initial load (once) and navigation (enter). Returns total ms.
+  // Easing curves: page-to-page (with the tile reveal) uses the iOS sheet curve;
+  // initial load/refresh uses a no-pause curve (instant start) since there's no
+  // tile cover to mask the slow ramp-in.
+  const SHEET_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';  // page-to-page sheet curve
+
+  // Load/refresh "boom": content stays hidden (just the dark bg shows) until the red
+  // tile exit is ~50% done, then the whole page appears in one quick move.
+  const LOAD_ENTER_EASE  = 'cubic-bezier(0.22, 1, 0.36, 1)'; // easeOutQuint — energized, no overshoot
+  const LOAD_REVEAL_MS   = 813;  // keep in sync with MosaicTransition LOAD_REVEAL_DURATION
+  const LOAD_ENTER_MS    = 800;
+  const LOAD_ENTER_DELAY = Math.round(LOAD_REVEAL_MS * 0.6); // ~half cleared (ease-in exit)
+  const LOAD_STAGGER_STEP = 55;  // ms between rows on the load boom
+
+  const SHEET_OFFSET = () => Math.round(window.innerHeight * 0.10); // ~10% of viewport
+  const LOAD_OFFSET  = () => Math.round(window.innerHeight * 0.14); // bigger travel = more energy
+  const ROW_TOLERANCE = 8;       // px; elements within this share a visual row
+  const ENTER_EXCLUDE = '.hero-availability-wrapper'; // never animated (stays static)
+
+  // Collect content rows top -> bottom with a stagger bucket per visual row. Flattens
+  // one level into a wrapper's children (so a full-bleed bg wrapper like .hero-page
+  // stays put while its inner blocks animate); otherwise the direct child is a row.
+  function collectRows(next: HTMLElement): { rows: { el: HTMLElement; bucket: number }[]; maxRow: number } {
+    const targets: HTMLElement[] = [];
+    Array.from(next.children).forEach((child) => {
+      if (!(child instanceof HTMLElement)) return;
+      const inner = Array.from(child.children).filter((g) => g instanceof HTMLElement) as HTMLElement[];
+      if (inner.length >= 2) targets.push(...inner);
+      else targets.push(child);
+    });
+    const filtered = targets.filter((el) => !el.matches(ENTER_EXCLUDE));
+    const els = filtered.length ? filtered : [next];
+    els.sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
+
+    const rows: { el: HTMLElement; bucket: number }[] = [];
+    let rowIndex = -1, lastTop = -Infinity;
+    for (const el of els) {
+      const top = el.getBoundingClientRect().top;
+      if (top - lastTop > ROW_TOLERANCE) { rowIndex++; lastTop = top; }
+      rows.push({ el, bucket: rowIndex });
+    }
+    return { rows, maxRow: rowIndex };
+  }
+
+  // Page-to-page entrance: rows slide up into rest, staggered.
+  // dir 'down' = top rows first; 'up' = bottom rows first.
+  function staggerEnter(next: HTMLElement, ease: string = SHEET_EASE, dir: 'down' | 'up' = 'down'): number {
+    next.style.opacity = '1';
+    const offset = SHEET_OFFSET();
+    const STAGGER_STEP = 70;
+    const { rows, maxRow } = collectRows(next);
+    for (const { el, bucket } of rows) {
+      const order = dir === 'up' ? (maxRow - bucket) : bucket;
+      el.animate(
+        [{ transform: `translateY(${offset}px)` }, { transform: 'translateY(0)' }],
+        { duration: 500, easing: ease, delay: order * STAGGER_STEP, fill: 'backwards' }
+      );
+    }
+    return 500 + (maxRow + 1) * STAGGER_STEP;
+  }
+
+  // Load/refresh entrance: rows stay hidden (just the dark bg shows) until the red
+  // tile exit is ~50% done, then boom up into rest, staggered top-first so the pull
+  // reads as coming from the top.
+  function loadEntrance(next: HTMLElement) {
+    next.style.opacity = '1';
+    const offset = LOAD_OFFSET();
+    const { rows } = collectRows(next);
+    for (const { el, bucket } of rows) {
+      const order = bucket; // top-first
+      el.animate(
+        [
+          { opacity: 0, transform: `translateY(${offset}px)` },
+          { opacity: 1, transform: 'translateY(0)' }
+        ],
+        {
+          duration: LOAD_ENTER_MS,
+          easing: LOAD_ENTER_EASE,
+          delay: LOAD_ENTER_DELAY + order * LOAD_STAGGER_STEP,
+          fill: 'backwards'
+        }
+      );
+    }
+  }
+
   barba.init({
-    preventRunning: true, // Allow Barba to handle navigation
+    preventRunning: true,
     debug: true,
     transitions: [{
       name: 'default-transition',
+
       once(data: any) {
-        // Initial load
+        // Initial page load / refresh — module scripts have all evaluated by now.
+        callProjectInit();
         reinitScripts();
-      },
-      async beforeEnter(data: any) {
-        // Parse the incoming HTML
-        const parser = new DOMParser();
-        const nextDoc = parser.parseFromString(data.next.html, 'text/html');
-        
-        // Update Stylesheets (Link tags)
-        const currentLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]')) as HTMLLinkElement[];
-        const nextLinks = Array.from(nextDoc.querySelectorAll('link[rel="stylesheet"]')) as HTMLLinkElement[];
-        
-        const currentHrefs = new Set(currentLinks.map(link => link.href));
-        
-        nextLinks.forEach(link => {
-          if (!currentHrefs.has(link.href)) {
-            const newLink = link.cloneNode(true);
-            document.head.appendChild(newLink);
+        // Hold on the red screen until the user clicks "Enter with sound" — that
+        // gesture unlocks audio, then we exit the red tiles (with sound) and boom
+        // the content in.
+        const next = data.next.container as HTMLElement;
+        const startIntro = () => {
+          if ((window as any).blockTransition?.loadIntro) {
+            (window as any).blockTransition.loadIntro();
           }
-        });
-
-        // Update Styles (Style tags - typically for component scoped styles)
-        const currentStyles = Array.from(document.querySelectorAll('style')) as HTMLStyleElement[];
-        const nextStyles = Array.from(nextDoc.querySelectorAll('style')) as HTMLStyleElement[];
-        
-        // Simple content comparison for style tags
-        const currentStyleContents = new Set(currentStyles.map(style => style.innerHTML));
-        
-        nextStyles.forEach(style => {
-          if (!currentStyleContents.has(style.innerHTML)) {
-            const newStyle = style.cloneNode(true);
-            document.head.appendChild(newStyle);
-          }
-        });
-
-        // Optional: Update Title
-        const newTitle = nextDoc.querySelector('title');
-        if (newTitle) {
-          document.title = newTitle.innerText;
+          loadEntrance(next);
+        };
+        const enterBtn = document.getElementById('mosaic-enter-btn');
+        if (enterBtn) {
+          enterBtn.addEventListener('click', () => {
+            enterBtn.style.display = 'none';
+            startIntro();
+          }, { once: true });
+        } else {
+          startIntro(); // no button (e.g. no-JS path shouldn't reach here) — just run
         }
       },
+
+      async beforeEnter(data: any) {
+        const parser = new DOMParser();
+        const nextDoc = parser.parseFromString(data.next.html, 'text/html');
+
+        // ── CSS: inject any link/style tags the next page needs ──────────────
+        const currentHrefs = new Set(
+          Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+            .map(l => (l as HTMLLinkElement).href)
+        );
+        nextDoc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
+          if (!currentHrefs.has((link as HTMLLinkElement).href)) {
+            document.head.appendChild(link.cloneNode(true));
+          }
+        });
+
+        const currentStyleContents = new Set(
+          Array.from(document.querySelectorAll('style')).map(s => s.innerHTML)
+        );
+        nextDoc.querySelectorAll('style').forEach(style => {
+          if (!currentStyleContents.has(style.innerHTML)) {
+            document.head.appendChild(style.cloneNode(true));
+          }
+        });
+
+        // ── JS: load any module scripts the next page has that we don't yet ──
+        // Use getAttribute('src') — the .src property on DOMParser elements
+        // resolves relative to about:blank, giving wrong absolute URLs.
+        const currentSrcs = new Set(
+          Array.from(document.querySelectorAll('script[src]'))
+            .map(s => (s as HTMLScriptElement).src) // already absolute in live document
+        );
+
+        const loads: Promise<void>[] = [];
+        nextDoc.querySelectorAll('script[src]').forEach((scriptEl) => {
+          const rawSrc = scriptEl.getAttribute('src');
+          if (!rawSrc) return;
+
+          let resolved: string;
+          try {
+            resolved = new URL(rawSrc, window.location.href).href;
+          } catch { return; }
+
+          // Skip if pathname already loaded (handles ?v= HMR cache-bust differences)
+          const alreadyLoaded = resolved === window.location.href
+            ? false
+            : Array.from(currentSrcs).some(s => {
+                try { return new URL(s).pathname === new URL(resolved).pathname; }
+                catch { return false; }
+              });
+
+          if (alreadyLoaded) return;
+
+          loads.push(new Promise<void>((resolve) => {
+            const el = document.createElement('script');
+            const type = scriptEl.getAttribute('type');
+            if (type) el.type = type;
+            el.src = rawSrc;           // browser resolves relative to current page
+            el.onload  = () => resolve();
+            el.onerror = () => resolve();
+            document.head.appendChild(el);
+          }));
+        });
+
+        if (loads.length) await Promise.all(loads);
+
+        // ── Title ─────────────────────────────────────────────────────────────
+        const newTitle = nextDoc.querySelector('title');
+        if (newTitle) document.title = newTitle.innerText;
+      },
+
       async leave(data: any) {
-        // Animate out current container (Cover screen with blocks)
         const done = (this as any).async();
-        
-        // Call BlockTransition enter (covers screen)
         if ((window as any).blockTransition) {
           await (window as any).blockTransition.enter();
         } else {
-          // Fallback
-          await gsap.to(data.current.container, {
-            opacity: 0,
-            duration: 0.5
-          });
+          await gsap.to(data.current.container, { opacity: 0, duration: 0.5 });
         }
-        
-        // We don't need to fade out the container if blocks cover it,
-        // but for safety/cleanliness we can hide it.
         gsap.set(data.current.container, { display: 'none' });
-
         done();
       },
-      async enter(data: any) {
-        // Ensure new container is visible but hidden by blocks
-        gsap.set(data.next.container, { opacity: 1, display: 'block' });
 
-        // Animate in new container (Reveal screen by removing blocks)
+      async enter(data: any) {
+        const next = data.next.container as HTMLElement;
+        gsap.set(next, { opacity: 1, display: 'block' });
+
+        // Staggered row entrance, concurrently with the red reveal.
+        const entranceMs = staggerEnter(next);
+
         if ((window as any).blockTransition) {
           await (window as any).blockTransition.leave();
         } else {
-          // Fallback
-          gsap.from(data.next.container, {
-            opacity: 0,
-            duration: 0.5
-          });
+          await new Promise((res) => setTimeout(res, entranceMs));
         }
       },
-      after(data: any) {
-        // Re-initialize scripts after transition
+
+      after(_data: any) {
+        // Directly call project page init (set by the project page's module script
+        // once it was loaded in beforeEnter). Then dispatch astro:page-load for
+        // other listeners like Header.
+        callProjectInit();
         reinitScripts();
-        
-        // Scroll to top
+
+        // Scroll to top — project pages use a custom .scroll-container
         window.scrollTo(0, 0);
+        const sc = document.querySelector('.scroll-container') as HTMLElement | null;
+        if (sc) sc.scrollTop = 0;
       }
     }],
+
     views: [
-      {
-        namespace: 'default',
-        beforeEnter() {
-          // General setup
-        }
-      },
-      {
-        namespace: 'project',
-        afterEnter() {
-          // Project specific re-init is handled by dispatching astro:page-load
-        }
-      }
+      { namespace: 'default', beforeEnter() {} },
+      { namespace: 'project', afterEnter() {} }
     ],
-    prevent: ({ el }: any) => {
-      // Prevent header links from being handled if they have specific attributes
-      return el.hasAttribute('data-barba-prevent');
-    }
+
+    prevent: ({ el }: any) => el.hasAttribute('data-barba-prevent')
   });
 
-  // Expose Barba to window
   (window as any).barba = barba;
 </script>

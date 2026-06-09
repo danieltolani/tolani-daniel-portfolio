@@ -1,0 +1,367 @@
+---
+// Mosaic page-transition overlay.
+// Implements the same window.blockTransition contract that BarbaTransition expects:
+//   enter() -> COVER the screen  (tiles ripple outward from the click point)
+//   leave() -> REVEAL the screen (tiles clear outward from the click point)
+// Both return Promises so Barba waits for them.
+//
+// Two-front wave: a WHITE leading edge ripples out first, and the RED fill
+// chases ~LEAD_GAP ms behind it, sealing over the white just as the wave ends.
+// At any instant only the moving edge band is white.
+---
+
+<canvas id="mosaic-transition" class="mosaic-transition-overlay" aria-hidden="true"></canvas>
+<!-- First-paint red cover for the load/refresh intro, so there's no flash before the
+     canvas paints its red fill. JS removes it once the canvas is drawn. Gated by
+     .js-enter so a no-JS visitor never gets stuck on a red screen. -->
+<div id="mosaic-load-cover" aria-hidden="true"></div>
+<!-- Shown over the red load screen so a user gesture can unlock audio before the
+     intro plays. Hidden after the first click (and on no-JS). -->
+<button id="mosaic-enter-btn" class="mosaic-enter-btn" type="button">Enter with sound</button>
+
+<style>
+  .mosaic-transition-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;        /* above the cursor-trail overlay (9999) */
+    pointer-events: none;  /* never blocks clicks */
+    display: block;
+  }
+
+  #mosaic-load-cover {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;        /* above the canvas, only during the load gate */
+    background-color: #f72f2f;
+    pointer-events: auto;  /* block clicks to the page behind while gating */
+    display: none;         /* shown only when JS is present (and will remove it) */
+  }
+  html.js-enter #mosaic-load-cover {
+    display: block;
+  }
+
+  #mosaic-enter-btn {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10002;        /* above the red canvas/cover */
+    display: none;
+    align-items: center;
+    padding: 15px 30px;
+    font-family: inherit;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    background: transparent;
+    border: 1.5px solid rgba(255, 255, 255, 0.85);
+    border-radius: 999px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  #mosaic-enter-btn:hover {
+    background: #fff;
+    color: #f72f2f;
+  }
+  html.js-enter #mosaic-enter-btn {
+    display: inline-flex;
+  }
+</style>
+
+<script>
+  // ---- CONFIG ----------------------------------------------------------------
+  const TILE_RATIO      = 58 / 1512;   // tile size scales with viewport (~58px on a 1512px-wide screen)
+  const COVER_DURATION  = 650;         // ms for the cover wave
+  const REVEAL_DURATION = 650;         // ms for the reveal wave (page-to-page)
+  const LOAD_REVEAL_DURATION = 813;    // ms for the load/refresh exit (ease-in)
+  const LOAD_FILL_HOLD  = 0.12;        // fraction of the wave the screen stays fully filled
+                                       // before any tile clears (no pre-punched holes)
+  const easeInPull = (t: number) => t * t * t; // slow start -> hard pull
+  const SCATTER         = 18;          // ~90% on the 1 (clean ring) -> 20 (heavy noise) scale
+  const TILE_COLOR      = "#f72f2f";   // brand red — the trailing fill
+  const LEAD_COLOR      = "#ffffff";   // white — the brief precursor before red
+  const LEAD_GAP        = 130;         // ms the white precursor shows before red covers it
+  const WHITE_DENSITY   = 0.3;         // fraction of clearing tiles that flash white (load exit)
+  const WHITE_START     = 0.6;         // white only appears for tiles covered after this fraction
+                                       // of the wave (0 = from the start, 1 = never). Keeps the
+                                       // opening looking like a plain red transition.
+  const SHAPE: "circle" | "diamond" | "square" = "circle";
+  const SOUND_SRC       = "/assets/sfx/Transition-(IN+OUT).aac";
+  const PAGE_OUT_OVERLAP = 250;        // ms the reversed OUT sfx starts before the cover ends
+  const PAGE_OUT_STRETCH: number = 1.25; // OUT sfx duration multiplier (pitch-preserved time-stretch)
+  // ---------------------------------------------------------------------------
+
+  const canvas = document.getElementById("mosaic-transition") as HTMLCanvasElement | null;
+  const ctx = canvas ? canvas.getContext("2d") : null;
+
+  let dpr = 1, cols = 0, rows = 0, tileSize = 100;
+  let covered = false;                  // resting state: is the screen covered?
+  let originX = window.innerWidth / 2;  // wave origin (last click, defaults to center)
+  let originY = window.innerHeight / 2;
+
+  // ---- Audio: Web Audio API so the OUT phase can play reversed ----
+  let audioCtx: AudioContext | null = null;
+  let fwdBuffer: AudioBuffer | null = null;   // forward — IN (cover / load exit)
+  let revBuffer: AudioBuffer | null = null;   // reversed + pitch-preserved stretch — OUT (page reveal)
+
+  // Pitch-preserving time-stretch via windowed overlap-add (OLA). factor > 1 = longer.
+  function timeStretch(ctx: AudioContext, buffer: AudioBuffer, factor: number): AudioBuffer {
+    const chs = buffer.numberOfChannels;
+    const sr = buffer.sampleRate;
+    const grain = Math.max(256, Math.round(sr * 0.06)); // ~60ms grains
+    const Ha = Math.round(grain / 2);                   // analysis hop (50% overlap)
+    const Hs = Math.max(1, Math.round(Ha * factor));    // synthesis hop (stretched)
+    const outLen = Math.ceil(buffer.length * factor) + grain;
+    const out = ctx.createBuffer(chs, outLen, sr);
+    const win = new Float32Array(grain);
+    for (let i = 0; i < grain; i++) win[i] = 0.5 - 0.5 * Math.cos((2 * Math.PI * i) / (grain - 1));
+    const norm = new Float32Array(outLen); // window-sum envelope (same for every channel)
+    for (let c = 0; c < chs; c++) {
+      const inp = buffer.getChannelData(c);
+      const o = out.getChannelData(c);
+      let inPos = 0, outPos = 0;
+      while (inPos + grain < inp.length && outPos + grain < outLen) {
+        for (let i = 0; i < grain; i++) {
+          o[outPos + i] += inp[inPos + i] * win[i];
+          if (c === 0) norm[outPos + i] += win[i];
+        }
+        inPos += Ha;
+        outPos += Hs;
+      }
+    }
+    for (let c = 0; c < chs; c++) {
+      const o = out.getChannelData(c);
+      for (let i = 0; i < outLen; i++) if (norm[i] > 1e-6) o[i] /= norm[i];
+    }
+    return out;
+  }
+
+  (async function loadAudio() {
+    try {
+      const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!Ctx) return;
+      audioCtx = new Ctx();
+      const arr = await (await fetch(SOUND_SRC)).arrayBuffer();
+      fwdBuffer = await audioCtx.decodeAudioData(arr);
+      // Reversed copy (samples flipped), then a pitch-preserved stretch for the OUT.
+      const rev = audioCtx.createBuffer(fwdBuffer.numberOfChannels, fwdBuffer.length, fwdBuffer.sampleRate);
+      for (let ch = 0; ch < fwdBuffer.numberOfChannels; ch++) {
+        const s = fwdBuffer.getChannelData(ch);
+        const d = rev.getChannelData(ch);
+        const n = s.length;
+        for (let i = 0; i < n; i++) d[i] = s[n - 1 - i];
+      }
+      revBuffer = PAGE_OUT_STRETCH !== 1 ? timeStretch(audioCtx, rev, PAGE_OUT_STRETCH) : rev;
+    } catch { /* ignore */ }
+  })();
+
+  function playSfx(buf: AudioBuffer | null, volume = 0.2, delaySec = 0, rate = 1) {
+    if (!audioCtx || !buf) return;
+    try {
+      if (audioCtx.state === "suspended") audioCtx.resume();
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      src.playbackRate.value = rate; // <1 stretches (slower, lower pitch)
+      const gain = audioCtx.createGain();
+      gain.gain.value = volume;
+      src.connect(gain).connect(audioCtx.destination);
+      src.start(audioCtx.currentTime + Math.max(0, delaySec));
+    } catch { /* ignore */ }
+  }
+
+  // Remember where the user clicked so the wave can ripple from that spot.
+  // Capture phase so we get it before Barba intercepts the link navigation.
+  document.addEventListener("pointerdown", (e) => {
+    originX = e.clientX;
+    originY = e.clientY;
+    // Unlock audio on the first user gesture (browser autoplay policy).
+    if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  }, true);
+
+  function resize() {
+    if (!canvas || !ctx) return;
+    dpr = window.devicePixelRatio || 1;
+    const w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tileSize = w * TILE_RATIO;
+    cols = Math.ceil(w / tileSize);
+    rows = Math.ceil(h / tileSize);
+    drawRest();
+  }
+
+  // Resting state: solid red when covered (white front has fully sealed), else clear.
+  function drawRest() {
+    if (!ctx) return;
+    const w = window.innerWidth, h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+    if (covered) {
+      ctx.fillStyle = TILE_COLOR;
+      ctx.fillRect(0, 0, w, h);
+    }
+  }
+
+  // Stable per-tile pseudo-random in [0,1) — same value every frame for a given tile.
+  function hash01(n: number): number {
+    const s = Math.sin(n * 127.1) * 43758.5453;
+    return s - Math.floor(s);
+  }
+
+  function dist(dx: number, dy: number): number {
+    switch (SHAPE) {
+      case "diamond": return Math.abs(dx) + Math.abs(dy);
+      case "square":  return Math.max(Math.abs(dx), Math.abs(dy));
+      default:        return Math.hypot(dx, dy);
+    }
+  }
+
+  // Per-tile arrival times from an arbitrary metric (px ordering), with jitter
+  // scaled by SCATTER, normalized to [0, span]. Mirrors the After Effects logic.
+  function buildFrontsBy(metric: (cx: number, cy: number) => number, span: number, loFrac = 0): Float32Array {
+    const t = new Float32Array(cols * rows);
+    let min = Infinity, max = -Infinity;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cx = c * tileSize + tileSize / 2;
+        const cy = r * tileSize + tileSize / 2;
+        const d = metric(cx, cy);
+        t[r * cols + c] = d;
+        if (d < min) min = d;
+        if (d > max) max = d;
+      }
+    }
+    const range = (max - min) || 1;
+    const jitterAmp = ((SCATTER - 1) / 19) * range * 0.9;
+
+    let fMin = Infinity, fMax = -Infinity;
+    for (let i = 0; i < t.length; i++) {
+      const j = t[i] + (Math.random() - 0.5) * 2 * jitterAmp;
+      t[i] = j;
+      if (j < fMin) fMin = j;
+      if (j > fMax) fMax = j;
+    }
+    const fRange = (fMax - fMin) || 1;
+    for (let i = 0; i < t.length; i++) {
+      // loFrac keeps the earliest tiles from clearing until the wave is loFrac in,
+      // so the screen stays fully filled before the dissolve begins.
+      t[i] = (loFrac + (1 - loFrac) * ((t[i] - fMin) / fRange)) * span;
+    }
+    return t;
+  }
+
+  // Ripple outward from a point (page-to-page reveal/cover).
+  function buildFronts(px: number, py: number, span: number): Float32Array {
+    return buildFrontsBy((cx, cy) => dist(cx - px, cy - py), span);
+  }
+
+  // Bottom-to-top wave (used by the load/refresh intro) — looks like the tiles
+  // pull the page up as they clear.
+  function buildFrontsUp(span: number): Float32Array {
+    return buildFrontsBy((_cx, cy) => -cy, span, LOAD_FILL_HOLD);
+  }
+
+  // Animate the wave rippling out from (px,py). HOLD-style snap per tile.
+  // RED is the primary front (spans the whole duration). On the cover, tiles whose
+  // red arrival lands in the late part of the wave (>= WHITE_START) flash WHITE for
+  // LEAD_GAP ms just before the red seals over them — so the opening reads as plain
+  // red and the white is only a late, catchable detail.
+  //   coverMode = true  -> off -> (white, late tiles only) -> RED   (ends covered)
+  //   coverMode = false -> RED -> off                                (plain red reveal)
+  function runWave(coverMode: boolean, frontT: Float32Array, duration: number, ease?: (t: number) => number, revealWhite = false): Promise<void> {
+    return new Promise<void>((resolve) => {
+      if (!ctx || cols === 0 || rows === 0) { covered = coverMode; drawRest(); resolve(); return; }
+
+      const lead = Math.min(LEAD_GAP, duration * 0.5);
+      const whiteAfter = duration * WHITE_START;       // only late tiles get the white precursor
+      const start = performance.now();
+
+      function frame() {
+        const el = performance.now() - start;
+        // Eased wave time: the load exit uses ease-in so it starts slow then pulls.
+        const p = (ease ? ease(Math.min(el / duration, 1)) : (el / duration)) * duration;
+        const w = window.innerWidth, h = window.innerHeight;
+        ctx!.clearRect(0, 0, w, h);
+
+        // Pass 1: red — the primary front
+        ctx!.fillStyle = TILE_COLOR;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const ft = frontT[r * cols + c];
+            // cover: red once the front arrives (el >= ft)
+            // reveal: red until the front arrives (el < ft), then clears to off
+            const red = coverMode ? (p >= ft) : (p < ft);
+            if (red) ctx!.fillRect(c * tileSize, r * tileSize, tileSize + 0.5, tileSize + 0.5);
+          }
+        }
+
+        // Pass 2: white edge.
+        //   cover  -> leading precursor, late tiles only, just BEFORE red arrives
+        //   reveal -> trailing flash as the red exit clears each tile (load only)
+        if (coverMode || revealWhite) {
+          ctx!.fillStyle = LEAD_COLOR;
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const ft = frontT[r * cols + c];
+              const white = coverMode
+                ? (ft >= whiteAfter && p >= ft - lead && p < ft)
+                : (p >= ft && p < ft + lead && hash01(r * cols + c) < WHITE_DENSITY);
+              if (white) ctx!.fillRect(c * tileSize, r * tileSize, tileSize + 0.5, tileSize + 0.5);
+            }
+          }
+        }
+
+        if (el >= duration) {
+          covered = coverMode;
+          drawRest();
+          resolve();
+        } else {
+          requestAnimationFrame(frame);
+        }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  // ---- Public contract used by BarbaTransition --------------------------------
+  (window as any).blockTransition = {
+    // Leaving the current page: cover the screen, rippling out from the click.
+    enter() {
+      playSfx(fwdBuffer); // IN (forward)
+      // Schedule the reversed OUT to start before the cover ends, so it overlaps the
+      // IN instead of waiting for the (later) reveal phase.
+      playSfx(revBuffer, 0.2, (COVER_DURATION - PAGE_OUT_OVERLAP) / 1000);
+      return runWave(true, buildFronts(originX, originY, COVER_DURATION), COVER_DURATION);
+    },
+    // Entering the new page: clear the screen, rippling out from the same point.
+    // (OUT sfx was already scheduled in enter() for overlap.)
+    leave() {
+      return runWave(false, buildFronts(originX, originY, REVEAL_DURATION), REVEAL_DURATION);
+    },
+    // Initial load / refresh: red fill already on screen, exit bottom-to-top (scattered).
+    loadIntro() {
+      playSfx(revBuffer); // OUT (reversed) only — the load is purely an exit
+      const lc = document.getElementById("mosaic-load-cover");
+      if (lc) lc.style.display = "none"; // drop the blocking CSS cover; canvas red takes over
+      covered = true;            // ensure the red fill is present, then clear it away
+      drawRest();
+      return runWave(false, buildFrontsUp(LOAD_REVEAL_DURATION), LOAD_REVEAL_DURATION, easeInPull, true);
+    },
+  };
+
+  window.addEventListener("resize", resize);
+
+  // On initial load the script runs once — start covered so the red fill is painted
+  // immediately, then drop the CSS first-paint cover (the canvas red stands in for it).
+  covered = true;
+  resize();
+  // The red fill (CSS cover + canvas) stays and blocks clicks until the user clicks
+  // "Enter with sound" (wired in BarbaTransition's once). loadIntro() drops the cover,
+  // unlocks audio and triggers the reveal.
+</script>

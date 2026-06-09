@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mosaic Tile Transition — Web Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+  /* Background content that the mosaic covers / reveals */
+  #stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #1f6feb, #0b1020 70%);
+    color: #fff;
+  }
+  #stage .headline { text-align: center; user-select: none; }
+  /* 90px on a 1512px-wide screen -> 90/1512 = 5.95vw. clamp() bounds the extremes. */
+  #stage h1 { font-size: clamp(2rem, 5.95vw, 8rem); letter-spacing: -0.03em; }
+  #stage p  { margin-top: .5rem; opacity: .7; font-size: clamp(.9rem, 2vw, 1.2rem); }
+
+  /* The mosaic canvas sits on top */
+  #mosaic { position: fixed; inset: 0; cursor: crosshair; display: block; }
+
+  /* Controls */
+  #panel {
+    position: fixed; top: 16px; left: 16px; z-index: 10;
+    background: rgba(20, 22, 30, .82); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 14px 16px; color: #e8e8ec; width: 230px;
+    font-size: 13px; box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  }
+  #panel h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; opacity: .6; margin-bottom: 10px; }
+  #panel label { display: block; margin: 10px 0 4px; opacity: .85; }
+  #panel .val { float: right; opacity: .6; font-variant-numeric: tabular-nums; }
+  #panel input[type=range] { width: 100%; accent-color: #1f6feb; }
+  #panel select { width: 100%; padding: 4px; border-radius: 6px; background:#11131a; color:#e8e8ec; border:1px solid rgba(255,255,255,.15); }
+  #panel .row { display: flex; gap: 8px; margin-top: 12px; }
+  #panel button {
+    flex: 1; padding: 7px; border-radius: 7px; border: 1px solid rgba(255,255,255,.15);
+    background: #1f6feb; color: #fff; font-weight: 600; cursor: pointer; font-size: 12px;
+  }
+  #panel button.ghost { background: transparent; }
+  #hint {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 10;
+    color: #fff; opacity: .7; font-size: 13px; pointer-events: none;
+    background: rgba(0,0,0,.3); padding: 6px 14px; border-radius: 20px;
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="headline">
+      <h1>PORTFOLIO</h1>
+      <p>click anywhere — the mosaic ripples from that spot</p>
+    </div>
+  </div>
+
+  <canvas id="mosaic"></canvas>
+
+  <div id="panel">
+    <h2>Mosaic Test</h2>
+
+    <label>Tile size <span class="val" id="tileVal">40px</span></label>
+    <input id="tile" type="range" min="10" max="120" value="40" />
+
+    <label>Duration <span class="val" id="durVal">0.9s</span></label>
+    <input id="dur" type="range" min="0.2" max="3" step="0.1" value="0.9" />
+
+    <label>Scatter <span class="val" id="scatVal">1</span></label>
+    <input id="scat" type="range" min="1" max="20" value="1" />
+
+    <label>Shape</label>
+    <select id="shape">
+      <option value="circle" selected>Circle (radial)</option>
+      <option value="diamond">Diamond</option>
+      <option value="square">Square</option>
+    </select>
+
+    <label>Tile color</label>
+    <select id="color">
+      <option value="#000000">Black</option>
+      <option value="#ffffff" selected>White</option>
+      <option value="#1f6feb">Blue</option>
+    </select>
+
+    <div class="row">
+      <button id="reset" class="ghost">Reset</button>
+    </div>
+  </div>
+
+  <div id="hint">First click <b>covers</b> · next click <b>reveals</b></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const canvas = document.getElementById("mosaic");
+  const ctx = canvas.getContext("2d");
+
+  const ui = {
+    tile:  document.getElementById("tile"),
+    dur:   document.getElementById("dur"),
+    scat:  document.getElementById("scat"),
+    shape: document.getElementById("shape"),
+    color: document.getElementById("color"),
+    reset: document.getElementById("reset"),
+    tileVal: document.getElementById("tileVal"),
+    durVal:  document.getElementById("durVal"),
+    scatVal: document.getElementById("scatVal"),
+    hint:    document.getElementById("hint"),
+  };
+
+  // ---- Grid state ----
+  let cols = 0, rows = 0, tileSize = 40, dpr = 1;
+  let covered = false;          // resting state: is the screen currently covered?
+  let anim = null;              // active wave, or null
+
+  // ---- Build / rebuild the grid for current size + tile size ----
+  function build() {
+    dpr = window.devicePixelRatio || 1;
+    const w = window.innerWidth, h = window.innerHeight;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    tileSize = +ui.tile.value;
+    cols = Math.ceil(w / tileSize);
+    rows = Math.ceil(h / tileSize);
+    draw();
+  }
+
+  // ---- Distance metric from a point, per chosen shape ----
+  function dist(dx, dy, shape) {
+    switch (shape) {
+      case "diamond": return Math.abs(dx) + Math.abs(dy);        // taxicab
+      case "square":  return Math.max(Math.abs(dx), Math.abs(dy)); // chebyshev
+      default:        return Math.hypot(dx, dy);                  // euclidean (circle)
+    }
+  }
+
+  // ---- Start a wave from (px, py) flipping covered <-> revealed ----
+  function startWave(px, py) {
+    const shape = ui.shape.value;
+    const duration = +ui.dur.value * 1000;
+    const scatter = +ui.scat.value;
+
+    // Per-tile trigger delay = distance from click, normalized to [0, duration],
+    // plus jitter scaled by the scatter slider (1 = clean ring, 20 = heavy noise).
+    const triggers = new Float32Array(cols * rows);
+    let min = Infinity, max = -Infinity;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cx = c * tileSize + tileSize / 2;
+        const cy = r * tileSize + tileSize / 2;
+        const d = dist(cx - px, cy - py, shape);
+        triggers[r * cols + c] = d;
+        if (d < min) min = d;
+        if (d > max) max = d;
+      }
+    }
+    const range = (max - min) || 1;
+    const jitterAmp = ((scatter - 1) / 19) * range * 0.4;
+
+    let fMin = Infinity, fMax = -Infinity;
+    for (let i = 0; i < triggers.length; i++) {
+      const j = triggers[i] + (Math.random() - 0.5) * 2 * jitterAmp;
+      triggers[i] = j;
+      if (j < fMin) fMin = j;
+      if (j > fMax) fMax = j;
+    }
+    const fRange = (fMax - fMin) || 1;
+    for (let i = 0; i < triggers.length; i++) {
+      triggers[i] = ((triggers[i] - fMin) / fRange) * duration;
+    }
+
+    anim = {
+      triggers,
+      duration,
+      start: performance.now(),
+      from: covered,        // current visibility
+      to: !covered,         // flip
+      color: ui.color.value,
+    };
+    requestAnimationFrame(loop);
+  }
+
+  // ---- Render current frame ----
+  function draw() {
+    const w = window.innerWidth, h = window.innerHeight;
+    ctx.clearRect(0, 0, w, h);
+
+    // Static resting state (no active wave)
+    if (!anim) {
+      if (covered) {
+        ctx.fillStyle = ui.color.value;
+        ctx.fillRect(0, 0, w, h);
+      }
+      return;
+    }
+
+    const elapsed = performance.now() - anim.start;
+    ctx.fillStyle = anim.color;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const t = anim.triggers[r * cols + c];
+        const visible = elapsed >= t ? anim.to : anim.from; // HOLD snap, like the AE script
+        if (visible) {
+          ctx.fillRect(c * tileSize, r * tileSize, tileSize + 0.5, tileSize + 0.5);
+        }
+      }
+    }
+  }
+
+  function loop() {
+    draw();
+    if (anim) {
+      const elapsed = performance.now() - anim.start;
+      if (elapsed >= anim.duration) {
+        covered = anim.to;   // settle into the new resting state
+        anim = null;
+        draw();
+      } else {
+        requestAnimationFrame(loop);
+      }
+    }
+  }
+
+  // ---- Events ----
+  canvas.addEventListener("pointerdown", (e) => {
+    if (anim) return;                 // ignore clicks mid-wave
+    startWave(e.clientX, e.clientY);
+  });
+
+  ui.tile.addEventListener("input", () => { ui.tileVal.textContent = ui.tile.value + "px"; build(); });
+  ui.dur.addEventListener("input",  () => { ui.durVal.textContent  = (+ui.dur.value).toFixed(1) + "s"; });
+  ui.scat.addEventListener("input", () => { ui.scatVal.textContent = ui.scat.value; });
+  ui.color.addEventListener("change", draw);
+  ui.reset.addEventListener("click", () => { anim = null; covered = false; draw(); });
+
+  window.addEventListener("resize", build);
+
+  build();
+})();
+</script>
+</body>
+</html>
