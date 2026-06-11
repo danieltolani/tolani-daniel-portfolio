@@ -28,7 +28,7 @@ import '../styles/footer.css';
     </section>
 
     <div class="hero-image-container">
-      <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" />
+      <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" data-cover-dir="tl-br" data-cover-white />
     </div>
   </main>
 
@@ -123,8 +123,31 @@ import '../styles/footer.css';
     });
   }
 
+  // The hero IMAGE itself is displaced left and settles into rest just like the
+  // text lines. Its red mosaic cover stays put (the displaced edge is clipped by
+  // the container's overflow:hidden), and the settle starts at the same moment
+  // the cover begins waving out — page visible AND image loaded — so the slide
+  // into position is actually seen through the dissolving tiles.
+  function runHeroImageSettle() {
+    const img = document.querySelector(".hero-page .hero-image");
+    if (!(img instanceof HTMLImageElement)) return;
+    const settle = () => {
+      gsap.fromTo(
+        img,
+        { x: -SETTLE_X() },
+        { x: 0, duration: SETTLE_S, ease: settleEase, clearProps: "transform" }
+      );
+    };
+    if (img.complete && img.naturalWidth > 0) settle();
+    else {
+      img.addEventListener("load", settle, { once: true });
+      img.addEventListener("error", settle, { once: true });
+    }
+  }
+
   document.addEventListener("dt:content-enter", (e) => {
     runHeroLineReveal((e as CustomEvent).detail?.delay ?? 0);
   });
+  document.addEventListener("dt:page-visible", () => runHeroImageSettle());
 </script>
 

@@ -367,7 +367,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
           <div class="carousel-container styleframes-carousel">
             <!-- Fixed detection rectangle on far left -->
             <div class="fixed-detection-rect" id="styleframe-detector"></div>
-            <div class="carousel-wrapper" id="hero-carousel" data-slider>
+            <div class="carousel-wrapper" id="styleframes-rail" data-slider>
               {
                 (projectData?.styleframes || []).map((item, index) => (
                   <div class="carousel-item">
@@ -1917,91 +1917,193 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     }
   }
 
-  // Hero carousel "boom" entrance: the whole rail starts a viewport-width to the
-  // right (reads as empty), rushes into place with a hard decelerating ease, and
-  // hands over seamlessly to Smooothy's slow leftward auto-scroll (which keeps
-  // ticking underneath — wrapper and item transforms compose independently).
-  // Fired on dt:content-enter, i.e. the moment the tile reveal starts.
-  function runCarouselEntrance(delayMs = 0) {
-    const el = document.getElementById("hero-carousel");
-    if (!el) return;
-    gsap.fromTo(
-      el,
-      { x: window.innerWidth },
-      { x: 0, duration: 1.2, ease: "expo.out", delay: delayMs / 1000, clearProps: "transform" }
-    );
+  // Carousel entrance choreography:
+  //   dt:content-enter — every carousel card (.carousel-item-inner: it carries the
+  //   rounded corners + slide gap) gets a solid red tile-grid cover and is hidden,
+  //   so the rail reads as empty.
+  //   dt:page-visible — only cards whose cells currently sit ON SCREEN take part:
+  //   they slide in from the right (ease-out, capped travel) with an AE-"lazy"
+  //   stagger, and the cascade is back-dated so the first few cards (~3 on a
+  //   1512w screen) are already mid-flight when the page appears — as if the
+  //   entrance began while the transition was still ending. Cards that live
+  //   off-screen (Smooothy's infinite loop wraps a block of cells out of view)
+  //   just pop in place, covers dropped — animating them used to drag a wall of
+  //   red across the whole rail. Tiles blink out while each card settles.
+  const TILE_RED = "#f72f2f";
+  const TILE_WHITE = "#E5EAF4";   // page-transition secondary, for the exit sparks
+  const TILE_WHITE_LEAD = 0.05;   // s a sparking tile shows white before it exits
+  const TILE_WHITE_ODDS = 0.18;   // fraction of tiles that get the white flash
+  const TILE_SIZE = 28;           // approx px per mosaic tile
+  const TILE_WAVE_STEP = 0.05;   // s per wave step inside an item
+  const TILE_SCATTER = 0.055;     // s of per-tile randomness on top of the wave front
+  const TILE_EARLY_ODDS = 0.04;   // fraction of tiles that pop out ahead of the front
+  const TILE_EXIT_LAG = 0.4;      // s after a card's fly-in starts before its tiles exit
+  const ENTER_DUR = 1.5;          // s for a card to slide in
+  const LAZY_GAP_FIRST = 0.22;    // s between the first two cards
+  const LAZY_GAP_DECAY = 0.62;    // each following gap shrinks by this factor
+  const MAX_TRAVEL = () => Math.round(window.innerWidth * 0.35); // px slide distance cap
+
+  type PendingCard = { inner: HTMLElement; overlay: HTMLDivElement; cols: number };
+  let pendingGroups: PendingCard[][] = [];
+
+  // Resolves when the card's image is usable — a card whose image is still
+  // loading keeps its red cover and only waves it out once the image is there.
+  function cardImageReady(inner: HTMLElement): Promise<void> {
+    const img = inner.querySelector("img");
+    if (!img || (img.complete && img.naturalWidth > 0)) return Promise.resolve();
+    return new Promise((res) => {
+      img.addEventListener("load", () => res(), { once: true });
+      img.addEventListener("error", () => res(), { once: true }); // never stuck red
+    });
   }
 
-  // Mosaic image reveal: every carousel item starts under a solid red tile grid;
-  // tiles then blink out in a wave travelling top-right -> bottom-left, revealing
-  // the image. Items are staggered for a quick cascading offset. Covers go up at
-  // dt:content-enter (before anything is on screen); the wave HOLDS until
-  // dt:page-visible — i.e. the page-transition tiles have fully cleared — so the
-  // red covers are actually seen.
-  const TILE_RED = "#f72f2f";
-  const TILE_SIZE = 28;          // approx px per mosaic tile
-  const TILE_WAVE_STEP = 0.018;  // s per diagonal step inside an item
-  const TILE_SCATTER = 0.055;    // s of per-tile randomness on top of the wave front
-  const TILE_EARLY_ODDS = 0.04;  // fraction of tiles that pop out ahead of the front
-  const ITEM_STAGGER = 0.06;     // s offset between items
-
-  type PendingTileReveal = { overlay: HTMLDivElement; cols: number; rows: number };
-  let pendingTileReveals: PendingTileReveal[] = [];
+  // Blink the overlay's tiles out top-right -> bottom-left (with scatter and a
+  // few "scout" tiles ahead of the front), then remove the overlay.
+  function runTileWave(overlay: HTMLDivElement, cols: number, base: number) {
+    let maxDelay = 0;
+    Array.from(overlay.children).forEach((tile, j) => {
+      const r = Math.floor(j / cols);
+      const c = j % cols;
+      const wave = ((cols - 1 - c) + r) * TILE_WAVE_STEP;
+      let d = base + wave + Math.random() * TILE_SCATTER;
+      if (Math.random() < TILE_EARLY_ODDS) d = base + Math.random() * wave;
+      maxDelay = Math.max(maxDelay, d);
+      gsap.set(tile, { autoAlpha: 0, delay: d });
+    });
+    gsap.delayedCall(maxDelay + 0.1, () => overlay.remove());
+  }
 
   function coverCarouselItems() {
-    pendingTileReveals = [];
-    document.querySelectorAll<HTMLElement>(".carousel-wrapper .carousel-item").forEach((item) => {
-      const rect = item.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      if (getComputedStyle(item).position === "static") item.style.position = "relative";
+    pendingGroups = [];
+    document.querySelectorAll<HTMLElement>(".carousel-wrapper").forEach((wrapper) => {
+      const group: PendingCard[] = [];
+      wrapper.querySelectorAll<HTMLElement>(".carousel-item-inner").forEach((inner) => {
+        const rect = inner.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        if (getComputedStyle(inner).position === "static") inner.style.position = "relative";
 
-      const cols = Math.max(3, Math.round(rect.width / TILE_SIZE));
-      const rows = Math.max(3, Math.round(rect.height / TILE_SIZE));
+        const cols = Math.max(3, Math.round(rect.width / TILE_SIZE));
+        const rows = Math.max(3, Math.round(rect.height / TILE_SIZE));
 
-      const overlay = document.createElement("div");
-      overlay.style.cssText =
-        "position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;" +
-        "border-radius:inherit;overflow:hidden;" +
-        `grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr);`;
-      for (let i = 0; i < cols * rows; i++) {
-        const tile = document.createElement("div");
-        tile.style.backgroundColor = TILE_RED;
-        overlay.appendChild(tile);
-      }
-      item.appendChild(overlay);
-      pendingTileReveals.push({ overlay, cols, rows });
+        const overlay = document.createElement("div");
+        overlay.style.cssText =
+          "position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;" +
+          "border-radius:inherit;overflow:hidden;" +
+          `grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr);`;
+        for (let i = 0; i < cols * rows; i++) {
+          const tile = document.createElement("div");
+          tile.style.backgroundColor = TILE_RED;
+          overlay.appendChild(tile);
+        }
+        inner.appendChild(overlay);
+
+        // Pre-decode the card's image behind the cover, so the reveal doesn't
+        // jank on first paint (the source of the pause on home->projects->project).
+        inner.querySelectorAll("img").forEach((im) => im.decode?.().catch(() => {}));
+
+        // Hide the card entirely while we hold for dt:page-visible. Parking with
+        // an x-offset measured here doesn't survive Smooothy's infinite loop: the
+        // covers go up before Smooothy's first ticker frame, and its wrapping then
+        // relocates whole cells (with their parked cards) back into the viewport.
+        // Hidden cards make the rail genuinely empty no matter how cells wrap;
+        // each card's fly-in start is measured at launch time instead.
+        gsap.set(inner, { autoAlpha: 0 });
+        group.push({ inner, overlay, cols });
+      });
+      if (group.length) pendingGroups.push(group);
     });
-    // Failsafe: never leave items stuck red if dt:page-visible doesn't arrive.
-    gsap.delayedCall(4, () => { if (pendingTileReveals.length) revealCarouselItems(); });
+    // Failsafe: never leave cards parked/red if dt:page-visible doesn't arrive.
+    gsap.delayedCall(4, () => { if (pendingGroups.length) revealCarouselItems(); });
   }
 
   function revealCarouselItems() {
-    const pending = pendingTileReveals;
-    pendingTileReveals = [];
-    pending.forEach(({ overlay, cols }, index) => {
-      const base = index * ITEM_STAGGER;
-      let maxDelay = 0;
-      Array.from(overlay.children).forEach((tile, i) => {
-        const r = Math.floor(i / cols);
-        const c = i % cols;
-        // The wave still travels top-right -> bottom-left, but heavy per-tile
-        // scatter breaks the front apart so it doesn't read as straight lines,
-        // and a few "scout" tiles blink out ahead of the front entirely.
-        const wave = ((cols - 1 - c) + r) * TILE_WAVE_STEP;
-        let d = base + wave + Math.random() * TILE_SCATTER;
-        if (Math.random() < TILE_EARLY_ODDS) d = base + Math.random() * wave;
-        maxDelay = Math.max(maxDelay, d);
-        gsap.set(tile, { autoAlpha: 0, delay: d });
+    const groups = pendingGroups;
+    pendingGroups = [];
+    const vw = window.innerWidth;
+    groups.forEach((group) => {
+      // Measure where Smooothy's wrapping ACTUALLY put each cell right now.
+      const measured = group.map((card) => {
+        const r = card.inner.getBoundingClientRect();
+        return { ...card, left: r.left, right: r.right };
       });
-      gsap.delayedCall(maxDelay + 0.1, () => overlay.remove());
+      const onScreen = measured
+        .filter((m) => m.left >= 0 && m.left < vw && m.right > 0)
+        .sort((a, b) => a.left - b.left); // cascade reads left -> right
+      // Cards clipped by the LEFT viewport edge are the loop's wrapped tail
+      // peeking in just before the first card. Hold them hidden until the
+      // auto-scroll carries them fully out of view, so the rail reads as a
+      // fresh non-looping row at first — the loop only shows up later.
+      const edgeCut = measured.filter((m) => m.left < 0 && m.right > 0);
+      const offScreen = measured.filter((m) => m.right <= 0 || m.left >= vw);
+
+      // Off-screen cards skip the choreography: un-hide in place; their cover
+      // stays red until the image is ready (in case auto-scroll brings one in
+      // while it's still loading), then waves out unceremoniously.
+      offScreen.forEach(({ inner, overlay, cols }) => {
+        gsap.set(inner, { clearProps: "opacity,visibility" });
+        cardImageReady(inner).then(() => runTileWave(overlay, cols, 0));
+      });
+
+      edgeCut.forEach(({ inner, overlay }) => {
+        overlay.remove();
+        const release = () => {
+          const r = inner.getBoundingClientRect();
+          if (r.right <= 0 || r.left >= window.innerWidth) {
+            gsap.ticker.remove(release);
+            gsap.set(inner, { clearProps: "opacity,visibility" });
+          }
+        };
+        gsap.ticker.add(release);
+        // Failsafe: never leave a card hidden forever (e.g. user drags it back in).
+        gsap.delayedCall(10, () => {
+          gsap.ticker.remove(release);
+          gsap.set(inner, { clearProps: "opacity,visibility" });
+        });
+      });
+
+      // Lazy launch times, then back-date the whole cascade so the first
+      // headCount cards are already mid-flight when the page appears.
+      const times: number[] = [];
+      let t = 0;
+      let gap = LAZY_GAP_FIRST;
+      onScreen.forEach(() => { times.push(t); t += gap; gap *= LAZY_GAP_DECAY; });
+      const headCount = Math.min(onScreen.length, Math.max(2, Math.round(vw / 500)));
+      const t0 = headCount > 0 ? times[headCount - 1] + 0.05 : 0;
+
+      onScreen.forEach(({ inner, overlay, cols, left }, i) => {
+        const launch = times[i] - t0; // negative = launched "during" the transition
+        const startX = Math.min(Math.max(0, vw - left) + 40, MAX_TRAVEL());
+
+        const tween = gsap.fromTo(
+          inner,
+          { x: startX, autoAlpha: 1 },
+          {
+            x: 0, duration: ENTER_DUR, ease: "power3.out",
+            delay: Math.max(0, launch),
+            // Delayed cards must stay hidden until their beat — otherwise they
+            // render at their offset and sit there paused, waiting to move.
+            immediateRender: launch < 0,
+            clearProps: "transform,opacity,visibility",
+          }
+        );
+        // Cards already underway: jump their tween to the elapsed progress so
+        // they're visibly MOVING (not paused) the moment the page shows.
+        if (launch < 0) tween.progress(Math.min(-launch / ENTER_DUR, 0.9));
+
+        // The slide-in above never waits for the image — covered cards fly on
+        // schedule. The tile exit, though, holds until the card's image is
+        // loaded: if it resolves late, the wave starts right then; if it was
+        // ready all along, the original beat (launch + lag) is kept.
+        const revealStarted = performance.now();
+        cardImageReady(inner).then(() => {
+          const elapsed = (performance.now() - revealStarted) / 1000;
+          runTileWave(overlay, cols, Math.max(0.05, launch + TILE_EXIT_LAG - elapsed));
+        });
+      });
     });
   }
 
-  document.addEventListener("dt:content-enter", (e) => {
-    runCarouselEntrance((e as CustomEvent).detail?.delay ?? 0);
-    coverCarouselItems();
-  });
-
+  document.addEventListener("dt:content-enter", () => coverCarouselItems());
   document.addEventListener("dt:page-visible", () => revealCarouselItems());
 
   // Listeners attached via initAll
@@ -2162,6 +2264,37 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     }
   }
 
+  // On a FIRST visit via Barba, images haven't loaded when initAll measures the
+  // page: sections are collapsed, so ScrollTrigger's scrub triggers compute wrong
+  // offsets (the hero renders scaled/pulled-up as if scrolled) and Smooothy
+  // measures a squashed rail (frozen, overlapping wrap — its IntersectionObserver
+  // then sees the displaced wrapper as off-screen and stops updating). Once every
+  // image in the container settles, re-measure both. No-op when layout was
+  // already complete at init (e.g. refresh with cached images).
+  function scheduleMediaRefresh() {
+    const container = document.querySelector('[data-barba-namespace="project"]');
+    if (!container) return;
+    const pending = Array.from(container.querySelectorAll("img"))
+      .filter((im) => !(im.complete && im.naturalWidth > 0))
+      .map((im) => new Promise<void>((res) => {
+        im.addEventListener("load", () => res(), { once: true });
+        im.addEventListener("error", () => res(), { once: true });
+      }));
+    if (!pending.length) return;
+    Promise.all(pending).then(() => {
+      ScrollTrigger.refresh();
+      heroCarouselInstance?.resize?.();
+      thumbsCarousel?.resize?.();
+      // Re-apply the 1512 viewport clamp after re-measuring.
+      if (heroCarouselInstance?.viewport?.wrapperWidth > 1512) {
+        heroCarouselInstance.viewport.wrapperWidth = 1512;
+      }
+      if (thumbsCarousel?.viewport?.wrapperWidth > 1512) {
+        thumbsCarousel.viewport.wrapperWidth = 1512;
+      }
+    });
+  }
+
   // Called by BarbaTransition directly (via window.__dtProjectInit) on every
   // page enter — both initial direct load and subsequent Barba navigations.
   const initAll = () => {
@@ -2178,6 +2311,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     run("motionDivider", initMotionDivider);
     run("toggles", initToggles);
     run("modalAndMarquee", initModalAndMarquee);
+    run("mediaRefresh", scheduleMediaRefresh);
 
     // Force-play every autoplay video — the autoplay attribute fires only on initial
     // HTML parse, so after a Barba swap the video stays paused without this.

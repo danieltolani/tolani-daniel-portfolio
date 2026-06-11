@@ -7,27 +7,25 @@ import "../styles/portfolio.css";
 // Sort projects if needed, or use as-is
 const projects = data;
 
-// Helper to get preview source
-const getPreviewSrc = (project: any) => {
-  return project["preview-media"]?.src || "";
-};
-
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-// Helper to determine media type and src
+// Card preview: local files are used as-is; Cloudinary video IDs become a
+// first-frame poster image (so_0) — cards stay light, no autoplaying videos.
+const getCardPreview = (project: any) => {
+  const src = project["preview-media"]?.src || "";
+  if (!src) return "";
+  if (src.startsWith("/")) return src;
+  return `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_640/${src}.jpg`;
+};
+
+// Helper to determine media type and src (no-JS fallback preview)
 const getMediaInfo = (project: any) => {
   const src = project["preview-media"]?.src || "";
-  if (!src) return { type: 'image', url: '' };
-  
-  // If it starts with /, it's a local file (image/gif)
-  if (src.startsWith('/')) {
-    return { type: 'image', url: src };
-  }
-  
-  // Otherwise assume it's a Cloudinary video ID
-  return { 
-    type: 'video', 
-    url: `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${src}.mp4` 
+  if (!src) return { type: "image", url: "" };
+  if (src.startsWith("/")) return { type: "image", url: src };
+  return {
+    type: "video",
+    url: `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${src}.mp4`,
   };
 };
 
@@ -35,20 +33,73 @@ const firstProjectMedia = getMediaInfo(projects[0]);
 ---
 
 <Layout title="Projects | Portfolio">
-  <div class="page-container">
+  <div class="page-container projects-fly-page">
 
-    <main class="projects-overview-section">
+    <!-- ════ 3D FLY-THROUGH (JS experience) ════
+         Cards live in z-space; a virtual heavy-lerp scroll flies the camera
+         through them on an infinite loop. Hidden without JS. -->
+    <div class="fly-viewport" id="fly-viewport">
+      <div class="fly-world" id="fly-world">
+        {projects.map((project, index) => (
+          <a class="fly-item fly-card" href={`/projects/${project.project}`} data-fly-card>
+            <div class="fly-card-head">
+              <span class="fly-mono">{(index + 1).toString().padStart(2, "0")} — {project.metadata?.year}</span>
+              <span class="fly-accent"></span>
+            </div>
+            <div class="fly-card-media">
+              {getCardPreview(project) ? (
+                <img src={getCardPreview(project)} alt="" loading="eager" />
+              ) : (
+                <div class="fly-card-fill">
+                  <span class="fly-fill-number">{(index + 1).toString().padStart(2, "0")}</span>
+                </div>
+              )}
+            </div>
+            <h2 class="fly-card-title" set:html={project.title}></h2>
+            <div class="fly-card-foot">
+              <span class="fly-mono">{project.metadata?.type}</span>
+              <span class="fly-mono fly-card-cta">view case study ↗</span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <div class="fly-hud fly-mono">
+        <span>VEL <b id="fly-vel">0.00</b></span>
+        <span>Z <b id="fly-z">0</b></span>
+        <span>{projects.length} PROJECTS — SCROLL TO FLY</span>
+      </div>
+    </div>
+
+    <!-- View switcher (left rail) -->
+    <div class="fly-switch" id="fly-switch">
+      <span class="fly-mono fly-switch-label">VIEW</span>
+      <button class="fly-mono fly-switch-btn active" data-view="space" type="button">01 — SPACE</button>
+      <button class="fly-mono fly-switch-btn" data-view="stack" type="button">02 — STACK</button>
+      <button class="fly-mono fly-switch-btn" data-view="list" type="button">03 — LIST</button>
+    </div>
+
+    <!-- Simple list view (toggled from the switcher) -->
+    <div class="fly-list" id="fly-list">
+      {projects.map((project, index) => (
+        <a class="fly-list-row" href={`/projects/${project.project}`}>
+          <span class="fly-mono">{(index + 1).toString().padStart(2, "0")}</span>
+          <h2 class="fly-list-title" set:html={project.title}></h2>
+          <span class="fly-mono">{project.metadata?.year}</span>
+          <span class="fly-mono fly-list-type">{project.metadata?.type}</span>
+          <span class="fly-mono fly-list-arrow">↗</span>
+        </a>
+      ))}
+    </div>
+
+    <!-- ════ NO-JS FALLBACK: plain list ════ -->
+    <main class="projects-overview-section projects-fallback">
       <div class="projects-overview-container">
-        <!-- Left: Project List -->
         <div class="projects-list">
           {projects.map((project, index) => (
-            <div 
-              class={`project-list-item ${index === 0 ? "active" : ""}`}
-              data-project={JSON.stringify(project)}
-              data-index={index}
-            >
+            <div class={`project-list-item ${index === 0 ? "active" : ""}`}>
               <div class="project-item-header">
-                <span class="project-number">{(index + 1).toString().padStart(2, '0')}</span>
+                <span class="project-number">{(index + 1).toString().padStart(2, "0")}</span>
                 <a href={`/projects/${project.project}`} class="project-name-link">
                   <h2 class="project-name" set:html={project.title}></h2>
                 </a>
@@ -65,134 +116,513 @@ const firstProjectMedia = getMediaInfo(projects[0]);
           ))}
         </div>
 
-        <!-- Right: Preview (Sticky) -->
         <div class="project-preview-column">
           <div class="project-preview-sticky">
-            <div class="preview-media-wrapper" id="preview-media-container" data-cloud-name={cloudName}>
-              {firstProjectMedia.type === 'video' ? (
-                <video
-                  src={firstProjectMedia.url}
-                  class="preview-media-element"
-                  autoplay
-                  loop
-                  muted
-                  playsinline
-                  oncontextmenu="return false;"
-                ></video>
+            <div class="preview-media-wrapper">
+              {firstProjectMedia.type === "video" ? (
+                <video src={firstProjectMedia.url} class="preview-media-element" autoplay loop muted playsinline></video>
               ) : (
-                <img 
-                  src={firstProjectMedia.url} 
-                  alt="Project Preview" 
-                  class="preview-media-element" 
-                />
+                <img src={firstProjectMedia.url} alt="Project Preview" class="preview-media-element" />
               )}
             </div>
-            
             <div class="preview-info">
-              <h3 id="preview-title" class="preview-title" set:html={projects[0]?.title || ""}></h3>
-              <p id="preview-description" class="preview-description">
-                {projects[0]?.description1}
-              </p>
-              
-              <div class="preview-metadata">
-                <div class="meta-pair">
-                  <span class="meta-label">YEAR</span>
-                  <span id="preview-year" class="meta-value">{projects[0]?.metadata?.year}</span>
-                </div>
-                <div class="meta-pair">
-                  <span class="meta-label">ROLE</span>
-                  <span id="preview-role" class="meta-value">{projects[0]?.metadata?.role}</span>
-                </div>
-                <div class="meta-pair">
-                  <span class="meta-label">TOOLS</span>
-                  <span id="preview-tools" class="meta-value">{projects[0]?.metadata?.tools}</span>
-                </div>
-                <div class="meta-pair">
-                  <span class="meta-label">TYPE</span>
-                  <span id="preview-type" class="meta-value">{projects[0]?.metadata?.type}</span>
-                </div>
-              </div>
+              <h3 class="preview-title" set:html={projects[0]?.title || ""}></h3>
+              <p class="preview-description">{projects[0]?.description1}</p>
             </div>
           </div>
         </div>
       </div>
-    </main>
 
-    <Footer />
+      <Footer />
+    </main>
   </div>
 </Layout>
 
-<script>
-  // Re-run on every Barba navigation (astro:page-load is dispatched by
-  // BarbaTransition) so listeners bind to the freshly swapped-in DOM. Each item
-  // is marked once bound, so running this again on the same DOM is a no-op.
-  function initProjectsList() {
-  const listItems = document.querySelectorAll('.project-list-item');
-  const previewContainer = document.getElementById('preview-media-container');
-  const cloudName = previewContainer?.dataset.cloudName || "";
+<style is:global>
+  /* JS on: show the fly-through, hide the fallback. JS off: the reverse. */
+  html.js-enter .projects-fallback { display: none; }
+  html:not(.js-enter) .fly-viewport { display: none; }
 
-  const previewTitle = document.getElementById('preview-title');
-  const previewDescription = document.getElementById('preview-description');
-  const previewYear = document.getElementById('preview-year');
-  const previewRole = document.getElementById('preview-role');
-  const previewTools = document.getElementById('preview-tools');
-  const previewType = document.getElementById('preview-type');
-
-  listItems.forEach(item => {
-    if ((item as HTMLElement).dataset.hoverBound) return;
-    (item as HTMLElement).dataset.hoverBound = 'true';
-    item.addEventListener('mouseenter', () => {
-      // Remove active class from all
-      listItems.forEach(li => li.classList.remove('active'));
-      // Add to current
-      item.classList.add('active');
-
-      // Update preview
-      const projectData = JSON.parse(item.getAttribute('data-project') || '{}');
-      
-      if (previewContainer) {
-        const src = projectData["preview-media"]?.src || "";
-        
-        // Clear current content
-        previewContainer.innerHTML = '';
-        
-        if (src) {
-            let mediaElement;
-            
-            if (src.startsWith('/')) {
-                // It's a local image/gif
-                mediaElement = document.createElement('img');
-                mediaElement.src = src;
-                mediaElement.alt = "Project Preview";
-                mediaElement.className = "preview-media-element";
-            } else {
-                // It's a Cloudinary video ID
-                mediaElement = document.createElement('video');
-                mediaElement.src = `https://res.cloudinary.com/${cloudName}/video/upload/f_auto,q_auto/${src}.mp4`;
-                mediaElement.className = "preview-media-element";
-                mediaElement.autoplay = true;
-                mediaElement.loop = true;
-                mediaElement.muted = true;
-                mediaElement.playsInline = true;
-                // Prevent right click
-                mediaElement.oncontextmenu = (e) => e.preventDefault();
-            }
-            
-            previewContainer.appendChild(mediaElement);
-        }
-      }
-
-      if (previewTitle) previewTitle.innerHTML = projectData.title || "";
-      if (previewDescription) previewDescription.textContent = projectData.description1 || "";
-      
-      if (previewYear) previewYear.textContent = projectData.metadata?.year || "";
-      if (previewRole) previewRole.textContent = projectData.metadata?.role || "";
-      if (previewTools) previewTools.textContent = projectData.metadata?.tools || "";
-      if (previewType) previewType.textContent = projectData.metadata?.type || "";
-    });
-  });
+  .projects-fly-page {
+    height: 100vh;
+    overflow: hidden;
+    background: #141417;
   }
 
-  initProjectsList();
-  document.addEventListener('astro:page-load', initProjectsList);
+  .fly-viewport {
+    position: absolute;
+    inset: 0;
+    height: 100vh;
+    overflow: hidden;
+    perspective: 1000px;
+    background: #141417;
+  }
+
+  .fly-world {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .fly-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    will-change: transform, opacity;
+  }
+
+  .fly-mono {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7d8484;
+  }
+
+  .fly-card {
+    display: block;
+    width: min(440px, 38vw);
+    padding: 1rem 1.1rem 1.2rem;
+    background: #1b1c1e;
+    border: 1px solid #2c2d31;
+    color: #ffffff;
+    text-decoration: none;
+  }
+  .fly-card:hover { border-color: #f72f2f; }
+  .fly-card:hover .fly-card-cta { color: #f72f2f; }
+
+  .fly-card-head,
+  .fly-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .fly-accent {
+    width: 10px;
+    height: 10px;
+    background: #f72f2f;
+    flex-shrink: 0;
+  }
+
+  .fly-card-media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin: 0.8rem 0;
+    background: #222327;
+  }
+  .fly-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .fly-card-title {
+    font-family: "Suisse Int'l", sans-serif;
+    font-size: 1.35rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0 0 0.9rem;
+  }
+
+  /* Placeholder fill for projects without preview media — mosaic checker + index. */
+  .fly-card-fill {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:
+      repeating-conic-gradient(#1f2024 0% 25%, #232428 0% 50%) 0 0 / 56px 56px;
+    position: relative;
+  }
+  .fly-card-fill::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 14px;
+    height: 14px;
+    background: #f72f2f;
+  }
+  .fly-fill-number {
+    font-family: "Suisse Int'l", sans-serif;
+    font-size: 4rem;
+    font-weight: 900;
+    color: #2c2d31;
+  }
+
+  .fly-star {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    pointer-events: none;
+  }
+
+  .fly-hud {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2.2rem;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .fly-hud b { color: #e5eaf4; font-weight: normal; }
+
+  /* ── View switcher (left rail) ── */
+  .fly-switch {
+    position: absolute;
+    left: 2.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    z-index: 20;
+  }
+  .fly-switch-label { color: #4a4b50; }
+  .fly-switch-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    transition: color 0.2s ease;
+  }
+  .fly-switch-btn::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #2c2d31;
+    transition: background 0.2s ease;
+  }
+  .fly-switch-btn:hover { color: #e5eaf4; }
+  .fly-switch-btn.active { color: #ffffff; }
+  .fly-switch-btn.active::before { background: #f72f2f; }
+
+  /* ── Simple list view ── */
+  .fly-list {
+    position: absolute;
+    inset: 0;
+    padding: 9.5rem clamp(2rem, 8vw, 10rem) 4rem clamp(8rem, 16vw, 18rem);
+    overflow-y: auto;
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden; /* gsap autoAlpha drives this */
+  }
+  .fly-list-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto minmax(10rem, auto) 2rem;
+    align-items: baseline;
+    gap: 1.4rem;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid #232428;
+    text-decoration: none;
+    color: #ffffff;
+    transition: transform 0.25s ease;
+  }
+  .fly-list-row:hover { transform: translateX(8px); }
+  .fly-list-row:hover .fly-list-title { color: #f72f2f; }
+  .fly-list-row:hover .fly-list-arrow { color: #f72f2f; }
+  .fly-list-title {
+    font-family: "Suisse Int'l", sans-serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin: 0;
+    transition: color 0.25s ease;
+  }
+  .fly-list-type { text-align: right; }
+
+  @media (max-width: 900px) {
+    .fly-switch { left: 1.2rem; top: auto; bottom: 4.5rem; transform: none; }
+    .fly-list { padding: 7.5rem 1.2rem 6rem 1.2rem; }
+    .fly-list-row { grid-template-columns: 2.2rem 1fr auto; }
+    .fly-list-type, .fly-list-arrow { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    .fly-card { width: min(420px, 78vw); }
+    .fly-hud { gap: 1.1rem; font-size: 0.55rem; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  // ════ 3D FLY-THROUGH SCROLL ════
+  // A virtual heavy-lerp scroll (wheel/touch, no page scroll — plays nice with
+  // Barba and the body-scroller) flies the camera through project cards laid
+  // out in z-space on an infinite loop. Velocity warps the FOV and stretches
+  // the starfield; the mouse tilts the camera.
+  const FLY = {
+    zGap: 800,             // px of z between consecutive cards
+    camSpeed: 2.4,         // scroll px -> camera z px
+    lerp: 0.08,            // heavy feel (matches Lenis lerp in the reference)
+    starCount: 110,
+    starColors: ["#f72f2f", "#e5eaf4", "#5a5b5e"],
+  };
+
+  type FlyThing = {
+    el: HTMLElement;
+    type: "card" | "star";
+    x: number; y: number; rot: number; baseZ: number;
+    idx: number;
+    blend: number; // 0 = position in the tunnel, 1 = position in the stack
+  };
+
+  function initProjectsFly() {
+    const viewport = document.getElementById("fly-viewport");
+    const world = document.getElementById("fly-world");
+    if (!viewport || !world || viewport.dataset.bound) return;
+    viewport.dataset.bound = "true";
+
+    const velEl = document.getElementById("fly-vel");
+    const zEl = document.getElementById("fly-z");
+
+    // ── Build the slot list from the SSR'd project cards ──
+    const cards = Array.from(world.querySelectorAll<HTMLElement>("[data-fly-card]"));
+    const total = cards.length;
+    const things: FlyThing[] = cards.map((el, i) => ({
+      el,
+      type: "card",
+      x: 0, y: 0,
+      rot: (Math.random() - 0.5) * 14,
+      baseZ: -i * FLY.zGap,
+      idx: i,
+      blend: 0,
+    }));
+    const loopSize = total * FLY.zGap;
+
+    // ── STACK view metrics: cards in one vertical column, scrollable ──
+    const STACK_TOP = 140, STACK_BOTTOM = 140, STACK_GAP = 44;
+    let cardH = 420, stackStep = 464, stackMax = 0;
+    const layoutStack = () => {
+      cardH = Math.max(...cards.map((c) => c.offsetHeight));
+      stackStep = cardH + STACK_GAP;
+      const totalH = STACK_TOP + (total - 1) * stackStep + cardH + STACK_BOTTOM;
+      stackMax = Math.max(0, totalH - window.innerHeight);
+    };
+
+    // Cards spiral loosely around the camera path.
+    const layout = () => {
+      things.forEach((t, i) => {
+        if (t.type !== "card") return;
+        const angle = (i / total) * Math.PI * 6;
+        t.x = Math.cos(angle) * window.innerWidth * 0.26;
+        t.y = Math.sin(angle) * window.innerHeight * 0.24;
+      });
+      layoutStack();
+    };
+    layout();
+    let resizeT: ReturnType<typeof setTimeout>;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(layout, 200);
+    });
+
+    // ── Starfield ──
+    for (let i = 0; i < FLY.starCount; i++) {
+      const el = document.createElement("div");
+      el.className = "fly-star";
+      el.style.background = FLY.starColors[Math.floor(Math.random() * FLY.starColors.length)];
+      world.appendChild(el);
+      things.push({
+        el, type: "star",
+        x: (Math.random() - 0.5) * window.innerWidth * 2.2,
+        y: (Math.random() - 0.5) * window.innerHeight * 2.2,
+        rot: 0,
+        baseZ: -Math.random() * loopSize,
+        idx: 0,
+        blend: 0,
+      });
+    }
+
+    // ── Virtual scroll state ──
+    const state = { target: 0, current: 0, vel: 0, mouseX: 0, mouseY: 0 };
+    const stack = { target: 0, current: 0 };   // STACK view's own (clamped) scroll
+    const gBlend = { v: 0 };                   // global space->stack blend (tilt/FOV)
+    let view = ((v) => (v === "list" || v === "stack" ? v : "space"))(
+      sessionStorage.getItem("dt-projects-view")
+    );
+
+    const scrollBy = (dy: number) => {
+      if (view === "stack") stack.target = Math.max(0, Math.min(stackMax, stack.target + dy));
+      else state.target += dy;
+    };
+
+    viewport.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      scrollBy(e.deltaY);
+    }, { passive: false });
+
+    let touchY = 0;
+    viewport.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+    viewport.addEventListener("touchmove", (e) => {
+      const y = e.touches[0].clientY;
+      scrollBy((touchY - y) * 2.2);
+      touchY = y;
+    }, { passive: true });
+
+    viewport.addEventListener("mousemove", (e) => {
+      state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    // ── View switcher: SPACE (fly-through) / STACK (vertical cards) / LIST ──
+    // SPACE <-> STACK never fades: the SAME cards tween their blend factor, so
+    // each one physically flies from its tunnel position into its stack slot
+    // (staggered). LIST cross-fades: leaving the tunnel kicks the camera
+    // forward so it exits through depth; returning arrives already in motion.
+    // The chosen view sticks for the session.
+    const switchEl = document.getElementById("fly-switch");
+    const listEl = document.getElementById("fly-list");
+    const rows = listEl ? Array.from(listEl.querySelectorAll(".fly-list-row")) : [];
+    const cardThings = things.filter((t) => t.type === "card");
+    let switching = false;
+
+    function applyView(v: string, animate: boolean) {
+      const prev = view;
+      view = v;
+      sessionStorage.setItem("dt-projects-view", v);
+      switchEl?.querySelectorAll(".fly-switch-btn").forEach((b) => {
+        b.classList.toggle("active", (b as HTMLElement).dataset.view === v);
+      });
+
+      if (!animate) {
+        gsap.set(viewport, { autoAlpha: v === "list" ? 0 : 1 });
+        gsap.set(listEl, { autoAlpha: v === "list" ? 1 : 0 });
+        if (v === "list") gsap.set(rows, { y: 0, autoAlpha: 1 });
+        cardThings.forEach((t) => { t.blend = v === "stack" ? 1 : 0; });
+        gBlend.v = v === "stack" ? 1 : 0;
+        return;
+      }
+
+      switching = true;
+      const done = () => { switching = false; };
+
+      if (v === "list") {
+        if (prev === "space") state.target += 750; // exit through the tunnel
+        gsap.to(viewport, { autoAlpha: 0, duration: 0.5, ease: "power2.in" });
+        gsap.set(listEl, { autoAlpha: 1 });
+        gsap.fromTo(rows,
+          { y: 30, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.65, ease: "power4.out", stagger: 0.05, delay: 0.3 }
+        );
+        gsap.delayedCall(0.85, done); // unlock before the last rows finish settling
+      } else if (prev === "list") {
+        // The viewport is hidden — set the target arrangement behind the fade.
+        cardThings.forEach((t) => { t.blend = v === "stack" ? 1 : 0; });
+        gBlend.v = v === "stack" ? 1 : 0;
+        if (v === "space") state.target += 500; // arrive already in motion
+        gsap.to(rows, { autoAlpha: 0, y: -14, duration: 0.25, ease: "power2.in", stagger: 0.02 });
+        gsap.to(listEl, { autoAlpha: 0, duration: 0.3, delay: 0.2 });
+        gsap.to(viewport, { autoAlpha: 1, duration: 0.65, ease: "power4.out",
+          delay: 0.25, onComplete: done });
+      } else {
+        // SPACE <-> STACK: the cards themselves travel into position. The blend
+        // tweens are interruptible (overwrite) so a quick reverse mid-flight
+        // just turns the cards around from wherever they are.
+        const toStack = v === "stack";
+        gsap.to(gBlend, { v: toStack ? 1 : 0, duration: 0.9, ease: "power3.inOut", overwrite: "auto" });
+        gsap.to(cardThings, {
+          blend: toStack ? 1 : 0,
+          duration: 0.95,
+          ease: "power3.inOut",
+          stagger: 0.045,
+          overwrite: "auto",
+        });
+        gsap.delayedCall(0.4, done);
+      }
+    }
+
+    switchEl?.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest(".fly-switch-btn") as HTMLElement | null;
+      if (!btn || switching) return;
+      const v = btn.dataset.view;
+      if (v && v !== view) applyView(v, true);
+    });
+
+    applyView(view, false); // restore the session's chosen view, no animation
+
+    // ── RAF loop (self-terminates once Barba swaps this page out) ──
+    const mix = (a: number, b: number, m: number) => a + (b - a) * m;
+    let frame = 0;
+    function raf() {
+      if (!world!.isConnected) return; // page left — stop and let GC clean up
+
+      state.current += (state.target - state.current) * FLY.lerp;
+      stack.current += (stack.target - stack.current) * 0.12;
+      const vel = state.current - state.vel; // px moved this frame
+      state.vel = state.current;
+
+      // Camera tilt (mouse) + velocity pitch, and FOV warp on speed — both damp
+      // to neutral as the stack takes over (a tilted stack would skew).
+      const flat = 1 - gBlend.v;
+      const tiltX = (state.mouseY * 5 - Math.max(-30, Math.min(30, vel)) * 0.2) * flat;
+      const tiltY = state.mouseX * 5 * flat;
+      world!.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      viewport!.style.perspective = `${1000 - Math.min(Math.abs(vel) * 6, 600) * flat}px`;
+
+      const cameraZ = state.current * FLY.camSpeed;
+
+      for (const t of things) {
+        const relZ = t.baseZ + cameraZ;
+        let vizZ = ((relZ % loopSize) + loopSize) % loopSize;
+        if (vizZ > 500) vizZ -= loopSize; // keep the loop behind the camera
+
+        // Fade far items in, fade near items out as they pass the camera.
+        let alpha = 1;
+        if (vizZ < -3000) alpha = 0;
+        else if (vizZ < -2000) alpha = (vizZ + 3000) / 1000;
+        if (vizZ > 100 && t.type !== "star") alpha = 1 - (vizZ - 100) / 400;
+
+        if (t.type === "star") {
+          if (alpha <= 0) { t.el.style.opacity = "0"; continue; }
+          t.el.style.opacity = alpha.toFixed(3);
+          const stretch = Math.max(1, Math.min(1 + Math.abs(vel) * 0.12, 10));
+          t.el.style.transform =
+            `translate(-50%, -50%) translate3d(${t.x}px, ${t.y}px, ${vizZ}px) scale3d(1, 1, ${stretch})`;
+          continue;
+        }
+
+        // Cards: blend between their tunnel position and their stack slot.
+        const b = t.blend;
+        const stackY = STACK_TOP + t.idx * stackStep + cardH / 2 - window.innerHeight / 2 - stack.current;
+        const fx = mix(t.x, 0, b);
+        const fy = mix(t.y, stackY, b);
+        const fz = mix(vizZ, 0, b);
+        const frot = mix(t.rot, 0, b);
+        const fa = mix(Math.max(alpha, 0), 1, b);
+        if (fa <= 0) { t.el.style.opacity = "0"; continue; }
+        t.el.style.opacity = fa.toFixed(3);
+        t.el.style.transform =
+          `translate(-50%, -50%) translate3d(${fx}px, ${fy}px, ${fz}px) rotateZ(${frot}deg)`;
+      }
+
+      // HUD (throttled)
+      if (++frame % 6 === 0) {
+        if (velEl) velEl.textContent = Math.abs(vel).toFixed(2);
+        if (zEl) zEl.textContent = `${Math.round(cameraZ)}`;
+      }
+
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }
+
+  initProjectsFly();
+  document.addEventListener("astro:page-load", initProjectsFly);
 </script>

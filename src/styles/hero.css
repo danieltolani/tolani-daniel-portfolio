@@ -96,6 +96,9 @@
   justify-content: center;
   margin-top: 50px;
   padding-bottom: 100px;
+  /* Clips the hero image's left edge while it settles in from its x-displacement
+     (the red mosaic cover stays put; only the image slides underneath it). */
+  overflow: hidden;
 }
 
 .hero-image {

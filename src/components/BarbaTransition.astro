@@ -38,7 +38,122 @@ import MosaicTransition from './MosaicTransition.astro';
   // Signals "the transition tiles have fully cleared — the page is on screen".
   // Effects that must be SEEN (e.g. the carousel red-tile covers) hold until this.
   function dispatchPageVisible() {
+    pageVisibleResolve?.();
+    pageVisibleResolve = null;
     document.dispatchEvent(new CustomEvent('dt:page-visible'));
+  }
+
+  // ── Site-wide mosaic image covers ──────────────────────────────────────────
+  // Every <img> in the entering container is covered solid red while the page
+  // is hidden. Once BOTH the page is on screen AND the image has fully loaded,
+  // the cover breaks into tiles and waves out top-right -> bottom-left. A slow
+  // image (network) simply stays red until it's ready — nothing on the site
+  // ever shows a half-loaded image.
+  const IMG_TILE_RED   = '#f72f2f';
+  const IMG_TILE_WHITE = '#E5EAF4'; // secondary used by the page transition tiles
+  const IMG_TILE_SIZE  = 28;     // approx px per tile
+  const IMG_WAVE_STEP  = 0.018;  // s per diagonal step
+  const IMG_SCATTER    = 0.07;   // s of per-tile randomness on the wave front
+  const IMG_EARLY_ODDS = 0.05;   // fraction of "scout" tiles that pop ahead of the front
+  const IMG_WHITE_LEAD = 0.05;   // s a tile shows white before it exits (data-cover-white)
+  const IMG_WHITE_ODDS = 0.18;   // fraction of tiles that get the white flash
+
+  // Gate armed at the start of each page cycle, opened by dispatchPageVisible().
+  let pageVisibleResolve: (() => void) | null = null;
+  let pageVisiblePromise: Promise<void> = Promise.resolve();
+  function armPageVisibleGate() {
+    pageVisiblePromise = new Promise((res) => { pageVisibleResolve = res; });
+  }
+
+  // Resolves when the image is loaded AND decoded — decode() pre-rasterizes the
+  // bitmap while it's still covered, so the reveal doesn't jank on first paint.
+  function imageReady(img: HTMLImageElement): Promise<void> {
+    const decoded = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve());
+    if (img.complete && img.naturalWidth > 0) return decoded();
+    return new Promise((res) => {
+      img.addEventListener('load',  () => { decoded().then(res); }, { once: true });
+      img.addEventListener('error', () => res(), { once: true }); // never stuck red
+    });
+  }
+
+  function coverImages(container: HTMLElement) {
+    container.querySelectorAll('img').forEach((img) => {
+      // Carousel cards run their own cover + slide-in choreography.
+      if (img.closest('.carousel-item-inner')) return;
+
+      const parent = img.parentElement;
+      if (!parent) return;
+      if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+
+      // Solid red while waiting — tiles are only built at reveal time, sized to
+      // the image's FINAL box (it may have had no dimensions before loading).
+      const overlay = document.createElement('div');
+      overlay.style.cssText =
+        `position:absolute;background:${IMG_TILE_RED};pointer-events:none;` +
+        'z-index:4;display:grid;border-radius:inherit;overflow:hidden;';
+      const place = () => {
+        overlay.style.left   = img.offsetLeft + 'px';
+        overlay.style.top    = img.offsetTop + 'px';
+        overlay.style.width  = img.offsetWidth + 'px';
+        overlay.style.height = img.offsetHeight + 'px';
+      };
+      place();
+      parent.appendChild(overlay);
+      const visibleGate = pageVisiblePromise; // this page cycle's gate
+
+      // Build the tile grid as soon as the image is ready (visually identical to
+      // the solid red, and it happens while the page is still covered) so the
+      // reveal moment only schedules tweens — no DOM-construction spike that
+      // would stall the carousel slide-in.
+      imageReady(img).then(() => {
+        place();
+        const w = overlay.offsetWidth, h = overlay.offsetHeight;
+        if (!w || !h) { overlay.remove(); return; }
+        const cols = Math.min(24, Math.max(3, Math.round(w / IMG_TILE_SIZE)));
+        const rows = Math.min(18, Math.max(3, Math.round(h / IMG_TILE_SIZE)));
+        overlay.style.gridTemplateColumns = `repeat(${cols},1fr)`;
+        overlay.style.gridTemplateRows = `repeat(${rows},1fr)`;
+        overlay.style.background = 'transparent';
+        const tiles: HTMLDivElement[] = [];
+        for (let i = 0; i < cols * rows; i++) {
+          const tile = document.createElement('div');
+          tile.style.backgroundColor = IMG_TILE_RED;
+          overlay.appendChild(tile);
+          tiles.push(tile);
+        }
+
+        visibleGate.then(() => {
+          // Default wave: top-right -> bottom-left. data-cover-dir overrides:
+          // "ltr" sweeps left -> right, "tl-br" sweeps diagonally top-left ->
+          // bottom-right (the home hero image — matches its text direction).
+          // With data-cover-white, some tiles flip to the off-white just before
+          // exiting, so white sparks overlap between the red front and the image.
+          const dir = img.dataset.coverDir || '';
+          const whiteLead = img.dataset.coverWhite !== undefined ? IMG_WHITE_LEAD : 0;
+          const base = 0.05 + Math.random() * 0.1; // tiny jitter between images
+          let maxDelay = 0;
+          tiles.forEach((tile, i) => {
+            const r = Math.floor(i / cols);
+            const c = i % cols;
+            const order =
+              dir === 'ltr'   ? c :
+              dir === 'tl-br' ? c + r :
+              (cols - 1 - c) + r;
+            const wave = order * IMG_WAVE_STEP;
+            let d = base + wave + Math.random() * IMG_SCATTER;
+            // A few scout tiles blink out ahead of the front for an organic seed.
+            if (Math.random() < IMG_EARLY_ODDS) d = base + Math.random() * wave;
+            maxDelay = Math.max(maxDelay, d);
+            // Sparse flash: only some tiles blink white, right before they exit.
+            if (whiteLead && Math.random() < IMG_WHITE_ODDS) {
+              gsap.set(tile, { backgroundColor: IMG_TILE_WHITE, delay: Math.max(0, d - whiteLead) });
+            }
+            gsap.set(tile, { autoAlpha: 0, delay: d });
+          });
+          gsap.delayedCall(maxDelay + 0.1, () => overlay.remove());
+        });
+      });
+    });
   }
 
   // Identity key = pathname + query, ignoring only the HMR cache-bust (?v=) and
@@ -167,7 +282,9 @@ import MosaicTransition from './MosaicTransition.astro';
       once(data: any) {
         // Initial page load / refresh — module scripts have all evaluated by now.
         const next = data.next.container as HTMLElement;
+        armPageVisibleGate();
         callProjectInit(next);
+        coverImages(next);
         reinitScripts();
         // Hold on the red screen until the user clicks "Enter with sound" — that
         // gesture unlocks audio, then we exit the red tiles (with sound) and boom
@@ -280,10 +397,17 @@ import MosaicTransition from './MosaicTransition.astro';
         // frozen-then-jerk start). The container has been in the DOM and styled
         // since beforeEnter, so measurements are valid here.
         window.scrollTo(0, 0);
+        // html,body{height:100%;overflow-x:hidden} makes the BODY the actual
+        // scrolling element — window.scrollTo alone resets nothing, and a stale
+        // body scroll displaces every ScrollTrigger/Smooothy measurement below.
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
         const sc = next.matches('.scroll-container')
           ? next : next.querySelector('.scroll-container') as HTMLElement | null;
         if (sc) sc.scrollTop = 0;
+        armPageVisibleGate();
         callProjectInit(next);
+        coverImages(next);
         dispatchContentEnter(0);
 
         gsap.set(next, { opacity: 1, display: 'block' });
