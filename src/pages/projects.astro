@@ -123,10 +123,14 @@ const firstProjectMedia = getMediaInfo(projects[0]);
 </Layout>
 
 <script>
+  // Re-run on every Barba navigation (astro:page-load is dispatched by
+  // BarbaTransition) so listeners bind to the freshly swapped-in DOM. Each item
+  // is marked once bound, so running this again on the same DOM is a no-op.
+  function initProjectsList() {
   const listItems = document.querySelectorAll('.project-list-item');
   const previewContainer = document.getElementById('preview-media-container');
   const cloudName = previewContainer?.dataset.cloudName || "";
-  
+
   const previewTitle = document.getElementById('preview-title');
   const previewDescription = document.getElementById('preview-description');
   const previewYear = document.getElementById('preview-year');
@@ -135,6 +139,8 @@ const firstProjectMedia = getMediaInfo(projects[0]);
   const previewType = document.getElementById('preview-type');
 
   listItems.forEach(item => {
+    if ((item as HTMLElement).dataset.hoverBound) return;
+    (item as HTMLElement).dataset.hoverBound = 'true';
     item.addEventListener('mouseenter', () => {
       // Remove active class from all
       listItems.forEach(li => li.classList.remove('active'));
@@ -185,4 +191,8 @@ const firstProjectMedia = getMediaInfo(projects[0]);
       if (previewType) previewType.textContent = projectData.metadata?.type || "";
     });
   });
+  }
+
+  initProjectsList();
+  document.addEventListener('astro:page-load', initProjectsList);
 </script>

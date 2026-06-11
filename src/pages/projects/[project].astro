@@ -41,7 +41,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 }
 ---
 
-<Layout>
+<Layout ownBarbaContainer>
   <div class={`page-container scroll-container project-${project}`} data-barba="container" data-barba-namespace="project">
     <!-- Header Navigation -->
 
@@ -239,7 +239,6 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
         </video>
       </div>
     </div>
-  </div>
 
   <!-- PROCESS BREAKDOWN SECTION -->
   {projectData?.["design-process-title"] && (
@@ -895,6 +894,11 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   )}
 
   <Footer />
+  <!-- Closes the data-barba container opened at the top of the page. Without an
+       explicit close, a stray </div> earlier ended the container after the video
+       modal, so Barba navigations dropped every section below it. -->
+  </div>
+</Layout>
 
 <script>
   // @ts-check
@@ -1436,84 +1440,84 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     });
   }
 
-  // Initialize Swiper Hero Carousel
-  const heroCarousel = document.getElementById("hero-carousel") as HTMLElement;
+  // Gallery modal + marquee — queried inside the init function (not at module
+  // top-level) so every Barba navigation binds to the freshly swapped-in DOM.
+  function initModalAndMarquee() {
+    const modal = document.getElementById("video-modal");
+    const modalVideo = document.getElementById(
+      "modal-video-player"
+    ) as HTMLVideoElement;
+    const modalVideoSource = document.getElementById(
+      "modal-video-source"
+    ) as HTMLSourceElement;
+    const modalClose = document.getElementById("modal-close");
+    const galleryItems = document.querySelectorAll(".gallery-item");
 
-  // Gallery Modal Functionality
-  const modal = document.getElementById("video-modal");
-  const modalVideo = document.getElementById(
-    "modal-video-player"
-  ) as HTMLVideoElement;
-  const modalVideoSource = document.getElementById(
-    "modal-video-source"
-  ) as HTMLSourceElement;
-  const modalClose = document.getElementById("modal-close");
-  const galleryItems = document.querySelectorAll(".gallery-item");
-
-  // Open modal with video
-  function openModal(videoUrl: string) {
-    if (modal && modalVideo && modalVideoSource) {
-      modalVideoSource.src = videoUrl;
-      modalVideo.load();
-      modal.classList.add("active");
-      document.body.style.overflow = "hidden"; // Prevent background scrolling
+    // Open modal with video
+    function openModal(videoUrl: string) {
+      if (modal && modalVideo && modalVideoSource) {
+        modalVideoSource.src = videoUrl;
+        modalVideo.load();
+        modal.classList.add("active");
+        document.body.style.overflow = "hidden"; // Prevent background scrolling
+      }
     }
-  }
 
-  // Close modal
-  function closeModal() {
-    if (modal && modalVideo) {
-      modal.classList.remove("active");
-      modalVideo.pause();
-      modalVideo.currentTime = 0;
-      document.body.style.overflow = ""; // Re-enable scrolling
+    // Close modal
+    function closeModal() {
+      if (modal && modalVideo) {
+        modal.classList.remove("active");
+        modalVideo.pause();
+        modalVideo.currentTime = 0;
+        document.body.style.overflow = ""; // Re-enable scrolling
+      }
     }
-  }
 
-  // Add click handlers to gallery items
-  galleryItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const videoUrl = item.getAttribute("data-video");
-      if (videoUrl) {
-        openModal(videoUrl);
+    // Add click handlers to gallery items
+    galleryItems.forEach((item) => {
+      item.addEventListener("click", () => {
+        const videoUrl = item.getAttribute("data-video");
+        if (videoUrl) {
+          openModal(videoUrl);
+        }
+      });
+    });
+
+    // Close modal on close button click
+    modalClose?.addEventListener("click", closeModal);
+
+    // Close modal on outside click
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
       }
     });
-  });
 
-  // Close modal on close button click
-  modalClose?.addEventListener("click", closeModal);
+    // Close modal on Escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal?.classList.contains("active")) {
+        closeModal();
+      }
+    });
 
-  // Close modal on outside click
-  modal?.addEventListener("click", (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
-  });
+    // Pause marquee on hover
+    const marqueeContent = document.querySelector(
+      ".marquee-content"
+    ) as HTMLElement;
+    const marqueeContainer = document.querySelector(".marquee-container");
 
-  // Close modal on Escape key
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && modal?.classList.contains("active")) {
-      closeModal();
-    }
-  });
+    marqueeContainer?.addEventListener("mouseenter", () => {
+      if (marqueeContent) {
+        marqueeContent.style.animationPlayState = "paused";
+      }
+    });
 
-  // Pause marquee on hover
-  const marqueeContent = document.querySelector(
-    ".marquee-content"
-  ) as HTMLElement;
-  const marqueeContainer = document.querySelector(".marquee-container");
-
-  marqueeContainer?.addEventListener("mouseenter", () => {
-    if (marqueeContent) {
-      marqueeContent.style.animationPlayState = "paused";
-    }
-  });
-
-  marqueeContainer?.addEventListener("mouseleave", () => {
-    if (marqueeContent) {
-      marqueeContent.style.animationPlayState = "running";
-    }
-  });
+    marqueeContainer?.addEventListener("mouseleave", () => {
+      if (marqueeContent) {
+        marqueeContent.style.animationPlayState = "running";
+      }
+    });
+  }
 
   // SVG Grid Lines Generator
   function generateGridLines() {
@@ -1913,6 +1917,93 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     }
   }
 
+  // Hero carousel "boom" entrance: the whole rail starts a viewport-width to the
+  // right (reads as empty), rushes into place with a hard decelerating ease, and
+  // hands over seamlessly to Smooothy's slow leftward auto-scroll (which keeps
+  // ticking underneath — wrapper and item transforms compose independently).
+  // Fired on dt:content-enter, i.e. the moment the tile reveal starts.
+  function runCarouselEntrance(delayMs = 0) {
+    const el = document.getElementById("hero-carousel");
+    if (!el) return;
+    gsap.fromTo(
+      el,
+      { x: window.innerWidth },
+      { x: 0, duration: 1.2, ease: "expo.out", delay: delayMs / 1000, clearProps: "transform" }
+    );
+  }
+
+  // Mosaic image reveal: every carousel item starts under a solid red tile grid;
+  // tiles then blink out in a wave travelling top-right -> bottom-left, revealing
+  // the image. Items are staggered for a quick cascading offset. Covers go up at
+  // dt:content-enter (before anything is on screen); the wave HOLDS until
+  // dt:page-visible — i.e. the page-transition tiles have fully cleared — so the
+  // red covers are actually seen.
+  const TILE_RED = "#f72f2f";
+  const TILE_SIZE = 28;          // approx px per mosaic tile
+  const TILE_WAVE_STEP = 0.018;  // s per diagonal step inside an item
+  const TILE_SCATTER = 0.055;    // s of per-tile randomness on top of the wave front
+  const TILE_EARLY_ODDS = 0.04;  // fraction of tiles that pop out ahead of the front
+  const ITEM_STAGGER = 0.06;     // s offset between items
+
+  type PendingTileReveal = { overlay: HTMLDivElement; cols: number; rows: number };
+  let pendingTileReveals: PendingTileReveal[] = [];
+
+  function coverCarouselItems() {
+    pendingTileReveals = [];
+    document.querySelectorAll<HTMLElement>(".carousel-wrapper .carousel-item").forEach((item) => {
+      const rect = item.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      if (getComputedStyle(item).position === "static") item.style.position = "relative";
+
+      const cols = Math.max(3, Math.round(rect.width / TILE_SIZE));
+      const rows = Math.max(3, Math.round(rect.height / TILE_SIZE));
+
+      const overlay = document.createElement("div");
+      overlay.style.cssText =
+        "position:absolute;inset:0;z-index:5;pointer-events:none;display:grid;" +
+        "border-radius:inherit;overflow:hidden;" +
+        `grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr);`;
+      for (let i = 0; i < cols * rows; i++) {
+        const tile = document.createElement("div");
+        tile.style.backgroundColor = TILE_RED;
+        overlay.appendChild(tile);
+      }
+      item.appendChild(overlay);
+      pendingTileReveals.push({ overlay, cols, rows });
+    });
+    // Failsafe: never leave items stuck red if dt:page-visible doesn't arrive.
+    gsap.delayedCall(4, () => { if (pendingTileReveals.length) revealCarouselItems(); });
+  }
+
+  function revealCarouselItems() {
+    const pending = pendingTileReveals;
+    pendingTileReveals = [];
+    pending.forEach(({ overlay, cols }, index) => {
+      const base = index * ITEM_STAGGER;
+      let maxDelay = 0;
+      Array.from(overlay.children).forEach((tile, i) => {
+        const r = Math.floor(i / cols);
+        const c = i % cols;
+        // The wave still travels top-right -> bottom-left, but heavy per-tile
+        // scatter breaks the front apart so it doesn't read as straight lines,
+        // and a few "scout" tiles blink out ahead of the front entirely.
+        const wave = ((cols - 1 - c) + r) * TILE_WAVE_STEP;
+        let d = base + wave + Math.random() * TILE_SCATTER;
+        if (Math.random() < TILE_EARLY_ODDS) d = base + Math.random() * wave;
+        maxDelay = Math.max(maxDelay, d);
+        gsap.set(tile, { autoAlpha: 0, delay: d });
+      });
+      gsap.delayedCall(maxDelay + 0.1, () => overlay.remove());
+    });
+  }
+
+  document.addEventListener("dt:content-enter", (e) => {
+    runCarouselEntrance((e as CustomEvent).detail?.delay ?? 0);
+    coverCarouselItems();
+  });
+
+  document.addEventListener("dt:page-visible", () => revealCarouselItems());
+
   // Listeners attached via initAll
 
   // ==================== MOTION DIVIDER BANNER LOGIC ====================
@@ -2086,6 +2177,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
     run("carousels", initCarousels);
     run("motionDivider", initMotionDivider);
     run("toggles", initToggles);
+    run("modalAndMarquee", initModalAndMarquee);
 
     // Force-play every autoplay video — the autoplay attribute fires only on initial
     // HTML parse, so after a Barba swap the video stays paused without this.

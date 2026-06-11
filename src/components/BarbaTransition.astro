@@ -13,19 +13,56 @@ import MosaicTransition from './MosaicTransition.astro';
     document.dispatchEvent(new Event('astro:page-load'));
   }
 
-  // Call the project-page init function if it has been registered and we are
-  // currently on a project page. This is more reliable than dispatching an event
+  // Call the project-page init function if it has been registered and the given
+  // container is a project page. This is more reliable than dispatching an event
   // because module scripts compiled by Astro/Vite may not have been evaluated yet
-  // when the event fires after a Barba navigation.
-  function callProjectInit() {
-    const isProject = !!document.querySelector('[data-barba-namespace="project"]');
-    if (!isProject) return;
+  // when the event fires after a Barba navigation. Scoped to the container so a
+  // leaving project page (still in the DOM mid-transition) can't trigger it.
+  function callProjectInit(container: HTMLElement) {
+    if (container.getAttribute('data-barba-namespace') !== 'project') return;
     if (typeof (window as any).__dtProjectInit === 'function') {
       (window as any).__dtProjectInit();
     } else {
       console.warn('[barba] project page but __dtProjectInit not ready — interactions skipped');
     }
   }
+
+  // Signals "the page content is about to become visible" — fired when the load
+  // intro starts (after the enter click) and on every Barba enter. Page scripts
+  // (e.g. the home hero line reveal) listen for this to start entrance effects.
+  // detail.delay is how long until the content actually starts appearing (ms).
+  function dispatchContentEnter(delay = 0) {
+    document.dispatchEvent(new CustomEvent('dt:content-enter', { detail: { delay } }));
+  }
+
+  // Signals "the transition tiles have fully cleared — the page is on screen".
+  // Effects that must be SEEN (e.g. the carousel red-tile covers) hold until this.
+  function dispatchPageVisible() {
+    document.dispatchEvent(new CustomEvent('dt:page-visible'));
+  }
+
+  // Identity key = pathname + query, ignoring only the HMR cache-bust (?v=) and
+  // our own ?__reinit=. Pathname alone is too loose in dev: it conflates a file's
+  // ?type=script with its ?type=style, and index=0 with index=1.
+  const scriptKeyOf = (u: string) => {
+    try {
+      const url = new URL(u, window.location.href);
+      const p = url.searchParams;
+      p.delete('v'); p.delete('__reinit');
+      const q = Array.from(p.entries()).sort().map(([k, val]) => `${k}=${val}`).join('&');
+      return url.pathname + (q ? `?${q}` : '');
+    } catch { return u; }
+  };
+
+  // Keys of scripts that have actually EXECUTED. We must track this ourselves
+  // instead of scanning the DOM: Astro renders page scripts inside the barba
+  // container, and Barba inserts the next container into the DOM *before*
+  // beforeEnter runs — script tags that arrive that way never execute, so a DOM
+  // scan wrongly counts them as loaded and the page's JS never runs.
+  const executedScriptKeys = new Set(
+    Array.from(document.querySelectorAll('script[src]'))
+      .map((s) => scriptKeyOf((s as HTMLScriptElement).src))
+  );
 
   // iOS Sheet-style entrance, staggered by row (top rows land first). 500ms
   // (intentionally over the 300ms guideline) with the iOS sheet presentation bezier.
@@ -129,19 +166,26 @@ import MosaicTransition from './MosaicTransition.astro';
 
       once(data: any) {
         // Initial page load / refresh — module scripts have all evaluated by now.
-        callProjectInit();
+        const next = data.next.container as HTMLElement;
+        callProjectInit(next);
         reinitScripts();
         // Hold on the red screen until the user clicks "Enter with sound" — that
         // gesture unlocks audio, then we exit the red tiles (with sound) and boom
         // the content in.
-        const next = data.next.container as HTMLElement;
         const startIntro = () => {
-          if ((window as any).blockTransition?.loadIntro) {
-            (window as any).blockTransition.loadIntro();
-          }
+          // loadIntro() resolves when the red tiles have fully cleared.
+          const intro = (window as any).blockTransition?.loadIntro
+            ? (window as any).blockTransition.loadIntro()
+            : null;
+          Promise.resolve(intro).then(() => dispatchPageVisible());
           // Project pages: reveal without the transform entrance (keeps ScrollTrigger sane).
-          if (isProject(next)) next.style.opacity = '1';
-          else loadEntrance(next);
+          if (isProject(next)) {
+            next.style.opacity = '1';
+            dispatchContentEnter(0);
+          } else {
+            loadEntrance(next);
+            dispatchContentEnter(LOAD_ENTER_DELAY);
+          }
         };
         const enterBtn = document.getElementById('mosaic-enter-btn');
         if (enterBtn) {
@@ -159,13 +203,20 @@ import MosaicTransition from './MosaicTransition.astro';
         const nextDoc = parser.parseFromString(data.next.html, 'text/html');
 
         // ── CSS: inject any link/style tags the next page needs ──────────────
+        // Awaited so layout is fully styled before enter() measures it.
+        const loads: Promise<void>[] = [];
         const currentHrefs = new Set(
           Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
             .map(l => (l as HTMLLinkElement).href)
         );
         nextDoc.querySelectorAll('link[rel="stylesheet"]').forEach(link => {
           if (!currentHrefs.has((link as HTMLLinkElement).href)) {
-            document.head.appendChild(link.cloneNode(true));
+            const el = link.cloneNode(true) as HTMLLinkElement;
+            loads.push(new Promise<void>((resolve) => {
+              el.onload  = () => resolve();
+              el.onerror = () => resolve();
+            }));
+            document.head.appendChild(el);
           }
         });
 
@@ -178,35 +229,18 @@ import MosaicTransition from './MosaicTransition.astro';
           }
         });
 
-        // ── JS: load any module scripts the next page has that we don't yet ──
-        // Identity key = pathname + query, ignoring only the HMR cache-bust (?v=) and
-        // our own ?__reinit=. Pathname alone is too loose in dev: it conflates a file's
-        // ?type=script with its ?type=style, and index=0 with index=1.
-        const keyOf = (u: string) => {
-          try {
-            const url = new URL(u, window.location.href);
-            const p = url.searchParams;
-            p.delete('v'); p.delete('__reinit');
-            const q = Array.from(p.entries()).sort().map(([k, val]) => `${k}=${val}`).join('&');
-            return url.pathname + (q ? `?${q}` : '');
-          } catch { return u; }
-        };
-        const currentKeys = new Set(
-          Array.from(document.querySelectorAll('script[src]'))
-            .map(s => keyOf((s as HTMLScriptElement).src))
-        );
-
-        const loads: Promise<void>[] = [];
+        // ── JS: load any scripts the next page has that haven't executed yet ──
         nextDoc.querySelectorAll('script[src]').forEach((scriptEl) => {
           const rawSrc = scriptEl.getAttribute('src');
           if (!rawSrc) return;
 
-          let resolved: string;
+          let key: string;
           try {
-            resolved = new URL(rawSrc, window.location.href).href;
+            key = scriptKeyOf(new URL(rawSrc, window.location.href).href);
           } catch { return; }
 
-          if (resolved !== window.location.href && currentKeys.has(keyOf(resolved))) return;
+          if (executedScriptKeys.has(key)) return;
+          executedScriptKeys.add(key);
 
           loads.push(new Promise<void>((resolve) => {
             const el = document.createElement('script');
@@ -239,6 +273,19 @@ import MosaicTransition from './MosaicTransition.astro';
 
       async enter(data: any) {
         const next = data.next.container as HTMLElement;
+
+        // Reset scroll and init the page's interactions BEFORE the tile reveal:
+        // carousels and ScrollTrigger are then already running while the tiles
+        // clear, so the page is in motion the instant it becomes visible (no
+        // frozen-then-jerk start). The container has been in the DOM and styled
+        // since beforeEnter, so measurements are valid here.
+        window.scrollTo(0, 0);
+        const sc = next.matches('.scroll-container')
+          ? next : next.querySelector('.scroll-container') as HTMLElement | null;
+        if (sc) sc.scrollTop = 0;
+        callProjectInit(next);
+        dispatchContentEnter(0);
+
         gsap.set(next, { opacity: 1, display: 'block' });
 
         // Staggered row entrance, concurrently with the red reveal — but skip the
@@ -253,18 +300,10 @@ import MosaicTransition from './MosaicTransition.astro';
       },
 
       after(_data: any) {
-        // Reset scroll FIRST so carousels (Smooothy) and ScrollTrigger measure against
-        // the settled top-of-page layout — project pages use a custom .scroll-container.
-        window.scrollTo(0, 0);
-        const sc = document.querySelector('.scroll-container') as HTMLElement | null;
-        if (sc) sc.scrollTop = 0;
-
         // Dispatch astro:page-load for listeners like Header.
         reinitScripts();
-
-        // Init project interactions on the next frame, once the swapped container is
-        // laid out (measurement-based widgets need correct dimensions).
-        requestAnimationFrame(() => callProjectInit());
+        // enter() resolved, so the tile reveal has finished — page is on screen.
+        dispatchPageVisible();
       }
     }],
 

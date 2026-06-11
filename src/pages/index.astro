@@ -35,3 +35,96 @@ import '../styles/footer.css';
   <Footer />
 </Layout>
 
+<script>
+  import { gsap } from "gsap";
+  import { SplitText } from "gsap/SplitText";
+
+  gsap.registerPlugin(SplitText);
+
+  // Mosaic-themed line reveal for the hero text: each visual line gets covered by
+  // a red tile-bar sweeping in from the left; the bar then exits to the right with
+  // an ease-in, revealing the text underneath. Staggered line by line. Runs on
+  // dt:content-enter, which BarbaTransition fires whenever the page content starts
+  // to appear (initial load intro and every Barba navigation).
+  const TILE_RED = "#f72f2f";
+  const LINE_STAGGER = 0.055;
+  const COVER_IN_S = 0.18;
+  const COVER_OUT_S = 0.28;
+  const COVER_HOLD_S = 0.02; // beat between full cover and the exit
+  // Settle matches the load entrance's "spike": same easeOutQuint, same 800ms,
+  // with a big sideways displacement (~6vw) so the first frames whip into place.
+  const SETTLE_X = () => Math.round(window.innerWidth * 0.06);
+  const SETTLE_S = 0.8;      // = LOAD_ENTER_MS in BarbaTransition
+  const POSTERIZE_FPS = 12;
+
+  // After Effects posterizeTime(12) feel: quantize the eased progress to 12fps
+  // frames, so the settle steps like stop-motion instead of gliding.
+  const settleEase = (() => {
+    const base = gsap.parseEase("power4.out"); // easeOutQuint, same as drag-up
+    const frames = Math.max(1, Math.round(SETTLE_S * POSTERIZE_FPS));
+    return (t: number) => base(Math.floor(t * frames) / frames);
+  })();
+
+  let running = false;
+
+  async function runHeroLineReveal(delayMs: number) {
+    const hero = document.querySelector(".hero-page");
+    if (!hero || running) return;
+    const targets = [".hero-title", ".hero-subtitle"]
+      .map((s) => hero.querySelector(s))
+      .filter((el): el is HTMLElement => el instanceof HTMLElement);
+    if (!targets.length) return;
+    running = true;
+
+    // Hide the text right away (the container isn't visible yet, so no flash),
+    // then split once fonts are ready so line breaks measure the real typeface.
+    targets.forEach((t) => (t.style.visibility = "hidden"));
+    await document.fonts.ready;
+
+    const split = SplitText.create(targets, {
+      type: "lines",
+      linesClass: "hero-reveal-line",
+    });
+    targets.forEach((t) => (t.style.visibility = ""));
+
+    const lines = split.lines as HTMLElement[];
+    const bars = lines.map((line) => {
+      line.style.position = "relative";
+      line.style.visibility = "hidden"; // children can override visibility,
+      line.style.transform = `translateX(${-SETTLE_X()}px)`; // displaced; settles in
+      const bar = document.createElement("div"); // so the bar stays visible
+      bar.style.cssText =
+        `position:absolute;inset:0;background:${TILE_RED};` +
+        "transform:scaleX(0);transform-origin:left center;" +
+        "visibility:visible;pointer-events:none;";
+      line.appendChild(bar);
+      return bar;
+    });
+
+    const tl = gsap.timeline({
+      delay: delayMs / 1000,
+      onComplete: () => {
+        bars.forEach((b) => b.remove());
+        split.revert(); // restore the original markup (pixel-font spans etc.)
+        running = false;
+      },
+    });
+    lines.forEach((line, i) => {
+      const at = i * LINE_STAGGER;
+      // Sweep in covering the (hidden, displaced) line, pop the text in at full
+      // cover, then exit right with an ease-in while the line settles into place.
+      tl.to(bars[i], { scaleX: 1, duration: COVER_IN_S, ease: "power3.out" }, at)
+        .set(line, { visibility: "visible" }, at + COVER_IN_S)
+        .set(bars[i], { transformOrigin: "right center" }, at + COVER_IN_S)
+        .to(bars[i], { scaleX: 0, duration: COVER_OUT_S, ease: "power2.in" }, at + COVER_IN_S + COVER_HOLD_S)
+        // Settle is an entrance: same easeOutQuint + 800ms as the rows' drag-up
+        // (LOAD_ENTER_EASE/LOAD_ENTER_MS), posterized to 12fps; bar exit stays ease-in.
+        .to(line, { x: 0, duration: SETTLE_S, ease: settleEase }, at + COVER_IN_S + COVER_HOLD_S);
+    });
+  }
+
+  document.addEventListener("dt:content-enter", (e) => {
+    runHeroLineReveal((e as CustomEvent).detail?.delay ?? 0);
+  });
+</script>
+
