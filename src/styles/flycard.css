@@ -1,0 +1,91 @@
+/* Project cards shared by the /projects fly-through (SPACE/STACK views) and
+   the home page's projects section. Positioning is contextual: the fly page
+   pairs .fly-card with .fly-item (absolute, JS-transformed); on the home page
+   cards sit in normal flow. */
+
+.fly-mono {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #7d8484;
+}
+
+.fly-card {
+  display: block;
+  width: min(440px, 38vw);
+  padding: 1rem 1.1rem 1.2rem;
+  background: #1b1c1e;
+  border: 1px solid #2c2d31;
+  color: #ffffff;
+  text-decoration: none;
+}
+.fly-card:hover,
+.fly-card.is-hot { border-color: #f72f2f; }
+.fly-card:hover .fly-card-cta,
+.fly-card.is-hot .fly-card-cta { color: #f72f2f; }
+
+.fly-card-head,
+.fly-card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.fly-accent {
+  width: 10px;
+  height: 10px;
+  background: #f72f2f;
+  flex-shrink: 0;
+}
+
+.fly-card-media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  margin: 0.8rem 0;
+  background: #222327;
+}
+.fly-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Placeholder fill for projects without preview media — mosaic checker + index. */
+.fly-card-fill {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    repeating-conic-gradient(#1f2024 0% 25%, #232428 0% 50%) 0 0 / 56px 56px;
+  position: relative;
+}
+.fly-card-fill::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 14px;
+  height: 14px;
+  background: #f72f2f;
+}
+.fly-fill-number {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #2c2d31;
+}
+
+.fly-card-title {
+  font-family: "Suisse Int'l", sans-serif;
+  font-size: 1.35rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  line-height: 1.1;
+  margin: 0 0 0.9rem;
+}

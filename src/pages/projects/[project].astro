@@ -4,6 +4,7 @@ import data from "../../data/projects/index";
 import type { ProjectData } from "../../types/project";
 import Layout from "../../layouts/Layout.astro";
 import Footer from "../../components/Footer.astro";
+import SpaceDots from "../../components/SpaceDots.astro";
 import "../../styles/portfolio.css";
 
 export function getStaticPaths() {
@@ -47,6 +48,8 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
 
     <!-- Hero Section -->
     <main class="hero-section snap-section">
+      <!-- 3D dot field behind the hero card (dark hero, not the old cream) -->
+      <SpaceDots />
       <div class="hero-content-wrapper">
         <div class="hero-content" id="hero-card">
           <!-- Project Title & Description -->
@@ -68,7 +71,35 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
               </div>
             </div>
 
-            <!-- Thumbnail Carousel -->
+            <!-- Project Metadata (above the carousel, so the carousel can sit
+                 flush against the video peeking underneath) -->
+            <div class="project-metadata">
+              <div class="metadata-item">
+                <span class="metadata-label">YEAR</span>
+                <span class="metadata-value">{projectData?.metadata?.year || "N/A"}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="metadata-label">ROLE</span>
+                <span class="metadata-value">{projectData?.metadata?.role || "N/A"}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="metadata-label">TOOLS</span>
+                <span class="metadata-value">{projectData?.metadata?.tools || "N/A"}</span>
+              </div>
+              <div class="metadata-item">
+                <span class="metadata-label">TYPE</span>
+                <span class="metadata-value">{projectData?.metadata?.type || "N/A"}</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Thumbnail Carousel — direct child of .hero-section, OUTSIDE
+           .hero-content-wrapper so the ScrollTrigger scale scrub never
+           shrinks it -->
             <div class="carousel-container">
               {projectData.project === "faramove-campaign" ? (
                 <div class="campaign-banner-wrapper">
@@ -146,29 +177,7 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
                 </div>
               )}
             </div>
-          </div>
 
-          <!-- Project Metadata -->
-          <div class="project-metadata">
-            <div class="metadata-item">
-              <span class="metadata-label">YEAR</span>
-              <span class="metadata-value">{projectData?.metadata?.year || "N/A"}</span>
-            </div>
-            <div class="metadata-item">
-              <span class="metadata-label">ROLE</span>
-              <span class="metadata-value">{projectData?.metadata?.role || "N/A"}</span>
-            </div>
-            <div class="metadata-item">
-              <span class="metadata-label">TOOLS</span>
-              <span class="metadata-value">{projectData?.metadata?.tools || "N/A"}</span>
-            </div>
-            <div class="metadata-item">
-              <span class="metadata-label">TYPE</span>
-              <span class="metadata-value">{projectData?.metadata?.type || "N/A"}</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
 
     <!-- VIDEO SECTION -->

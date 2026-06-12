@@ -57,15 +57,22 @@ body {
 /* Hero Section */
 .hero-section {
   position: relative;
-  padding-top: 12rem;
-  height: 80vh;
+  padding-top: 7rem;
+  /* taller hero: pushes the bottom-pinned carousel down so only a small
+     sliver of the video shows beneath it, and opens the desc->carousel gap */
+  height: 92vh;
   display: flex;
-  align-items: center;
+  /* top-aligned: the (overflowing) hero content starts below the 12rem
+     padding instead of centering up underneath the nav */
+  align-items: flex-start;
   justify-content: center;
   flex-shrink: 0;
-  background-color: #e5e3dc;
+  /* dark hero with the SpaceDots field behind the card (was #e5e3dc) */
+  background-color: #141417;
 
   .hero-content-wrapper {
+  position: relative;
+  z-index: 1;
     position: relative;
     z-index: 1;
     width: 85%;
@@ -73,7 +80,11 @@ body {
     margin: 0 0;
 
     .hero-content {
-      background-color: var(--color-bg-dark);
+      /* transparent so the SpaceDots field shows through behind the card */
+      /* content-box ONLY here (site stays border-box): padding adds OUTSIDE
+         the 80vh, making the hero content larger — and the video section
+         peeks in at the bottom of the first viewport as a scroll draw. */
+      box-sizing: content-box;
       position: relative;
       padding: 3.75rem 3.75rem 0;
       /* no bottom padding so metadata can sit flush */
@@ -149,8 +160,10 @@ body {
     .project-metadata {
       display: flex;
       gap: 2.5rem;
-      margin-top: auto;
-      /* pushes metadata to the bottom of the flex column */
+      /* sits between the description and the carousel, on the dot field */
+      margin: 2.25rem 0 2rem;
+      position: relative;
+      z-index: 2;
 
       .metadata-item {
         display: flex;
@@ -254,6 +267,23 @@ body {
 /* Override for Faramove Campaign to allow breakout */
 .project-faramove-campaign .carousel-container {
   overflow: visible;
+}
+
+/* Hero carousel: full-bleed edge to edge, pinned to the hero section's
+   bottom as a DIRECT child (outside .hero-content-wrapper, so the hero's
+   ScrollTrigger scale scrub never shrinks it). */
+.hero-section > .carousel-container {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  /* above the video section's click overlay (z 15), which pulls up -10vh
+     under the hero — otherwise the overlay eats carousel drags/clicks in
+     the overlap strip and starts the video instead */
+  z-index: 20;
 }
 
 /* Styleframes Carousel - Smaller version */

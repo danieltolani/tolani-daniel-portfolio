@@ -21,6 +21,13 @@ import AvailabilityTime from './AvailabilityTime.astro';
       </p>
     </div>
 
+    <!-- 3. Showreel slot (Top Right) — on the home page the hero's reel
+         placeholder hides on scroll and eases into this slot at the bottom. -->
+    <div class="footer-reel" aria-label="Showreel">
+      <span class="footer-reel-label">REEL</span>
+      <span class="footer-reel-accent"></span>
+    </div>
+
     <!-- 4. Available for Work Status (Bottom Left) -->
     <AvailabilityTime />
 
@@ -38,6 +45,39 @@ import AvailabilityTime from './AvailabilityTime.astro';
     </a>
   </div>
 </footer>
+
+<style is:global>
+  /* Self-contained so the slot is styled on every page that renders Footer. */
+  .footer-reel {
+    position: relative;
+    width: min(280px, 100%);
+    aspect-ratio: 16 / 9;
+    background: #1b1c1e;
+    border: 1px solid #2c2d31;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: end;
+  }
+  .footer-reel-label {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4a4b50;
+  }
+  .footer-reel-accent {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 10px;
+    height: 10px;
+    background: #f72f2f;
+  }
+  @media (max-width: 900px) {
+    .footer-reel { justify-self: start; }
+  }
+</style>
 
 <script>
   function updateFooterTime() {

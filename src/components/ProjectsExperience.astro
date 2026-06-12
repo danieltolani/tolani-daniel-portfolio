@@ -1,0 +1,628 @@
+---
+// The full projects experience (SPACE fly-through / STACK / LIST + switcher).
+// Used by the standalone /projects page AND embedded as the home page's
+// #projects section — the script initializes every unbound instance and the
+// wheel handling releases to normal page scroll at the boundaries, so it
+// behaves as a section of a longer page when embedded.
+// `embedded` makes the SPACE tunnel FINITE (one full pass through the cards,
+// then the end releases scroll to the page) instead of infinitely looping.
+import data from "../data/projects/index";
+import "../styles/flycard.css";
+
+const { embedded = false } = Astro.props;
+
+const projects = data;
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+
+// Card preview: local files are used as-is; Cloudinary video IDs become a
+// first-frame poster image (so_0) — cards stay light, no autoplaying videos.
+const getCardPreview = (project: any) => {
+  const src = project["preview-media"]?.src || "";
+  if (!src) return "";
+  if (src.startsWith("/")) return src;
+  return `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_640/${src}.jpg`;
+};
+---
+
+<div class="projects-experience" data-embedded={embedded ? "true" : undefined}>
+  <div class="fly-viewport">
+    <div class="fly-world">
+      {projects.map((project, index) => (
+        <a class="fly-item fly-card" href={`/projects/${project.project}`} data-fly-card>
+          <div class="fly-card-head">
+            <span class="fly-mono">{(index + 1).toString().padStart(2, "0")} — {project.metadata?.year}</span>
+            <span class="fly-accent"></span>
+          </div>
+          <div class="fly-card-media">
+            {getCardPreview(project) ? (
+              <img src={getCardPreview(project)} alt="" loading="eager" />
+            ) : (
+              <div class="fly-card-fill">
+                <span class="fly-fill-number">{(index + 1).toString().padStart(2, "0")}</span>
+              </div>
+            )}
+          </div>
+          <h2 class="fly-card-title" set:html={project.title}></h2>
+          <div class="fly-card-foot">
+            <span class="fly-mono">{project.metadata?.type}</span>
+            <span class="fly-mono fly-card-cta">view case study ↗</span>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="fly-hud fly-mono">
+      <span>VEL <b class="fly-vel">0.00</b></span>
+      <span>Z <b class="fly-z">0</b></span>
+      <span>{projects.length} PROJECTS — SCROLL TO FLY</span>
+    </div>
+  </div>
+
+  <!-- View switcher (left rail) -->
+  <div class="fly-switch">
+    <span class="fly-mono fly-switch-label">VIEW</span>
+    <button class="fly-mono fly-switch-btn active" data-view="space" type="button">01 — SPACE</button>
+    <button class="fly-mono fly-switch-btn" data-view="stack" type="button">02 — STACK</button>
+    <button class="fly-mono fly-switch-btn" data-view="list" type="button">03 — LIST</button>
+  </div>
+
+  <!-- Simple list view (toggled from the switcher) -->
+  <div class="fly-list">
+    {projects.map((project, index) => (
+      <a class="fly-list-row" href={`/projects/${project.project}`}>
+        <span class="fly-mono">{(index + 1).toString().padStart(2, "0")}</span>
+        <h2 class="fly-list-title" set:html={project.title}></h2>
+        <span class="fly-mono">{project.metadata?.year}</span>
+        <span class="fly-mono fly-list-type">{project.metadata?.type}</span>
+        <span class="fly-mono fly-list-arrow">↗</span>
+      </a>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .projects-experience {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #141417;
+  }
+  html:not(.js-enter) .projects-experience { display: none; }
+
+  .fly-viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    perspective: 1000px;
+  }
+
+  .fly-world {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .fly-item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    will-change: transform, opacity;
+  }
+
+  /* Card + mono styles shared via flycard.css */
+
+  .fly-star {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 3px;
+    height: 3px;
+    pointer-events: none;
+  }
+
+  .fly-hud {
+    position: absolute;
+    bottom: 1.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2.2rem;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .fly-hud b { color: #e5eaf4; font-weight: normal; }
+
+  /* ── View switcher (left rail) ── */
+  .fly-switch {
+    position: absolute;
+    left: 2.4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    z-index: 20;
+  }
+  .fly-switch-label { color: #4a4b50; }
+  .fly-switch-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    transition: color 0.2s ease;
+  }
+  .fly-switch-btn::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #2c2d31;
+    transition: background 0.2s ease;
+  }
+  .fly-switch-btn:hover,
+  .fly-switch-btn.is-hot { color: #e5eaf4; }
+  .fly-switch-btn.active { color: #ffffff; }
+  .fly-switch-btn.active::before { background: #f72f2f; }
+  /* a generous real hit area on top of the visual proximity */
+  .fly-switch-btn { padding: 5px 10px 5px 0; }
+
+  /* ── Simple list view ── */
+  .fly-list {
+    position: absolute;
+    inset: 0;
+    padding: 9.5rem clamp(2rem, 8vw, 10rem) 4rem clamp(8rem, 16vw, 18rem);
+    overflow-y: auto;
+    z-index: 5;
+    opacity: 0;
+    visibility: hidden; /* gsap autoAlpha drives this */
+    perspective: 900px; /* rows zoom in from depth, like arriving in SPACE */
+  }
+  .fly-list-row {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto minmax(10rem, auto) 2rem;
+    align-items: baseline;
+    gap: 1.4rem;
+    padding: 1.05rem 0;
+    border-bottom: 1px solid #232428;
+    text-decoration: none;
+    color: #ffffff;
+    /* Hover nudge via padding, NOT transform: a CSS transform transition
+       would intercept gsap's per-frame writes during the entrance tween and
+       make the rows stutter into place. */
+    transition: padding-left 0.25s ease;
+  }
+  .fly-list-row:hover { padding-left: 8px; }
+  .fly-list-row:hover .fly-list-title { color: #f72f2f; }
+  .fly-list-row:hover .fly-list-arrow { color: #f72f2f; }
+  .fly-list-title {
+    font-family: "Suisse Int'l", sans-serif;
+    font-size: 1.6rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.05;
+    margin: 0;
+    transition: color 0.25s ease;
+  }
+  .fly-list-type { text-align: right; }
+
+  @media (max-width: 900px) {
+    .fly-switch { left: 1.2rem; top: auto; bottom: 4.5rem; transform: none; }
+    .fly-list { padding: 7.5rem 1.2rem 6rem 1.2rem; }
+    .fly-list-row { grid-template-columns: 2.2rem 1fr auto; }
+    .fly-list-type, .fly-list-arrow { display: none; }
+    .fly-card { width: min(420px, 78vw); }
+    .fly-hud { gap: 1.1rem; font-size: 0.55rem; }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  // ════ 3D FLY-THROUGH SCROLL ════
+  // A virtual heavy-lerp scroll flies the camera through project cards laid
+  // out in z-space on an infinite loop. Velocity warps the FOV and stretches
+  // the starfield; the mouse tilts the camera. Wheel control RELEASES to the
+  // page at boundaries (tunnel start going up; both stack ends), so the
+  // experience can live as a section of a scrollable page.
+  const FLY = {
+    zGap: 800,             // px of z between consecutive cards
+    camSpeed: 2.4,         // scroll px -> camera z px
+    lerp: 0.08,            // heavy feel (matches Lenis lerp in the reference)
+    starCount: 110,
+    starColors: ["#f72f2f", "#e5eaf4", "#5a5b5e"],
+  };
+
+  type FlyThing = {
+    el: HTMLElement;
+    type: "card" | "star";
+    x: number; y: number; rot: number; baseZ: number;
+    idx: number;
+    blend: number;    // 0 = position in the tunnel, 1 = position in the stack
+    hoverT: number;   // hover target (0/1)
+    hoverAmt: number; // smoothed hover, lerped in the raf
+  };
+
+  function initExperience(root: HTMLElement) {
+    const viewport = root.querySelector<HTMLElement>(".fly-viewport");
+    const world = root.querySelector<HTMLElement>(".fly-world");
+    if (!viewport || !world) return;
+
+    const velEl = root.querySelector(".fly-vel");
+    const zEl = root.querySelector(".fly-z");
+
+    // ── Build the slot list from the SSR'd project cards ──
+    const cards = Array.from(world.querySelectorAll<HTMLElement>("[data-fly-card]"));
+    const total = cards.length;
+    const things: FlyThing[] = cards.map((el, i) => ({
+      el,
+      type: "card",
+      x: 0, y: 0,
+      rot: (Math.random() - 0.5) * 14,
+      baseZ: -i * FLY.zGap,
+      idx: i,
+      blend: 0,
+      hoverT: 0,
+      hoverAmt: 0,
+    }));
+    const loopSize = total * FLY.zGap;
+
+    // Card hover is PROXIMITY-based (checked each frame against the card's
+    // projected rect, inflated) rather than native mouseenter: 3D-transformed
+    // cards have hit areas that don't match what the eye reads as the card,
+    // which made edges feel dead. See the raf loop.
+    const HOVER_PAD = 22; // px of forgiveness around each card
+
+    // ── STACK view metrics: a scrollable column — two side by side on desktop ──
+    const STACK_TOP = 140, STACK_BOTTOM = 140, STACK_GAP = 44;
+    let cardH = 420, cardW = 440, stackStep = 464, stackMax = 0, sCols = 1, sRows = total;
+    const layoutStack = () => {
+      sCols = window.innerWidth > 1100 ? 2 : 1;
+      sRows = Math.ceil(total / sCols);
+      cardH = Math.max(...cards.map((c) => c.offsetHeight));
+      cardW = Math.max(...cards.map((c) => c.offsetWidth));
+      stackStep = cardH + STACK_GAP;
+      const totalH = STACK_TOP + (sRows - 1) * stackStep + cardH + STACK_BOTTOM;
+      stackMax = Math.max(0, totalH - window.innerHeight);
+    };
+
+    // Cards spiral loosely around the camera path.
+    const layout = () => {
+      things.forEach((t, i) => {
+        if (t.type !== "card") return;
+        const angle = (i / total) * Math.PI * 6;
+        t.x = Math.cos(angle) * window.innerWidth * 0.26;
+        t.y = Math.sin(angle) * window.innerHeight * 0.24;
+      });
+      layoutStack();
+    };
+    layout();
+    let resizeT: ReturnType<typeof setTimeout>;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeT);
+      resizeT = setTimeout(() => { if (root.isConnected) layout(); }, 200);
+    });
+
+    // ── Starfield ──
+    for (let i = 0; i < FLY.starCount; i++) {
+      const el = document.createElement("div");
+      el.className = "fly-star";
+      el.style.background = FLY.starColors[Math.floor(Math.random() * FLY.starColors.length)];
+      world.appendChild(el);
+      things.push({
+        el, type: "star",
+        x: (Math.random() - 0.5) * window.innerWidth * 2.2,
+        y: (Math.random() - 0.5) * window.innerHeight * 2.2,
+        rot: 0,
+        baseZ: -Math.random() * loopSize,
+        idx: 0,
+        blend: 0,
+        hoverT: 0,
+        hoverAmt: 0,
+      });
+    }
+
+    // ── Virtual scroll state ──
+    const state = { target: 0, current: 0, vel: 0, mouseX: 0, mouseY: 0, mx: -9999, my: -9999 };
+    const stack = { target: 0, current: 0 };   // STACK view's own (clamped) scroll
+    const gBlend = { v: 0 };                   // global space->stack blend (tilt/FOV)
+    let view = ((v) => (v === "list" || v === "stack" ? v : "space"))(
+      sessionStorage.getItem("dt-projects-view")
+    );
+
+    // Embedded: the tunnel is FINITE — exactly one pass through every card
+    // (cameraZ ends right at the loop seam, so the final frame composes like
+    // the start). Standalone keeps the infinite loop.
+    const embedded = root.dataset.embedded === "true";
+    const maxTravel = embedded ? loopSize / FLY.camSpeed : Infinity;
+    const clampTravel = (v: number) => Math.max(0, Math.min(maxTravel, v));
+
+    // ── Input ──
+    // Standalone: the experience owns the wheel/touch directly. Embedded: it
+    // binds NO input of its own — the home page's unified smooth scroller
+    // (index.astro) drives it through the __flyApi exposed further down, so
+    // page travel and section travel are one continuous lerped timeline.
+    if (!embedded) {
+      viewport.addEventListener("wheel", (e) => {
+        if (view === "stack") {
+          if ((e.deltaY < 0 && stack.target <= 0) || (e.deltaY > 0 && stack.target >= stackMax)) return;
+          e.preventDefault();
+          stack.target = Math.max(0, Math.min(stackMax, stack.target + e.deltaY));
+        } else {
+          if (e.deltaY < 0 && state.target <= 0) return;
+          if (e.deltaY > 0 && state.target >= maxTravel) return;
+          e.preventDefault();
+          state.target = clampTravel(state.target + e.deltaY);
+        }
+      }, { passive: false });
+
+      let touchY = 0;
+      viewport.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+      viewport.addEventListener("touchmove", (e) => {
+        const y = e.touches[0].clientY;
+        const dy = (touchY - y) * 2.2;
+        touchY = y;
+        if (view === "stack") stack.target = Math.max(0, Math.min(stackMax, stack.target + dy));
+        else state.target = clampTravel(state.target + dy);
+      }, { passive: true });
+    }
+
+    // The single "hot" card (proximity hover). The viewport shows a pointer
+    // cursor while one exists, and clicks anywhere route to it — so the red
+    // highlight, the cursor and the click can never disagree.
+    let hotCard: HTMLElement | null = null;
+    viewport.addEventListener("click", (e) => {
+      if (!hotCard) return;
+      if ((e.target as HTMLElement).closest("[data-fly-card]") === hotCard) return; // native click already correct
+      e.preventDefault();
+      e.stopPropagation();
+      hotCard.click(); // re-dispatch on the highlighted card (barba picks it up)
+    });
+
+    // Tracked on the ROOT (covers the viewport AND the switcher rail) so the
+    // proximity hovers below always have fresh cursor coordinates.
+    root.addEventListener("mousemove", (e) => {
+      state.mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      state.mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      state.mx = e.clientX;
+      state.my = e.clientY;
+    });
+    root.addEventListener("mouseleave", () => { state.mx = -9999; state.my = -9999; });
+
+    // ── View switcher: SPACE (fly-through) / STACK (vertical cards) / LIST ──
+    // SPACE <-> STACK never fades: the SAME cards tween their blend factor, so
+    // each one physically flies from its tunnel position into its stack slot
+    // (staggered). LIST cross-fades: leaving the tunnel kicks the camera
+    // forward so it exits through depth; returning arrives already in motion.
+    // The chosen view sticks for the session.
+    const switchEl = root.querySelector<HTMLElement>(".fly-switch");
+    const switchBtns = switchEl
+      ? Array.from(switchEl.querySelectorAll<HTMLElement>(".fly-switch-btn"))
+      : [];
+    const listEl = root.querySelector<HTMLElement>(".fly-list");
+    const rows = listEl ? Array.from(listEl.querySelectorAll(".fly-list-row")) : [];
+    const cardThings = things.filter((t) => t.type === "card");
+    let switching = false;
+
+    function applyView(v: string, animate: boolean) {
+      const prev = view;
+      view = v;
+      sessionStorage.setItem("dt-projects-view", v);
+      switchEl?.querySelectorAll(".fly-switch-btn").forEach((b) => {
+        b.classList.toggle("active", (b as HTMLElement).dataset.view === v);
+      });
+
+      if (!animate) {
+        gsap.set(viewport, { autoAlpha: v === "list" ? 0 : 1 });
+        gsap.set(listEl, { autoAlpha: v === "list" ? 1 : 0 });
+        if (v === "list") gsap.set(rows, { y: 0, z: 0, autoAlpha: 1 });
+        cardThings.forEach((t) => { t.blend = v === "stack" ? 1 : 0; });
+        gBlend.v = v === "stack" ? 1 : 0;
+        return;
+      }
+
+      switching = true;
+      const done = () => { switching = false; };
+
+      if (v === "list") {
+        // (kicks only when self-driven — the home scroller owns the target when embedded)
+        if (prev === "space" && !embedded) state.target = clampTravel(state.target + 750);
+        gsap.to(viewport, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+        gsap.set(listEl, { autoAlpha: 1 });
+        // Rows ZOOM IN from depth — same feel as arriving in the SPACE view:
+        // z flies toward the camera with a hard exponential deceleration.
+        gsap.fromTo(rows,
+          { z: -420, autoAlpha: 0 },
+          { z: 0, autoAlpha: 1, duration: 0.7, ease: "expo.out", stagger: 0.025,
+            delay: 0.08, overwrite: "auto" }
+        );
+        gsap.delayedCall(0.5, done); // unlock before the last rows finish settling
+      } else if (prev === "list") {
+        // The viewport is hidden — set the target arrangement behind the fade.
+        cardThings.forEach((t) => { t.blend = v === "stack" ? 1 : 0; });
+        gBlend.v = v === "stack" ? 1 : 0;
+        if (v === "space" && !embedded) state.target = clampTravel(state.target + 500); // arrive already in motion
+        gsap.to(rows, { autoAlpha: 0, z: -260, duration: 0.28, ease: "power2.in", stagger: 0.015, overwrite: "auto" });
+        gsap.to(listEl, { autoAlpha: 0, duration: 0.3, delay: 0.2 });
+        gsap.to(viewport, { autoAlpha: 1, duration: 0.65, ease: "power4.out",
+          delay: 0.25, onComplete: done });
+      } else {
+        // SPACE <-> STACK: the cards themselves travel into position. The blend
+        // tweens are interruptible (overwrite) so a quick reverse mid-flight
+        // just turns the cards around from wherever they are.
+        const toStack = v === "stack";
+        gsap.to(gBlend, { v: toStack ? 1 : 0, duration: 0.9, ease: "power3.inOut", overwrite: "auto" });
+        gsap.to(cardThings, {
+          blend: toStack ? 1 : 0,
+          duration: 0.95,
+          ease: "power3.inOut",
+          stagger: 0.045,
+          overwrite: "auto",
+        });
+        gsap.delayedCall(0.4, done);
+      }
+    }
+
+    switchEl?.addEventListener("click", (e) => {
+      const btn = (e.target as HTMLElement).closest(".fly-switch-btn") as HTMLElement | null;
+      if (!btn || switching) return;
+      const v = btn.dataset.view;
+      if (v && v !== view) applyView(v, true);
+    });
+
+    applyView(view, false); // restore the session's chosen view, no animation
+
+    // Drive API for the home page's unified smooth scroller: it advances a
+    // single virtual timeline and pushes the in-section progress here.
+    if (embedded) {
+      (root as any).__flyApi = {
+        setProgress(p: number) {
+          if (view === "space") state.target = clampTravel(p);
+          else if (view === "stack") stack.target = Math.max(0, Math.min(stackMax, p));
+          else if (listEl) listEl.scrollTop = p;
+        },
+        getLength() {
+          if (view === "space") return maxTravel;
+          if (view === "stack") return stackMax;
+          return listEl ? Math.max(0, listEl.scrollHeight - listEl.clientHeight) : 0;
+        },
+      };
+    }
+
+    // ── RAF loop (self-terminates once Barba swaps this page out) ──
+    const mix = (a: number, b: number, m: number) => a + (b - a) * m;
+    let frame = 0;
+    function raf() {
+      if (!world!.isConnected) return; // page left — stop and let GC clean up
+
+      state.current += (state.target - state.current) * FLY.lerp;
+      stack.current += (stack.target - stack.current) * 0.12;
+      const vel = state.current - state.vel; // px moved this frame
+      state.vel = state.current;
+
+      // Camera tilt (mouse) + velocity pitch, and FOV warp on speed — damped
+      // (not fully flattened) as the stack takes over, so the stacked cards
+      // keep a living 3D parallax under the mouse.
+      const flat = 1 - gBlend.v * 0.6;
+      const tiltX = (state.mouseY * 5 - Math.max(-30, Math.min(30, vel)) * 0.2) * flat;
+      const tiltY = state.mouseX * 5 * flat;
+      world!.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      viewport!.style.perspective = `${1000 - Math.min(Math.abs(vel) * 6, 600) * flat}px`;
+
+      const cameraZ = state.current * FLY.camSpeed;
+
+      // Hover candidate this frame: of all sufficiently-visible cards whose
+      // projected rect (+pad) contains the cursor, the one nearest the camera.
+      let bestCard: FlyThing | null = null;
+      let bestCardZ = -Infinity;
+
+      for (const t of things) {
+        const relZ = t.baseZ + cameraZ;
+        let vizZ = ((relZ % loopSize) + loopSize) % loopSize;
+        if (vizZ > 500) vizZ -= loopSize; // keep the loop behind the camera
+
+        // Fade far items in, fade near items out as they pass the camera.
+        let alpha = 1;
+        if (vizZ < -3000) alpha = 0;
+        else if (vizZ < -2000) alpha = (vizZ + 3000) / 1000;
+        if (vizZ > 100 && t.type !== "star") alpha = 1 - (vizZ - 100) / 400;
+
+        if (t.type === "star") {
+          if (alpha <= 0) { t.el.style.opacity = "0"; continue; }
+          t.el.style.opacity = alpha.toFixed(3);
+          const stretch = Math.max(1, Math.min(1 + Math.abs(vel) * 0.12, 10));
+          t.el.style.transform =
+            `translate(-50%, -50%) translate3d(${t.x}px, ${t.y}px, ${vizZ}px) scale3d(1, 1, ${stretch})`;
+          continue;
+        }
+
+        // Cards: blend between their tunnel position and their stack slot
+        // (column/row in a grid — 2 columns on desktop, 1 on smaller screens).
+        const b = t.blend;
+        const sRow = Math.floor(t.idx / sCols);
+        const sCol = t.idx % sCols;
+        const stackX = sCols === 1 ? 0 : (sCol === 0 ? -1 : 1) * ((cardW + STACK_GAP) / 2);
+        const stackY = STACK_TOP + sRow * stackStep + cardH / 2 - window.innerHeight / 2 - stack.current;
+        const fx = mix(t.x, stackX, b);
+        const fy = mix(t.y, stackY, b);
+        const fz = mix(vizZ, 0, b);
+        const frot = mix(t.rot, 0, b);
+        const fa = mix(Math.max(alpha, 0), 1, b);
+        if (fa <= 0) { t.el.style.opacity = "0"; continue; }
+        // Proximity hover candidate: cursor within the projected rect + pad.
+        // Only the nearest-to-camera candidate becomes hot (applied post-loop),
+        // so an occluded card can never light up under a front one.
+        if (fa > 0.15) {
+          const rct = t.el.getBoundingClientRect();
+          if (
+            state.mx > rct.left - HOVER_PAD && state.mx < rct.right + HOVER_PAD &&
+            state.my > rct.top - HOVER_PAD && state.my < rct.bottom + HOVER_PAD &&
+            fz > bestCardZ
+          ) { bestCardZ = fz; bestCard = t; }
+        }
+
+        // Stacked cards keep a LITTLE 3D twist at rest; hovering eases in the
+        // full card bend (plus a slight lift toward the camera). The hover
+        // amount lerps here in the raf — never a CSS transition on transform.
+        t.hoverAmt += (t.hoverT - t.hoverAmt) * 0.12;
+        const h = t.hoverAmt;
+        const bendY = (sCols === 1 ? 0 : (sCol === 0 ? 1 : -1) * mix(2, 9, h)) * b;
+        const bendX = (-(stackY / window.innerHeight) * mix(1.5, 6, h)) * b;
+        const lift = 50 * h * b;
+        t.el.style.opacity = fa.toFixed(3);
+        t.el.style.transform =
+          `translate(-50%, -50%) translate3d(${fx}px, ${fy}px, ${fz + lift}px) rotateZ(${frot}deg) rotateX(${bendX}deg) rotateY(${bendY}deg)`;
+      }
+
+      // Apply the single hot card: highlight, bend target, pointer cursor —
+      // and route clicks to it (see the viewport click handler).
+      for (const t of things) {
+        if (t.type !== "card") continue;
+        const hot = t === bestCard;
+        t.hoverT = hot ? 1 : 0;
+        t.el.classList.toggle("is-hot", hot);
+      }
+      hotCard = bestCard ? bestCard.el : null;
+      viewport!.style.cursor = bestCard ? "pointer" : "";
+
+      // Switcher proximity: the nearest button within reach lights up, so the
+      // user doesn't need to land exactly on the small text to feel "on" it.
+      let nearestBtn: HTMLElement | null = null;
+      let nearestDist = 16; // px of forgiveness around each button
+      for (const bEl of switchBtns) {
+        const r = bEl.getBoundingClientRect();
+        const dx = Math.max(r.left - state.mx, 0, state.mx - r.right);
+        const dy = Math.max(r.top - state.my, 0, state.my - r.bottom);
+        const d = Math.max(dx, dy);
+        if (d < nearestDist) { nearestDist = d; nearestBtn = bEl; }
+      }
+      for (const bEl of switchBtns) bEl.classList.toggle("is-hot", bEl === nearestBtn);
+
+      // HUD (throttled)
+      if (++frame % 6 === 0) {
+        if (velEl) velEl.textContent = Math.abs(vel).toFixed(2);
+        if (zEl) zEl.textContent = `${Math.round(cameraZ)}`;
+      }
+
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }
+
+  // Initialize every unbound instance: the experience can exist on /projects
+  // AND embedded on the home page, and two pages briefly coexist during a
+  // Barba transition — class-scoped init handles all of it.
+  function initAllExperiences() {
+    document.querySelectorAll<HTMLElement>(".projects-experience").forEach((root) => {
+      if (root.dataset.flyBound) return;
+      root.dataset.flyBound = "true";
+      initExperience(root);
+    });
+  }
+
+  initAllExperiences();
+  document.addEventListener("astro:page-load", initAllExperiences);
+</script>

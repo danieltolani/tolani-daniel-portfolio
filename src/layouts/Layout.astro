@@ -70,6 +70,18 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
 		box-sizing: border-box;
 	}
 
+	/* No visible scrollbars anywhere — scrolling is custom/virtual and the
+	   home page shows progress in the SCRL readout instead. */
+	* {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
+	*::-webkit-scrollbar {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
 	html,
 	body {
 		margin: 0;

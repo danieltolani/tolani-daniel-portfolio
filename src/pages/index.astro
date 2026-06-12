@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import AvailabilityTime from '../components/AvailabilityTime.astro';
+import ProjectsExperience from '../components/ProjectsExperience.astro';
+import SpaceDots from '../components/SpaceDots.astro';
 import '../styles/hero.css';
 import '../styles/header.css';
 import '../styles/footer.css';
@@ -10,6 +12,9 @@ import '../styles/footer.css';
 <Layout>
   
   <main class="hero-page">
+    <!-- 3D drifting dot field filling the black space above the hero image. -->
+    <SpaceDots height="72vh" />
+
     <div class="hero-availability-wrapper">
       <AvailabilityTime />
     </div>
@@ -24,6 +29,12 @@ import '../styles/footer.css';
         <p class="hero-subtitle">
           using aRTISTIC shapes, colors, texts AND sound in a way that they <span class="red-text">MOVE to COMMUNICATE.</span>
         </p>
+
+        <!-- Showreel slot — empty container for now, video drops in later. -->
+        <div class="hero-reel" id="hero-reel" aria-label="Showreel">
+          <span class="hero-reel-label">REEL</span>
+          <span class="hero-reel-accent"></span>
+        </div>
       </div>
     </section>
 
@@ -31,6 +42,16 @@ import '../styles/footer.css';
       <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" data-cover-dir="tl-br" data-cover-white />
     </div>
   </main>
+
+  <!-- ════ PROJECTS SECTION (id-navigable) ════
+       The FULL projects experience (space/stack/list + switcher), embedded as
+       a section under the hero image — same component as /projects, so home
+       and projects feel like one continuous page. Its wheel handling releases
+       to normal page scroll at the boundaries. The header's PRJT.WORK
+       highlighter transitions in via scrollspy (Header.astro). -->
+  <section class="home-projects-xp" id="projects">
+    <ProjectsExperience embedded />
+  </section>
 
   <Footer />
 </Layout>
@@ -105,7 +126,15 @@ import '../styles/footer.css';
       delay: delayMs / 1000,
       onComplete: () => {
         bars.forEach((b) => b.remove());
-        split.revert(); // restore the original markup (pixel-font spans etc.)
+        // Do NOT revert here: natural text re-wraps slightly differently than
+        // SplitText's measured lines, so reverting makes the block jump (the
+        // row is bottom-aligned, so a height change shifts everything). Keep
+        // the split DOM; revert only on resize, where reflow is wanted anyway.
+        const revertOnResize = () => {
+          window.removeEventListener("resize", revertOnResize);
+          split.revert();
+        };
+        window.addEventListener("resize", revertOnResize, { once: true });
         running = false;
       },
     });
@@ -149,5 +178,138 @@ import '../styles/footer.css';
     runHeroLineReveal((e as CustomEvent).detail?.delay ?? 0);
   });
   document.addEventListener("dt:page-visible", () => runHeroImageSettle());
+
+  // ════ UNIFIED HOME SMOOTH SCROLL ════
+  // One lerped virtual timeline drives the entire home page: body scroll down
+  // to the projects section, then the experience's internal progress (tunnel /
+  // stack / list, via its __flyApi), then body scroll again to the footer.
+  // Entering, flying through and leaving the section are a single continuous
+  // eased motion — there is no handoff, so there is nothing to hiccup.
+  // Also feeds the fixed SCRL readout (how far until the bottom of the page).
+  const HOME_SCROLL = {
+    lerp: 0.1,        // page glide weight
+    touchMult: 2.2,
+  };
+
+  function initHomeScroll() {
+    const heroPage = document.querySelector<HTMLElement>(".hero-page");
+    const section = document.getElementById("projects");
+    const xpRoot = section?.querySelector(".projects-experience");
+    if (!heroPage || !section || !xpRoot || heroPage.dataset.scrollBound) return;
+    heroPage.dataset.scrollBound = "true";
+
+    // Progress readout lives on <body> (outside the barba container) so the
+    // page entrance row-animations never transform it; removed on page leave.
+    let hud = document.querySelector<HTMLElement>(".scroll-progress");
+    if (!hud) {
+      hud = document.createElement("div");
+      hud.className = "scroll-progress fly-mono";
+      hud.innerHTML = "SCRL <b>000%</b>";
+      document.body.appendChild(hud);
+    }
+    const hudVal = hud.querySelector("b");
+
+    const sc = { target: document.body.scrollTop, current: document.body.scrollTop };
+
+    const onWheel = (e: WheelEvent) => {
+      if (!heroPage!.isConnected) return;
+      e.preventDefault();
+      sc.target += e.deltaY;
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+
+    let touchY = 0;
+    const onTouchStart = (e: TouchEvent) => { touchY = e.touches[0].clientY; };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!heroPage!.isConnected) return;
+      e.preventDefault();
+      const y = e.touches[0].clientY;
+      sc.target += (touchY - y) * HOME_SCROLL.touchMult;
+      touchY = y;
+    };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    // Header's PRJT.WORK uses this for its smooth scroll into the section.
+    (window as any).__dtScrollHome = (y: number) => { sc.target = y; };
+
+    // Reel choreography targets (both driven from the virtual scroll below).
+    const heroReel = document.querySelector<HTMLElement>(".hero-reel");
+    const footerReel = document.querySelector<HTMLElement>(".footer-reel");
+
+    let frame = 0;
+    let prevLen = -1;
+    function raf() {
+      if (!heroPage!.isConnected) {
+        // Page left — release everything this scroller owns.
+        window.removeEventListener("wheel", onWheel);
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchmove", onTouchMove);
+        delete (window as any).__dtScrollHome;
+        document.querySelector(".scroll-progress")?.remove();
+        return;
+      }
+
+      const S = section!.offsetTop;                       // section flush point
+      const api = (xpRoot as any).__flyApi;
+      const len = api ? api.getLength() : 0;              // current view's travel
+      const R = Math.max(0, document.body.scrollHeight - window.innerHeight - S);
+      const total = S + len + R;
+
+      // View switches change the section's travel length — remap the virtual
+      // position so the page stays EXACTLY where it is (no jump): in-section
+      // progress clamps to the new length, footer positions shift with it.
+      if (prevLen >= 0 && len !== prevLen) {
+        const remap = (v: number) =>
+          v <= S ? v : v <= S + prevLen ? S + Math.min(v - S, len) : v - prevLen + len;
+        sc.current = remap(sc.current);
+        sc.target = remap(sc.target);
+      }
+      prevLen = len;
+
+      sc.target = Math.max(0, Math.min(total, sc.target));
+      sc.current += (sc.target - sc.current) * HOME_SCROLL.lerp;
+      if (Math.abs(sc.target - sc.current) < 0.05) sc.current = sc.target;
+
+      if (sc.current <= S) {
+        document.body.scrollTop = sc.current;
+        api?.setProgress(0);
+      } else if (sc.current <= S + len) {
+        document.body.scrollTop = S;
+        api?.setProgress(sc.current - S);
+      } else {
+        document.body.scrollTop = S + (sc.current - S - len);
+        api?.setProgress(len);
+      }
+
+      // Reel choreography: scrolling away from the hero dips the reel down
+      // behind the hero image and hides it; approaching the very bottom eases
+      // it (quint-out) into its footer slot beside WTH / AS OF TODAY.
+      if (heroReel) {
+        const hideP = Math.min(1, sc.current / (window.innerHeight * 0.45));
+        heroReel.style.transform = `translateY(${Math.round(hideP * 150)}px)`;
+        heroReel.style.opacity = (1 - hideP).toFixed(3);
+      }
+      if (footerReel) {
+        const start = total - window.innerHeight * 0.55;
+        const p = Math.min(1, Math.max(0, (sc.current - start) / (window.innerHeight * 0.4)));
+        const e = 1 - Math.pow(1 - p, 4); // easeOutQuint scrub
+        // Drops IN from above — reads as "arriving", not "was always there".
+        footerReel.style.transform = `translateY(${Math.round((1 - e) * -90)}px)`;
+        footerReel.style.opacity = e.toFixed(3);
+      }
+
+      if (++frame % 5 === 0 && hudVal) {
+        const pct = total > 0 ? Math.round((sc.current / total) * 100) : 0;
+        hudVal.textContent = `${String(Math.max(0, Math.min(100, pct))).padStart(3, "0")}%`;
+      }
+
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+  }
+
+  initHomeScroll();
+  document.addEventListener("astro:page-load", initHomeScroll);
 </script>
 

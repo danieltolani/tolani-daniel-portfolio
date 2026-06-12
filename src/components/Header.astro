@@ -17,6 +17,25 @@ const isHomePage = currentPath === '/';
 </header>
 
 <script>
+  // Scrollspy for the home page's #projects section: PRJT.WORK stays
+  // unhighlighted while scrolling the hero, then the active highlighter
+  // transitions in (the ::after square already animates via CSS) once the
+  // section reaches the middle band of the viewport. Re-bound per page.
+  let projectsSpy: IntersectionObserver | null = null;
+
+  function bindProjectsSpy(currentPath: string, navLinks: NodeListOf<Element>) {
+    projectsSpy?.disconnect();
+    projectsSpy = null;
+    if (currentPath !== "/") return;
+    const section = document.getElementById("projects");
+    const link = Array.from(navLinks).find((l) => l.getAttribute("href") === "/projects");
+    if (!section || !link) return;
+    projectsSpy = new IntersectionObserver((entries) => {
+      entries.forEach((en) => link.classList.toggle("active", en.isIntersecting));
+    }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+    projectsSpy.observe(section);
+  }
+
   function init() {
     // Client-side active state management on page load
     const currentPath = window.location.pathname;
@@ -52,6 +71,8 @@ const isHomePage = currentPath === '/';
     if (shouldBeActive) {
       shouldBeActive.classList.add("active");
     }
+
+    bindProjectsSpy(currentPath, navLinks);
 
     // --- Square Animation Logic ---
     function updateNavScales() {
@@ -116,7 +137,22 @@ const isHomePage = currentPath === '/';
             e.preventDefault(); // Prevent immediate navigation
             const target = e.currentTarget as HTMLElement;
             const href = target.getAttribute('href');
-            
+
+            // On the home page, PRJT.WORK smooth-scrolls to the embedded
+            // #projects section instead of navigating — home and projects
+            // behave as one continuous page. The scrollspy lights the link.
+            if (href === '/projects' && window.location.pathname === '/') {
+              const section = document.getElementById('projects');
+              if (section) {
+                // Glide there on the home page's unified smooth scroller (a
+                // native scrollIntoView would desync its virtual position).
+                const glide = (window as any).__dtScrollHome;
+                if (glide) glide(section.offsetTop);
+                else section.scrollIntoView({ behavior: 'smooth' });
+                return;
+              }
+            }
+
             // Add clicking class to trigger "scale down from right"
             target.classList.add('is-clicking');
 

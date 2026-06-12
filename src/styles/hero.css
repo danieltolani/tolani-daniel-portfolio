@@ -22,6 +22,11 @@
   color: white;
   overflow-x: hidden;
   padding-top: 0; /* Header is overlay or top? */
+  /* Flex column so the hero image can pin itself to the section's bottom
+     regardless of viewport width (narrow widths shrink the image height,
+     which used to leave a dark gap beneath it). */
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-availability-wrapper {
@@ -41,18 +46,52 @@
   color: #7d8484; /* Match footer time color */
 }
 
+/* (The 3D dot field above the hero image is the shared SpaceDots component.) */
+
 .hero-content {
   margin: 0 auto;
   width: 1512px;
   max-width: 85%;
   padding-top: 16.25rem;
+  /* keep the text above the star layer */
+  position: relative;
+  z-index: 1;
 }
 
 .hero-text-row {
   display: flex;
   align-items: flex-end; /* Align bottom of texts or center? Figma shows subtitle lower */
-  gap: 14.5625rem; /* Calculated gap from Figma */
+  justify-content: space-between; /* title ——— subtitle ——— [REEL] */
+  gap: 3rem;
   flex-wrap: wrap;
+}
+
+/* Showreel slot, far right of the hero row (empty container for now). */
+.hero-reel {
+  position: relative;
+  width: min(300px, 100%);
+  aspect-ratio: 16 / 9;
+  background: #1b1c1e;
+  border: 1px solid #2c2d31;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-reel-label {
+  font-family: "Suisse Int'l Mono", monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #4a4b50;
+}
+.hero-reel-accent {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 10px;
+  height: 10px;
+  background: #f72f2f;
 }
 
 .hero-title {
@@ -94,11 +133,17 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-top: 50px;
-  padding-bottom: 100px;
+  /* Always sit at the BOTTOM of the hero section; the padding keeps the old
+     50px minimum breathing room to the text above when space is tight. */
+  margin-top: auto;
+  padding-top: 50px;
+  padding-bottom: 0;
   /* Clips the hero image's left edge while it settles in from its x-displacement
      (the red mosaic cover stays put; only the image slides underneath it). */
   overflow: hidden;
+  /* above the star layer */
+  position: relative;
+  z-index: 1;
 }
 
 .hero-image {
@@ -106,6 +151,25 @@
   height: auto;
   display: block;
 }
+
+/* Fixed scroll-progress readout (created by the home smooth scroller). */
+.scroll-progress {
+  position: fixed;
+  right: 1.6rem;
+  bottom: 1.4rem;
+  z-index: 60;
+  pointer-events: none;
+}
+.scroll-progress b { color: #e5eaf4; font-weight: normal; }
+
+/* ════ Home projects section: the full embedded experience ════ */
+.home-projects-xp {
+  position: relative;
+  z-index: 1;
+  height: 100vh;
+  background-color: #141417;
+}
+html:not(.js-enter) .home-projects-xp { display: none; }
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
