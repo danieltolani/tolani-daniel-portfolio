@@ -53,6 +53,15 @@
     align-items: center;
     gap: 0.9rem;
   }
+  /* Mobile: lift SND + SCRL to the SAME base level as the projects view switcher
+     (bottom-left), so they clear the centre HUD (VEL / Z / PROJECTS) instead of
+     sharing its row and overlapping. */
+  @media (max-width: 900px) {
+    .dt-corner {
+      right: 1.2rem;
+      bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    }
+  }
 
   .dt-music-toggle {
     display: flex;

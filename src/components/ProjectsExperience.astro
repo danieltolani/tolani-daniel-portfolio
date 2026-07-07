@@ -85,6 +85,8 @@ const getCardPreview = (project: any) => {
     position: relative;
     width: 100%;
     height: 100vh;
+    height: 100dvh;   /* mobile: track the VISIBLE viewport so bottom-anchored UI
+                         (the view switcher, the HUD) isn't pushed under the browser bar */
     overflow: hidden;
     background: #141417;
   }
@@ -210,7 +212,7 @@ const getCardPreview = (project: any) => {
   .fly-list-type { text-align: right; }
 
   @media (max-width: 900px) {
-    .fly-switch { left: 1.2rem; top: auto; bottom: 4.5rem; transform: none; }
+    .fly-switch { left: 1.2rem; top: auto; bottom: calc(4.5rem + env(safe-area-inset-bottom)); transform: none; z-index: 30; }
     .fly-list { padding: 7.5rem 1.2rem 6rem 1.2rem; }
     .fly-list-row { grid-template-columns: 2.2rem 1fr auto; }
     .fly-list-type, .fly-list-arrow { display: none; }
