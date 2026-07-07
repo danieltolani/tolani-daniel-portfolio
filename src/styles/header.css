@@ -81,55 +81,239 @@
   transition: color 0.3s ease;
 }
 
-.nav a::after {
-  content: "";
+/* Red mosaic behind the text — same technique as the "Enter with sound" button:
+   ~50% filled at rest (a partial cut-out that does NOT fully cover the text),
+   building up left->right in stop-motion steps on hover. Occupies the same box
+   the old ::after bar did. */
+.nav-mosaic {
   position: absolute;
   top: 50%;
   left: calc(1rem - 10px);
   width: calc(100% - 2rem);
   height: 24px;
-  background-color: #f72f2f;
+  transform: translateY(-50%);
   z-index: -1;
-  transform: translate(0, -50%) scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  pointer-events: none;
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  grid-template-rows: repeat(var(--rows), 1fr);
+  overflow: hidden;
+  mix-blend-mode: none;
+}
+.nav-tile {
+  background-color: #f72f2f;
+  box-shadow: 0 0 0 0.5px #f72f2f;   /* seal sub-pixel seams between 1fr tracks */
+  opacity: 0;                        /* inactive links show nothing at rest */
   mix-blend-mode: none !important;
 }
-
-.nav a:hover::after {
-  transform: translate(0, -50%) scaleX(1);
-  mix-blend-mode: none !important;
-
+/* Active page: a resting partial indicator (~50%) that does NOT cover the text.
+   Fades in/out on route change so the indicator moving between links doesn't snap. */
+.nav a.active .nav-tile.is-on {
+  opacity: 1;
+  transition: opacity 0.22s ease;
 }
 
-.nav a:hover span {
-  color: #222220;
+/* Hover: build up to full with a sprinkle of white, snapping per frame (stop-motion).
+   Inactive links build every tile; the active link builds only the ones not already
+   in its resting indicator. */
+.nav a:hover:not(.active) .nav-tile,
+.nav a.active:hover .nav-tile:not(.is-on) {
+  animation: nav-pop 0.06s linear both;
+  animation-delay: calc((var(--o) + var(--s)) * 18ms);
+}
+.nav a:hover:not(.active) .nav-tile.is-white,
+.nav a.active:hover .nav-tile.is-white:not(.is-on) {
+  animation-name: nav-flash;
+  animation-duration: 0.16s;
+}
+/* Leave: draw the fill back out in reverse (JS toggles .is-out for the wave's run). */
+.nav a.is-out:not(.active) .nav-tile,
+.nav a.active.is-out .nav-tile:not(.is-on) {
+  animation: nav-unpop 0.06s linear both;
+  animation-delay: calc((var(--fmax) - (var(--o) + var(--s))) * 16ms);
 }
 
-.nav a.active {
-    font-weight: 700;
+/* Click / exit-to-another link: retract the fill. */
+.nav a.is-clicking .nav-tile,
+.nav a.is-exiting .nav-tile {
+  animation: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.nav a.is-clicking .nav-tile { transition-duration: 0.15s; }
+
+@keyframes nav-pop {   /* empty -> instant snap on (red) */
+  0%    { opacity: 0; }
+  0.01% { opacity: 1; }
+  100%  { opacity: 1; }
+}
+@keyframes nav-flash { /* empty -> one white frame -> snap to red */
+  0%     { opacity: 0; }
+  0.01%  { opacity: 1; background-color: #e5eaf4; box-shadow: 0 0 0 0.5px #e5eaf4; }
+  50%    { opacity: 1; background-color: #e5eaf4; box-shadow: 0 0 0 0.5px #e5eaf4; }
+  50.01% { opacity: 1; background-color: #f72f2f; box-shadow: 0 0 0 0.5px #f72f2f; }
+  100%   { opacity: 1; }
+}
+@keyframes nav-unpop { /* lit -> hold -> instant snap off */
+  0%   { opacity: 1; }
+  99%  { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-.nav a.active::after {
-  transform: translate(0, -50%) scaleX(var(--square-scale, 0.2));
-  mix-blend-mode: none !important;
-}
+/* ─── Mobile menu (≤768px) ────────────────────────────────────────────────── */
+.nav-menu-btn { display: none; }
+.nav-menu-panel { display: none; }
 
-/* Click and Exit Animation States */
-.nav a.is-clicking::after {
-  transform-origin: right center;
-  transform: translate(0, -50%) scaleX(0);
-  left: 1rem;
-  transition: transform 0.17s cubic-bezier(0.19, 1, 0.22, 1);
-}
+@media (max-width: 768px) {
+  /* Swap the desktop links for the menu trigger. */
+  .nav { display: none; }
 
-.nav a.is-exiting::after {
-  transform-origin: left center;
-  transform: translate(0, -50%) scaleX(0);
-  /* left: calc(1rem - 10px); Keep position */
-  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
+  .nav-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    padding: 4px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;                 /* trigger (and its X) stay above the full-view panel */
+  }
+  /* Resting glyph: row of 3 squares, then a square + a wide block, then a full bar.
+     On OPEN the blocks collapse/slide into an evenly-spaced dot-matrix X — 5 clean 6px
+     dots: 2 top, 1 centre, 2 bottom (the two bars shrink to squares; B & F stack at the
+     centre). steps() gives the stop-motion snap; per-block delays stack them out one
+     after another. Reverses on close automatically (it's a transition, not a one-shot). */
+  .nav-menu-icon {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    --p: 10px;                 /* cell (6px) + gap (4px) pitch — airy, digital-dot spacing */
+  }
+  .nav-menu-icon i {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: #f72f2f;
+    mix-blend-mode: none;
+    transition: transform 0.16s steps(3, end), opacity 0.12s steps(2, end);
+  }
+  /* Resting positions (match the glyph). Selectors are scoped under .nav-menu-icon so
+     they out-specify the base `.nav-menu-icon i` rule (otherwise every block collapses
+     to 0,0). Stagger lives here too, for the same reason. */
+  .nav-menu-icon .nmi-a { top: 0;                left: 0; }
+  .nav-menu-icon .nmi-b { top: 0;                left: var(--p);           transition-delay: 0.08s; }
+  .nav-menu-icon .nmi-c { top: 0;                left: calc(var(--p) * 2); }
+  .nav-menu-icon .nmi-d { top: var(--p);         left: 0;                  transition-delay: 0s; }
+  .nav-menu-icon .nmi-e { top: var(--p);         left: var(--p); width: calc(var(--p) + 6px); transition-delay: 0.16s; } /* wide, to right edge */
+  .nav-menu-icon .nmi-f { top: calc(var(--p) * 2); left: 0;      width: calc(var(--p) * 2 + 6px); transition-delay: 0.04s; } /* full bar */
+  /* Open → 5-dot X. A & C stay (top corners). D & B slide as whole squares to the
+     bottom corners (no distortion). E (already on the centre row) shrinks horizontally
+     into the centre dot — the only shrink. F (the full bar) just fades away. A sprinkle
+     of blocks flash white for a frame as they land (nmi-flash, delay-synced to the move). */
+  .nav-menu-btn.is-open .nmi-d { transform: translateY(var(--p));                      animation: nmi-flash 0.16s steps(1) both; animation-delay: 0s; }    /* -> bottom-left */
+  .nav-menu-btn.is-open .nmi-b { transform: translate(var(--p), calc(var(--p) * 2));   animation: nmi-flash 0.16s steps(1) both; animation-delay: 0.08s; } /* -> bottom-right */
+  .nav-menu-btn.is-open .nmi-e { transform-origin: left center; transform: scaleX(0.375); animation: nmi-flash 0.16s steps(1) both; animation-delay: 0.16s; } /* -> centre dot */
+  .nav-menu-btn.is-open .nmi-a { animation: nmi-flash 0.16s steps(1) both; animation-delay: 0.12s; }  /* sprinkle on a static corner */
+  .nav-menu-btn.is-open .nmi-f { opacity: 0; }                                                         /* fade out */
+  @keyframes nmi-flash {   /* red -> one white frame -> back to red */
+    0%     { background-color: #f72f2f; }
+    0.01%  { background-color: #e5eaf4; }
+    50%    { background-color: #e5eaf4; }
+    50.01% { background-color: #f72f2f; }
+    100%   { background-color: #f72f2f; }
+  }
 
-.nav a:not(.is-clicking):not(.is-exiting)::after {
-  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  .nav-menu-label {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #fff;
+  }
+
+  /* Full-view panel — OUTSIDE the header (no difference blend) and BELOW it (z-index)
+     so the X close button stays tappable. Always laid out; the background is a mosaic
+     that builds DOWN (below), not a solid fill. visibility is gated so the panel never
+     intercepts clicks while closed. */
+  .nav-menu-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0 clamp(1.5rem, 8vw, 3rem);
+    background: transparent;
+    visibility: hidden;
+    transition: visibility 0s linear 0.36s;   /* hide only after the build-out finishes */
+  }
+  .nav-menu-panel.is-open {
+    visibility: visible;
+    transition: visibility 0s;
+  }
+  /* Background mosaic: 1fr tiles stretched over the panel. Build DOWN on open (top row
+     first); a sprinkle flash white. Fast. Fades back out on close. */
+  .nav-menu-mosaic {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+  }
+  .nmm-tile {
+    background-color: #141417;
+    box-shadow: 0 0 0 0.5px #141417;   /* seal seams */
+    opacity: 0;
+    /* Close = snap OUT in the SAME downward direction (top row first), staggered by
+       row — a stop-motion build-out, not a fade. (On open the animation below wins.) */
+    transition: opacity 0.05s steps(1, jump-start);
+    transition-delay: calc((var(--o) + var(--s)) * 18ms);
+  }
+  .nav-menu-panel.is-open .nmm-tile {
+    animation: nmm-pop 0.05s linear both;
+    animation-delay: calc((var(--o) + var(--s)) * 18ms);
+  }
+  .nav-menu-panel.is-open .nmm-tile.nmm-white {
+    animation-name: nmm-flash;
+    animation-duration: 0.14s;
+  }
+  @keyframes nmm-pop {   /* empty -> instant snap to dark */
+    0%    { opacity: 0; }
+    0.01% { opacity: 1; }
+    100%  { opacity: 1; }
+  }
+  @keyframes nmm-flash { /* empty -> one white frame -> snap to dark */
+    0%     { opacity: 0; }
+    0.01%  { opacity: 1; background-color: #e5eaf4; box-shadow: 0 0 0 0.5px #e5eaf4; }
+    50%    { opacity: 1; background-color: #e5eaf4; box-shadow: 0 0 0 0.5px #e5eaf4; }
+    50.01% { opacity: 1; background-color: #141417; box-shadow: 0 0 0 0.5px #141417; }
+    100%   { opacity: 1; }
+  }
+  .nav-menu-link {
+    position: relative;
+    z-index: 1;                        /* above the background mosaic */
+    font-family: var(--font-mono);
+    font-size: clamp(2rem, 11vw, 3rem);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: #e5eaf4;
+    text-decoration: none;
+    padding: 0.4rem 0;
+    /* Links rise + fade in, staggered, once the panel opens. */
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  .nav-menu-panel.is-open .nav-menu-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .nav-menu-panel.is-open .nav-menu-link:nth-child(1) { transition-delay: 0.08s; }
+  .nav-menu-panel.is-open .nav-menu-link:nth-child(2) { transition-delay: 0.15s; }
+  .nav-menu-panel.is-open .nav-menu-link:nth-child(3) { transition-delay: 0.22s; }
+  .nav-menu-link.active { color: #f72f2f; }
 }

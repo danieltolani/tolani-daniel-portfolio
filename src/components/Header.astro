@@ -3,6 +3,43 @@
 const currentPath = Astro.url.pathname;
 const isProjectPage = currentPath.startsWith('/projects/');
 const isHomePage = currentPath === '/';
+
+// Nav indicator: a red tile grid behind each link, built with the SAME effect as
+// the "Enter with sound" button. Inactive links show NOTHING at rest; the ACTIVE
+// link shows a partial (~50%) indicator that doesn't cover the text. Hover builds
+// every tile up left->right with a sprinkle of white, and draws back out on exit.
+const NAV_COLS = 8;
+const NAV_ROWS = 2;
+const NAV_FILL = 0.5;
+const navMaxOrder = NAV_COLS - 1;
+const navCells = Array.from({ length: NAV_COLS * NAV_ROWS }, (_, i) => {
+  const c = i % NAV_COLS;
+  const r = Math.floor(i / NAV_COLS);
+  const order = c;                                    // left -> right wave
+  const jitter = (((c * 13 + r * 7) % 5) - 2) * 0.05; // ±0.10 ragged edge
+  const on = order / navMaxOrder <= NAV_FILL + jitter; // ACTIVE link's resting indicator
+  const white = Math.random() < 0.4;                  // sprinkle of white on build-up
+  const scatter = Math.floor(Math.random() * 3);      // 0/1/2 frame stop-motion scatter
+  return { order, on, white, scatter };
+});
+const navFmax = Math.max(...navCells.map((c) => c.order + c.scatter));
+const navItems = [
+  { href: '/projects', label: 'PRJT.WORK' },
+  { href: '/about', label: 'AB.ME' },
+  { href: '/contact', label: 'CT.MAIL' },
+];
+
+// Mobile menu background: a full-screen mosaic that BUILDS DOWN (top row first) to form
+// the dark overlay when the menu opens, with a sprinkle of tiles flashing white. Tiles
+// are 1fr cells stretched over the panel; order is by row so the wave rolls downward.
+const MENU_COLS = 8;
+const MENU_ROWS = 14;
+const menuTiles = Array.from({ length: MENU_COLS * MENU_ROWS }, (_, i) => {
+  const order = Math.floor(i / MENU_COLS);          // row index -> build downward
+  const scatter = Math.floor(Math.random() * 3);    // 0/1/2 frame stop-motion scatter
+  const white = Math.random() < 0.14;               // sprinkle that flashes white
+  return { order, scatter, white };
+});
 ---
 
 <header class="header" id="main-header" data-barba-prevent="all">
@@ -10,11 +47,44 @@ const isHomePage = currentPath === '/';
         <svg xmlns="http://www.w3.org/2000/svg" width="73" height="60" fill="none"><path fill="#F72F2F" d="M30.732 10v39.295h-8.943v-3.902c-.904 1.518-2.187 2.674-3.849 3.469C16.278 49.62 14.58 50 12.845 50c-3.794 0-6.883-1.373-9.268-4.12C1.192 43.136 0 39.414 0 34.716c0-4.697 1.192-8.4 3.577-11.11 2.385-2.747 5.474-4.12 9.268-4.12 1.735 0 3.433.398 5.095 1.192 1.662.76 2.945 1.898 3.849 3.415V10h8.943Zm-19.62 18.645c-1.23 1.445-1.844 3.469-1.844 6.07 0 2.602.615 4.644 1.843 6.125 1.229 1.482 2.782 2.222 4.661 2.222 1.915 0 3.47-.668 4.662-2.005 1.192-1.373 1.788-3.487 1.788-6.342 0-2.854-.596-4.95-1.788-6.287-1.193-1.337-2.747-2.005-4.662-2.005-1.879 0-3.432.74-4.66 2.222Z"/><path fill="#F72F2F" d="M30.732 18.13H22.84V10h29.843v8.13H40.054v31.165h-9.322V18.13ZM48.888 49.295v-9.647H58.97v9.647H48.89Z"/><path fill="#F72F2F" d="M52.803 49.295v-9.647h10.081v9.647H52.803Z"/></svg>
 	</a>
 	<nav class="nav">
-		<a href="/projects" class={currentPath.startsWith('/projects') ? 'active' : ''}>PRJT.WORK</a>
-		<a href="/about" class={currentPath.startsWith('/about') ? 'active' : ''}>AB.ME</a>
-		<a href="/contact" class={currentPath.startsWith('/contact') ? 'active' : ''}>CT.MAIL</a>
+		{navItems.map((item) => (
+			<a href={item.href} class={currentPath.startsWith(item.href) ? 'active' : ''}>
+				<span class="nav-mosaic" aria-hidden="true" style={`--cols:${NAV_COLS};--rows:${NAV_ROWS};--fmax:${navFmax}`}>
+					{navCells.map((cell) => (
+						<i class:list={["nav-tile", { "is-on": cell.on, "is-white": cell.white }]} style={`--o:${cell.order};--s:${cell.scatter}`}></i>
+					))}
+				</span>
+				{item.label}
+			</a>
+		))}
 	</nav>
+
+	<!-- Mobile menu trigger (≤768px): a red-block glyph in the audio-visualizer family,
+	     plus a "see.pages" label. Toggles the panel below. -->
+	<button class="nav-menu-btn" id="nav-menu-btn" type="button" aria-expanded="false" aria-controls="nav-menu-panel" aria-label="Open menu">
+		<span class="nav-menu-icon" aria-hidden="true">
+			<i class="nmi-a"></i><i class="nmi-b"></i><i class="nmi-c"></i>
+			<i class="nmi-d"></i><i class="nmi-e"></i>
+			<i class="nmi-f"></i>
+		</span>
+	</button>
 </header>
+
+<!-- Mobile menu panel — full-screen. OUTSIDE the header so it isn't inverted by the
+     header's mix-blend-mode: difference, and BELOW it (z-index) so the X close button
+     stays on top. data-barba-prevent="all" keeps these links on the SAME custom
+     navigation path as the desktop nav (barba.go), so a tap never hard-reloads into
+     the red enter-gate. -->
+<nav class="nav-menu-panel" id="nav-menu-panel" aria-label="Pages" data-barba-prevent="all">
+	<span class="nav-menu-mosaic" aria-hidden="true" style={`--cols:${MENU_COLS};--rows:${MENU_ROWS}`}>
+		{menuTiles.map((t) => (
+			<i class:list={["nmm-tile", { "nmm-white": t.white }]} style={`--o:${t.order};--s:${t.scatter}`}></i>
+		))}
+	</span>
+	{navItems.map((item) => (
+		<a href={item.href} class:list={["nav-menu-link", { active: currentPath.startsWith(item.href) }]}>{item.label}</a>
+	))}
+</nav>
 
 <script>
   // Scrollspy for the home page's #projects section: PRJT.WORK stays
@@ -36,41 +106,39 @@ const isHomePage = currentPath === '/';
     projectsSpy.observe(section);
   }
 
+  // Move the active indicator to the link matching `pathname` and clear transient
+  // states. Exposed as __dtSyncNav so BarbaTransition can call it DURING the page
+  // transition (while the nav is covered) — otherwise the old link stays active for
+  // a few ms after the reveal, until init() runs at the very end of the transition.
+  function syncActiveNav(pathname?: string) {
+    const path = pathname || window.location.pathname;
+    // The href that should be active: /projects (incl. project detail pages), the
+    // exact path otherwise, or none on home (the logo carries active there).
+    const activeHref = path.startsWith('/projects') ? '/projects' : (path === '/' ? null : path);
+    // Desktop + mobile nav links both get synced (same hrefs).
+    document.querySelectorAll(".nav a, .nav-menu-link").forEach((el) => {
+      el.classList.remove("is-clicking", "is-exiting");
+      el.classList.toggle("active", activeHref !== null && el.getAttribute("href") === activeHref);
+    });
+    const headerLogo = document.querySelector(".header-logo");
+    headerLogo?.classList.remove("is-clicking", "is-exiting");
+    headerLogo?.classList.toggle("active", path === "/");
+  }
+  (window as any).__dtSyncNav = syncActiveNav;
+
   function init() {
     // Client-side active state management on page load
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll(".nav a");
     const headerLogo = document.querySelector(".header-logo") as HTMLElement;
-    const allNavElements = [...navLinks, headerLogo];
 
-    // Determine which element should be active based on route
-    let shouldBeActive: HTMLElement | null = null;
+    syncActiveNav(currentPath);
 
-    if (currentPath.startsWith('/projects/')) {
-      // Find and activate PRJT.WORK link
-      const projectsLink = Array.from(navLinks).find(link => link.getAttribute('href') === '/projects');
-      if (projectsLink) {
-        shouldBeActive = projectsLink as HTMLElement;
-      }
-    } else if (currentPath === '/') {
-      // Activate logo on home page
-      shouldBeActive = headerLogo;
-    } else {
-        // For other pages, match exact href
-        shouldBeActive = Array.from(navLinks).find(link => link.getAttribute('href') === currentPath) as HTMLElement;
-    }
-
-    // Update active state: remove from all, add to correct element
-    allNavElements.forEach((element) => {
-        if (element) {
-          element.classList.remove("active");
-          element.classList.remove("is-clicking");
-          element.classList.remove("is-exiting");
-        }
-    });
-    if (shouldBeActive) {
-      shouldBeActive.classList.add("active");
-    }
+    // Make sure the mobile menu is collapsed (and the X folded back) after a navigation.
+    document.getElementById("nav-menu-panel")?.classList.remove("is-open");
+    const nmBtn = document.getElementById("nav-menu-btn");
+    nmBtn?.classList.remove("is-open");
+    nmBtn?.setAttribute("aria-expanded", "false");
 
     bindProjectsSpy(currentPath, navLinks);
 
@@ -92,9 +160,33 @@ const isHomePage = currentPath === '/';
     if (!headerLogo.dataset.listenersAttached) {
         // Recalculate on resize
         window.addEventListener('resize', updateNavScales);
-        
-        // Click Animation with Barba Integration
-        const allLinks = document.querySelectorAll('.nav a, .header-logo');
+
+        // --- Mobile menu (≤768px): toggle the panel, place it under the trigger ---
+        const menuBtn = document.getElementById('nav-menu-btn');
+        const menuPanel = document.getElementById('nav-menu-panel');
+        const closeMenu = () => {
+          menuPanel?.classList.remove('is-open');
+          menuBtn?.classList.remove('is-open');       // fold the X back to bars
+          menuBtn?.setAttribute('aria-expanded', 'false');
+        };
+        menuBtn?.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const open = !menuPanel?.classList.contains('is-open');
+          if (open) {
+            menuPanel?.classList.add('is-open');
+            menuBtn?.classList.add('is-open');         // bars -> X
+          } else closeMenu();
+          menuBtn?.setAttribute('aria-expanded', String(open));
+        });
+        document.addEventListener('click', (e) => {
+          if (!menuPanel?.classList.contains('is-open')) return;
+          const t = e.target as Node;
+          if (menuPanel.contains(t) || menuBtn?.contains(t)) return;
+          closeMenu();
+        });
+
+        // Click Animation with Barba Integration (desktop nav, logo, AND mobile links)
+        const allLinks = document.querySelectorAll('.nav a, .header-logo, .nav-menu-link');
         const navContainer = document.querySelector('.nav');
 
         // Handle hover interactions for exiting state
@@ -107,24 +199,26 @@ const isHomePage = currentPath === '/';
           });
         }
 
+        const NAV_OUT_MS = 400; // must outlast the draw-back wave
         const navLinksList = document.querySelectorAll('.nav a');
         navLinksList.forEach(link => {
+            let outTimer: ReturnType<typeof setTimeout> | undefined;
             link.addEventListener('mouseenter', () => {
-                // Find currently active link
+                // Cancel any in-progress draw-back on the link we're now hovering.
+                clearTimeout(outTimer);
+                link.classList.remove('is-out');
+                // If there is an active link and it's not the one we're hovering, exit it.
                 const activeLink = document.querySelector('.nav a.active');
-                
-                // If there is an active link and it's not the one we're hovering
                 if (activeLink && activeLink !== link) {
                     activeLink.classList.add('is-exiting');
                 }
             });
 
             link.addEventListener('mouseleave', () => {
-                 // When leaving a link, we might want to restore the active link?
-                 // But wait, the user said "when we hover on another".
-                 // So if I hover Link A (inactive), Active Link B should exit.
-                 // When I stop hovering Link A, Active Link B should return to normal.
-                 
+                 // Draw this link's fill back out (reverse mosaic wave), then clear the flag.
+                 link.classList.add('is-out');
+                 outTimer = setTimeout(() => link.classList.remove('is-out'), NAV_OUT_MS);
+                 // Restore the active link's resting indicator.
                  const activeLink = document.querySelector('.nav a.active');
                  if (activeLink && activeLink !== link) {
                      activeLink.classList.remove('is-exiting');
@@ -137,6 +231,8 @@ const isHomePage = currentPath === '/';
             e.preventDefault(); // Prevent immediate navigation
             const target = e.currentTarget as HTMLElement;
             const href = target.getAttribute('href');
+
+            closeMenu(); // collapse the mobile menu on any nav click
 
             // On the home page, PRJT.WORK smooth-scrolls to the embedded
             // #projects section instead of navigating — home and projects

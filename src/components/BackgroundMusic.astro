@@ -34,9 +34,9 @@
     aria-pressed="false"
   >
     <span class="dt-snd" aria-hidden="true">SND [<b>OFF</b>]</span>
-    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
-    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
-    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack" style="--i:0"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack" style="--i:1"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack" style="--i:2"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
   </button>
   <!-- Scroll progress, persistent across pages. The home page's custom fly-through
        scroll drives it while active; every other page uses the generic updater below. -->
@@ -134,26 +134,33 @@
        stops below are the original hop rescaled ×1.6), so the rest "gap" between
        hops is short — the dots joggle almost continuously. */
     animation: dt-dot 0.65s linear infinite;
+    /* Phase offset per stack via --i (set in markup). Using --i instead of
+       :nth-child keeps the wave identical no matter what else sits in the toggle —
+       e.g. the SND label before the stacks in the corner, which would otherwise
+       shift a :nth-child() stagger and make this wave differ from the enter button.
+       (var(--i) - 2) makes the LEFT-most dot lead, so the wave runs left -> right. */
+    animation-delay: calc((var(--i, 0) - 2) * 0.05s);
   }
-  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(1) .dt-eq-dot { animation-delay: 0s; }
-  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(2) .dt-eq-dot { animation-delay: -0.05s; }
-  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(3) .dt-eq-dot { animation-delay: -0.10s; }
   @keyframes dt-dot {
-    /* rise (0–32%): sine ease-out, swings up then floats */
-    0%     { transform: translateY(0); }
+    /* rise (0–32%): sine ease-out, swings up then floats. Red until ~80% of the hop
+       height, then flips WHITE and stays white through the peak/float; on the way
+       down it fades back to red by the time it lands. */
+    0%     { transform: translateY(0);       background-color: #f72f2f; }
     8%     { transform: translateY(-1.53px); }
     16%    { transform: translateY(-2.83px); }
+    19%    {                                  background-color: #f72f2f; }
+    20%    {                                  background-color: #ffffff; } /* ~80% height */
     24%    { transform: translateY(-3.70px); }
     32%    { transform: translateY(-4px); }
-    /* fall (32–45.7%): hangs, then accelerates hard into landing */
-    35.42% { transform: translateY(-4px); }
+    /* fall (32–45.7%): hangs at the top (still white), then accelerates into landing */
+    35.42% { transform: translateY(-4px);     background-color: #ffffff; }
     38.86% { transform: translateY(-3.88px); }
     41.6%  { transform: translateY(-3.33px); }
     42.98% { transform: translateY(-2.69px); }
     44.34% { transform: translateY(-1.64px); }
-    45.71% { transform: translateY(0); }
+    45.71% { transform: translateY(0);        background-color: #f72f2f; } /* landed → red */
     /* rest (45.7–100%): short hold at the landing before the next hop */
-    100%   { transform: translateY(0); }
+    100%   { transform: translateY(0);        background-color: #f72f2f; }
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -201,6 +201,13 @@ import '../styles/footer.css';
     // the readout from its virtual fly-through scroll while it's mounted.
     (window as any).__dtHomeScrollActive = true;
 
+    // The RAF loop keeps writing document.body.scrollTop every frame, and the OLD
+    // (home) container stays connected until AFTER the barba transition — so during
+    // a nav the loop would clobber the incoming page's scroll reset back to the home
+    // position. This lets the transition tell us to let go the instant it starts.
+    let released = false;
+    (window as any).__dtReleaseHomeScroll = () => { released = true; };
+
     // Progress readout sits in the persistent corner HUD (#dt-corner), to the
     // RIGHT of the sound toggle. Falls back to <body> if the HUD isn't present.
     // It lives outside the barba container either way, so the page entrance
@@ -249,12 +256,14 @@ import '../styles/footer.css';
     let frame = 0;
     let prevLen = -1;
     function raf() {
-      if (!heroPage!.isConnected) {
-        // Page left — release everything this scroller owns.
+      if (released || !heroPage!.isConnected) {
+        // Page leaving/left — release everything this scroller owns and STOP writing
+        // body.scrollTop so the incoming page can reset to the top and stay there.
         window.removeEventListener("wheel", onWheel);
         window.removeEventListener("touchstart", onTouchStart);
         window.removeEventListener("touchmove", onTouchMove);
         delete (window as any).__dtScrollHome;
+        delete (window as any).__dtReleaseHomeScroll;
         // Hand the (persistent) SCRL readout back to the generic updater.
         (window as any).__dtHomeScrollActive = false;
         return;

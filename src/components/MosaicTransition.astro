@@ -38,6 +38,25 @@ const eqMaxFrame = Math.max(
   ...eqCells.filter((c) => !c.on).map((c) => c.order - eqMinOffOrder + c.scatter)
 );
 const eqOutMs = eqMaxFrame * 46 + 120;
+
+// Silent "enter" button: a mosaic that builds UP from the bottom to the top on hover
+// — a sprinkle of tiles flash white, the rest snap straight to the dark colour, filling
+// the button. All tiles build (nothing lit at rest). Timing is ROW-dominant so each
+// row bursts in near-together (a spike, like the "enter with sound" button — not an
+// eased ramp); within a row the column on the cursor-entry side leads slightly (JS
+// sets data-enter), giving the wave a directional lean.
+const MES_COLS = 7;   // fewer, larger tiles so the build-up reads crisp (not tiny)
+const MES_ROWS = 3;
+const mesCells = Array.from({ length: MES_COLS * MES_ROWS }, (_, i) => {
+  const c = i % MES_COLS;
+  const r = Math.floor(i / MES_COLS);
+  const rowOrder = MES_ROWS - 1 - r;               // bottom row first -> top row last
+  const colL = c;                                  // left-entry: left column leads
+  const colR = MES_COLS - 1 - c;                   // right-entry: right column leads
+  const white = Math.random() < 0.22;              // sprinkle that flashes white (match eq btn)
+  return { rowOrder, colL, colR, white };
+});
+const mesRmax = MES_ROWS - 1;                      // for the reverse (leave) stagger
 ---
 
 <canvas id="mosaic-transition" class="mosaic-transition-overlay" aria-hidden="true"></canvas>
@@ -55,9 +74,9 @@ const eqOutMs = eqMaxFrame * 46 + 120;
   </span>
   <span class="mosaic-enter-content">
     <span class="dt-music-toggle is-playing mosaic-enter-eq" aria-hidden="true">
-      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
-      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
-      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+      <span class="dt-eq-stack" style="--i:0"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+      <span class="dt-eq-stack" style="--i:1"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+      <span class="dt-eq-stack" style="--i:2"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
     </span>
     <span class="mosaic-enter-label">Enter with sound</span>
   </span>
@@ -65,6 +84,11 @@ const eqOutMs = eqMaxFrame * 46 + 120;
 <!-- Enter with sound OFF: a static (non-hopping) equalizer + "enter". Takes the user
      in silently; they can turn audio on later via the corner toggle. -->
 <button id="mosaic-enter-silent-btn" class="mosaic-enter-silent" type="button">
+  <span class="mes-fill" aria-hidden="true" style={`--cols:${MES_COLS};--rows:${MES_ROWS};--rmax:${mesRmax}`}>
+    {mesCells.map((cell) => (
+      <i class:list={["mes-tile", { "mes-white": cell.white }]} style={`--ro:${cell.rowOrder};--cl:${cell.colL};--cr:${cell.colR}`}></i>
+    ))}
+  </span>
   <span class="dt-music-toggle mosaic-enter-eq" aria-hidden="true">
     <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
     <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
@@ -213,19 +237,69 @@ const eqOutMs = eqMaxFrame * 46 + 120;
     display: none;
     align-items: center;
     gap: 12px;
-    padding: 10px 2px 8px;
+    /* Roomier now that the fill mosaic (not a hairline stroke) is the button's frame. */
+    padding: 13px 18px 12px;
     background: transparent;
     border: none;
-    /* Single underline running under BOTH the static equalizer and the label. */
-    border-bottom: 1.5px solid #fff;
     outline: none;
     cursor: pointer;
     pointer-events: auto;
+    overflow: hidden;      /* clip the fill mosaic + underline wipe to the button */
   }
   html.js-enter .mosaic-enter-silent {
     display: inline-flex;
   }
+  /* Fill mosaic: builds UP from the bottom to the top on hover — each tile
+     flashes white, then settles to the dark colour, until it fills the button. */
+  .mes-fill {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+  }
+  .mes-tile {
+    background-color: #141417;
+    box-shadow: 0 0 0 0.5px #141417;   /* seal seams */
+    opacity: 0;
+    /* --c (leading column) follows the entry side: left by default, right when the
+       cursor came in from the right (data-enter set by JS). */
+    --c: var(--cl);
+    /* Resting transition = the staggered REVERSE clear on leave (top row first). */
+    transition: opacity 0.05s steps(1, jump-start);
+    transition-delay: calc((var(--rmax) - var(--ro)) * 60ms);
+  }
+  .mosaic-enter-silent[data-enter="right"] .mes-tile {
+    --c: var(--cr);
+  }
+  /* Row-dominant timing: each row bursts near-together (a spike), the entry-side column
+     leading by a small amount. Most tiles snap straight to dark; only the sprinkle
+     (.mes-white) flash white first. */
+  .mosaic-enter-silent:hover .mes-tile {
+    animation: mes-pop 0.06s linear both;
+    animation-delay: calc(var(--ro) * 84ms + var(--c) * 12ms);
+  }
+  .mosaic-enter-silent:hover .mes-tile.mes-white {
+    animation-name: mes-build;
+    animation-duration: 0.16s;
+  }
+  @keyframes mes-pop {     /* empty -> instant snap to dark */
+    0%    { opacity: 0; }
+    0.01% { opacity: 1; background-color: #141417; box-shadow: 0 0 0 0.5px #141417; }
+    100%  { opacity: 1; background-color: #141417; box-shadow: 0 0 0 0.5px #141417; }
+  }
+  @keyframes mes-build {  /* empty -> one white frame -> snap to dark */
+    0%     { opacity: 0; }
+    0.01%  { opacity: 1; background-color: #ffffff; box-shadow: 0 0 0 0.5px #ffffff; } /* snap in white */
+    50%    { opacity: 1; background-color: #ffffff; box-shadow: 0 0 0 0.5px #ffffff; } /* hold white */
+    50.01% { opacity: 1; background-color: #141417; box-shadow: 0 0 0 0.5px #141417; } /* settle dark */
+    100%   { opacity: 1; background-color: #141417; box-shadow: 0 0 0 0.5px #141417; }
+  }
+  /* Content rides above the fill. */
   .mosaic-enter-silent .mosaic-enter-eq {
+    position: relative;
+    z-index: 1;
     margin: 0;
     padding: 0;
     flex-shrink: 0;
@@ -238,6 +312,8 @@ const eqOutMs = eqMaxFrame * 46 + 120;
     opacity: 1;
   }
   .mosaic-enter-silent-label {
+    position: relative;
+    z-index: 1;
     font-family: "Suisse Int'l Mono", monospace;
     font-size: 13px;
     letter-spacing: 0.14em;
@@ -265,6 +341,18 @@ const eqOutMs = eqMaxFrame * 46 + 120;
     btn.addEventListener("mouseleave", () => {
       btn.classList.add("is-out");
       outTimer = window.setTimeout(() => btn.classList.remove("is-out"), OUT_MS);
+    });
+  })();
+
+  // Silent "enter": the fill mosaic rolls up from the corner on the side the cursor
+  // entered from — enter-left => from the bottom-left, enter-right => bottom-right.
+  (() => {
+    const sbtn = document.getElementById("mosaic-enter-silent-btn");
+    if (!sbtn) return;
+    sbtn.addEventListener("pointerenter", (e) => {
+      const r = sbtn.getBoundingClientRect();
+      const fromLeft = ((e as PointerEvent).clientX - r.left) < r.width / 2;
+      sbtn.setAttribute("data-enter", fromLeft ? "left" : "right");
     });
   })();
 </script>

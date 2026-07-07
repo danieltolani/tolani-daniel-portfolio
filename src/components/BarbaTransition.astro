@@ -435,11 +435,20 @@ import MosaicTransition from './MosaicTransition.astro';
       async enter(data: any) {
         const next = data.next.container as HTMLElement;
 
+        // Move the nav's active indicator to the destination NOW, while the screen is
+        // still covered — otherwise the previous link stays active for a few ms after
+        // the reveal (until after() -> page-load -> Header init runs).
+        (window as any).__dtSyncNav?.(data.next?.url?.path);
+
         // Reset scroll and init the page's interactions BEFORE the tile reveal:
         // carousels and ScrollTrigger are then already running while the tiles
         // clear, so the page is in motion the instant it becomes visible (no
         // frozen-then-jerk start). The container has been in the DOM and styled
         // since beforeEnter, so measurements are valid here.
+        // First tell the home scroller (if we came from home) to stop writing
+        // body.scrollTop — otherwise its still-running RAF loop clobbers this reset
+        // back to the home scroll position, and the project reveals mid-page.
+        (window as any).__dtReleaseHomeScroll?.();
         window.scrollTo(0, 0);
         // html,body{height:100%;overflow-x:hidden} makes the BODY the actual
         // scrolling element — window.scrollTo alone resets nothing, and a stale
