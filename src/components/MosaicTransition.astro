@@ -8,6 +8,36 @@
 // Two-front wave: a WHITE leading edge ripples out first, and the RED fill
 // chases ~LEAD_GAP ms behind it, sealing over the white just as the wave ends.
 // At any instant only the moving edge band is white.
+
+// "Enter with sound" button mosaic: a grid of black tiles, ~60% filled at rest,
+// densest in the bottom-left and thinning toward the top-right (diagonal order).
+// On hover the remaining tiles fill in, rippling bottom-left -> top-right.
+const EQ_MOSAIC_COLS = 14; // fewer cols = ~10% larger tiles (1fr scales with count)
+const EQ_MOSAIC_ROWS = 4;
+const EQ_MOSAIC_FILL = 0.6; // fraction lit at rest
+const eqMaxOrder = (EQ_MOSAIC_COLS - 1) + (EQ_MOSAIC_ROWS - 1);
+const eqCells = Array.from({ length: EQ_MOSAIC_COLS * EQ_MOSAIC_ROWS }, (_, i) => {
+  const c = i % EQ_MOSAIC_COLS;
+  const r = Math.floor(i / EQ_MOSAIC_COLS);
+  const order = c + (EQ_MOSAIC_ROWS - 1 - r); // 0 = bottom-left, max = top-right
+  const jitter = (((r * 7 + c * 13) % 7) - 3) * 0.035; // ±~0.10 for an organic edge
+  const on = order / eqMaxOrder <= EQ_MOSAIC_FILL + jitter;
+  // Scatter is a WHOLE-frame offset (0/1/2), not continuous — the hover build then
+  // pops on a coarse time grid so it reads stop-motion (like the page transition),
+  // not a smooth ripple. Only a few tiles flash white so it isn't a white wash.
+  const scatter = Math.floor(Math.random() * 3);
+  const white = !on && Math.random() < 0.22;
+  return { on, order, scatter, white };
+});
+// Diagonal order where the unlit region begins — the hover wave staggers from here
+// so it starts immediately (continuing the rest fill) instead of after a dead pause.
+const eqMinOffOrder = Math.min(...eqCells.filter((c) => !c.on).map((c) => c.order));
+// Frame each unlit tile pops on (whole frames, incl. the 0/1/2 scatter). The build-out
+// reverses this order; eqOutMs is how long the full staggered clear takes.
+const eqMaxFrame = Math.max(
+  ...eqCells.filter((c) => !c.on).map((c) => c.order - eqMinOffOrder + c.scatter)
+);
+const eqOutMs = eqMaxFrame * 46 + 120;
 ---
 
 <canvas id="mosaic-transition" class="mosaic-transition-overlay" aria-hidden="true"></canvas>
@@ -17,7 +47,31 @@
 <div id="mosaic-load-cover" aria-hidden="true"></div>
 <!-- Shown over the red load screen so a user gesture can unlock audio before the
      intro plays. Hidden after the first click (and on no-JS). -->
-<button id="mosaic-enter-btn" class="mosaic-enter-btn" type="button">Enter with sound</button>
+<button id="mosaic-enter-btn" class="mosaic-enter-btn" type="button" data-out-ms={eqOutMs}>
+  <span class="mosaic-enter-fill" aria-hidden="true" style={`--cols:${EQ_MOSAIC_COLS};--rows:${EQ_MOSAIC_ROWS};--o0:${eqMinOffOrder};--fmax:${eqMaxFrame}`}>
+    {eqCells.map((cell) => (
+      <i class:list={["mte-cell", { "is-on": cell.on, "mte-white": cell.white }]} style={`--o:${cell.order};--s:${cell.scatter}`}></i>
+    ))}
+  </span>
+  <span class="mosaic-enter-content">
+    <span class="dt-music-toggle is-playing mosaic-enter-eq" aria-hidden="true">
+      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+      <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    </span>
+    <span class="mosaic-enter-label">Enter with sound</span>
+  </span>
+</button>
+<!-- Enter with sound OFF: a static (non-hopping) equalizer + "enter". Takes the user
+     in silently; they can turn audio on later via the corner toggle. -->
+<button id="mosaic-enter-silent-btn" class="mosaic-enter-silent" type="button">
+  <span class="dt-music-toggle mosaic-enter-eq" aria-hidden="true">
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+  </span>
+  <span class="mosaic-enter-silent-label">enter</span>
+</button>
 
 <style>
   .mosaic-transition-overlay {
@@ -49,34 +103,179 @@
     transform: translate(-50%, -50%);
     z-index: 10002;        /* above the red canvas/cover */
     display: none;
+    padding: 15px 28px;
+    background: transparent;
+    border: none;          /* no frame — mosaic only */
+    outline: none;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  /* Invisible reach halo: extends hover + click + the pointer cursor a short way
+     around the button, so the mosaic starts building (and the cursor signals
+     "clickable") as you get CLOSE — not only once you're on the label. */
+  #mosaic-enter-btn::before {
+    content: "";
+    position: absolute;
+    inset: -30px;
+    cursor: pointer;
+  }
+  html.js-enter #mosaic-enter-btn {
+    display: block;
+  }
+
+  /* 60%-built black mosaic behind the label: densest bottom-left, thinning to the
+     top-right. On hover the remaining tiles light up, rippling bottom-left -> top-right. */
+  .mosaic-enter-fill {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;      /* clip the tiles' box-shadow spread to the frame */
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+  }
+  .mte-cell {
+    background: #141417;
+    /* Same-colour spread seals the sub-pixel seams between 1fr tracks so lit tiles
+       read as one solid shape (the mosaic edge still stair-steps at the boundary). */
+    box-shadow: 0 0 0 0.75px #141417;
+    opacity: 0;
+  }
+  .mte-cell.is-on { opacity: 1; }
+
+  /* Near (cursor within reach — set by JS): unlit tiles POP in on a coarse frame grid
+     (delay is a whole multiple of one frame, incl. the 0/1/2 scatter) so it reads
+     stop-motion, not a smooth ripple. Each pop is an instant hard snap — no fade. Most
+     go straight to black; only the .mte-white ones flash white for a frame first. */
+  #mosaic-enter-btn:hover .mte-cell:not(.is-on) {
+    animation: mte-pop 0.06s linear both;
+    animation-delay: calc((var(--o) - var(--o0) + var(--s)) * 46ms);
+  }
+  #mosaic-enter-btn:hover .mte-cell:not(.is-on).mte-white {
+    animation-name: mte-flash;
+    animation-duration: 0.14s;
+  }
+  /* Leaving: build OUT — the added tiles clear in the same stop-motion steps but in
+     REVERSE (top-right first, retracting toward the boundary), not a snap-back. */
+  #mosaic-enter-btn.is-out .mte-cell:not(.is-on) {
+    animation: mte-unpop 0.06s linear both;
+    animation-delay: calc((var(--fmax) - (var(--o) - var(--o0) + var(--s))) * 46ms);
+  }
+  @keyframes mte-pop {   /* invisible -> instant snap on (black) */
+    0%    { opacity: 0; }
+    0.01% { opacity: 1; }
+    100%  { opacity: 1; }
+  }
+  @keyframes mte-unpop { /* lit -> hold -> instant snap off */
+    0%    { opacity: 1; }
+    99%   { opacity: 1; }
+    100%  { opacity: 0; }
+  }
+  @keyframes mte-flash { /* invisible -> one white frame -> snap to black */
+    0%    { opacity: 0; }
+    0.01% { opacity: 1; background: #e5eaf4; box-shadow: 0 0 0 0.75px #e5eaf4; }
+    50%   { opacity: 1; background: #e5eaf4; box-shadow: 0 0 0 0.75px #e5eaf4; }
+    50.01%{ opacity: 1; background: #141417; box-shadow: 0 0 0 0.75px #141417; }
+    100%  { opacity: 1; }
+  }
+
+  /* Bouncing equalizer + label ride above the mosaic. */
+  .mosaic-enter-content {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
     align-items: center;
-    padding: 15px 30px;
-    font-family: inherit;
+    gap: 14px;
+  }
+  /* Neutralize the corner toggle's hit-area margin so the dots align with the text. */
+  .mosaic-enter-content .mosaic-enter-eq {
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .mosaic-enter-label {
+    font-family: "Suisse Int'l Mono", monospace;
     font-size: 13px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #fff;
+    white-space: nowrap;
+    font-weight: 900;
+  }
+
+  /* Silent "enter" — a static equalizer (no hop) + label, near the bottom. */
+  .mosaic-enter-silent {
+    position: fixed;
+    left: 50%;
+    bottom: 9vh;
+    transform: translateX(-50%);
+    z-index: 10002;
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 2px 8px;
     background: transparent;
-    border: 1.5px solid rgba(255, 255, 255, 0.85);
-    border-radius: 999px;
+    border: none;
+    /* Single underline running under BOTH the static equalizer and the label. */
+    border-bottom: 1.5px solid #fff;
+    outline: none;
     cursor: pointer;
     pointer-events: auto;
-    transition: background-color 0.2s ease, color 0.2s ease;
   }
-  #mosaic-enter-btn:hover {
-    background: #fff;
-    color: #f72f2f;
-  }
-  html.js-enter #mosaic-enter-btn {
+  html.js-enter .mosaic-enter-silent {
     display: inline-flex;
   }
+  .mosaic-enter-silent .mosaic-enter-eq {
+    margin: 0;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  /* White + full-opacity so the static squares read on the red screen (the ID beats
+     the global :not(.is-playing) dimming). */
+  #mosaic-enter-silent-btn .dt-eq-dot,
+  #mosaic-enter-silent-btn .dt-eq-bar {
+    background: #fff;
+    opacity: 1;
+  }
+  .mosaic-enter-silent-label {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+    white-space: nowrap;
+    font-weight: 900;
+  }
 </style>
+
+<script>
+  // "Enter with sound" button: the mosaic builds IN on hover (its ::before halo makes
+  // that fire as the cursor gets close, and gives the pointer cursor + click in the
+  // halo), and builds OUT — a staggered stop-motion reverse wave — when the cursor
+  // leaves, rather than snapping back. The out-flag clears once the wave finishes.
+  (() => {
+    const btn = document.getElementById("mosaic-enter-btn");
+    if (!btn) return;
+    const OUT_MS = Number(btn.dataset.outMs) || 500;
+    let outTimer = 0;
+    btn.addEventListener("mouseenter", () => {
+      clearTimeout(outTimer);
+      btn.classList.remove("is-out");
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.classList.add("is-out");
+      outTimer = window.setTimeout(() => btn.classList.remove("is-out"), OUT_MS);
+    });
+  })();
+</script>
 
 <script>
   // ---- CONFIG ----------------------------------------------------------------
   const TILE_RATIO      = 58 / 1512;   // tile size scales with viewport (~58px on a 1512px-wide screen)
   const COVER_DURATION  = 650;         // ms for the cover wave
   const REVEAL_DURATION = 650;         // ms for the reveal wave (page-to-page)
+  const REVEAL_SFX_LEAD = 110;         // ms the OUT sfx leads the visible reveal (the wave
+                                       // waits this long so the sound is heard first). Tune by ear.
   const LOAD_REVEAL_DURATION = 813;    // ms for the load/refresh exit (ease-in)
   const LOAD_FILL_HOLD  = 0.12;        // fraction of the wave the screen stays fully filled
                                        // before any tile clears (no pre-punched holes)
@@ -91,7 +290,6 @@
                                        // opening looking like a plain red transition.
   const SHAPE: "circle" | "diamond" | "square" = "circle";
   const SOUND_SRC       = "/assets/sfx/Transition-(IN+OUT).aac";
-  const PAGE_OUT_OVERLAP = 250;        // ms the reversed OUT sfx starts before the cover ends
   const PAGE_OUT_STRETCH: number = 1.25; // OUT sfx duration multiplier (pitch-preserved time-stretch)
   // ---------------------------------------------------------------------------
 
@@ -333,16 +531,25 @@
   (window as any).blockTransition = {
     // Leaving the current page: cover the screen, rippling out from the click.
     enter() {
-      playSfx(fwdBuffer); // IN (forward)
-      // Schedule the reversed OUT to start before the cover ends, so it overlaps the
-      // IN instead of waiting for the (later) reveal phase.
-      playSfx(revBuffer, 0.2, (COVER_DURATION - PAGE_OUT_OVERLAP) / 1000);
+      playSfx(fwdBuffer); // IN (forward) — matches the cover wave
       return runWave(true, buildFronts(originX, originY, COVER_DURATION), COVER_DURATION);
     },
     // Entering the new page: clear the screen, rippling out from the same point.
-    // (OUT sfx was already scheduled in enter() for overlap.)
+    // The OUT sfx is played HERE, at the reveal, so it always lands with the red
+    // screen exiting — not on a fixed offset from the cover. beforeEnter() may hold
+    // this phase back to load assets (up to ASSET_WAIT_CAP_MS), so pre-scheduling it
+    // during enter() (as we used to) made the sound fire well before the page appeared
+    // on slow connections. The reveal wave's own ease-in gives the sound a subtle
+    // natural lead without desyncing.
     leave() {
-      return runWave(false, buildFronts(originX, originY, REVEAL_DURATION), REVEAL_DURATION);
+      playSfx(revBuffer); // OUT (reversed) — play first, then hold the wave briefly
+      // Delay the visible reveal by REVEAL_SFX_LEAD so the sound is heard just before
+      // the red screen starts clearing (audio has a small attack/scheduling latency).
+      return new Promise<void>((res) => {
+        setTimeout(() => {
+          runWave(false, buildFronts(originX, originY, REVEAL_DURATION), REVEAL_DURATION).then(res);
+        }, REVEAL_SFX_LEAD);
+      });
     },
     // Initial load / refresh: red fill already on screen, exit bottom-to-top (scattered).
     loadIntro() {

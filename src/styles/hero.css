@@ -152,12 +152,9 @@
   display: block;
 }
 
-/* Fixed scroll-progress readout (created by the home smooth scroller). */
+/* Scroll-progress readout — flows inside the persistent corner HUD
+   (#dt-corner), to the right of the sound toggle. */
 .scroll-progress {
-  position: fixed;
-  right: 1.6rem;
-  bottom: 1.4rem;
-  z-index: 60;
   pointer-events: none;
 }
 .scroll-progress b { color: #e5eaf4; font-weight: normal; }

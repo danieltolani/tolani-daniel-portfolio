@@ -12,6 +12,7 @@ const { title = "DT —— Motion Designer", description = "Portfolio of Daniel 
 
 import PageTransition from '../components/PageTransition.astro';
 import BarbaTransition from '../components/BarbaTransition.astro';
+import BackgroundMusic from '../components/BackgroundMusic.astro';
 import Header from '../components/Header.astro';
 
 // Get the site URL from environment or construct from request
@@ -62,6 +63,7 @@ const metaImage = `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q
       </div>
     )}
     <BarbaTransition />
+    <BackgroundMusic />
 	</body>
 </html>
 

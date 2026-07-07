@@ -127,6 +127,14 @@ body {
           letter-spacing: -0.02em;
           line-height: 100%;
           margin: 0;
+          /* Never let the flex row squeeze the title to fit the WIP tag beside it.
+             Without this, when the pixel glyph font (.special-o) hasn't applied yet
+             — e.g. right after a Barba SPA nav — the wider fallback metrics push the
+             row over, flexbox shrinks the h1, and the title wraps to two lines. On a
+             hard refresh the cached font applies first and it stays one line. Pinning
+             flex-shrink:0 keeps it a single line in both paths; the tag wraps below
+             only if space is genuinely too tight. */
+          flex-shrink: 0;
 
           .special-o {
             font-family: "Neue Pixel Round", monospace;

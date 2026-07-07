@@ -1,0 +1,295 @@
+---
+// Persistent site background music + a corner sound toggle. Lives OUTSIDE the
+// Barba container (in Layout, beside the other persistent chrome) so it keeps
+// playing across navigations. Audio can only start on a user gesture — we use
+// the existing "Enter with sound" button (#mosaic-enter-btn) for that.
+//
+// Volume choreography (smooth RAF lerp, never clicks):
+//   • starts silent, fades up to FULL when the user enters with sound
+//   • ducks to DUCK while a Barba navigation is covering the screen
+//   • fades back to FULL once the new page is visible
+//   • the corner toggle mutes/unmutes; mute survives navigations
+//
+// The corner container (#dt-corner) is the persistent bottom-right HUD: the
+// equalizer toggle sits on its left, and the home page's SCRL readout is
+// placed into it (to the toggle's right) by initHomeScroll.
+//
+// Source is a 3.2MB AAC (m4a), transcoded from the original WAV with
+// `afconvert -f m4af -d aac -b 128000`. Plays in all modern browsers.
+---
+
+<audio
+  id="dt-bg-music"
+  src="/assets/sfx/born-in-this-body-92bpm.m4a"
+  preload="auto"
+  loop
+></audio>
+
+<div class="dt-corner" id="dt-corner">
+  <button
+    class="dt-music-toggle"
+    id="dt-music-toggle"
+    type="button"
+    aria-label="Toggle sound"
+    aria-pressed="false"
+  >
+    <span class="dt-snd" aria-hidden="true">SND [<b>OFF</b>]</span>
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+    <span class="dt-eq-stack"><span class="dt-eq-dot"></span><span class="dt-eq-bar"></span></span>
+  </button>
+  <!-- Scroll progress, persistent across pages. The home page's custom fly-through
+       scroll drives it while active; every other page uses the generic updater below. -->
+  <div class="scroll-progress fly-mono">SCRL <b>000%</b></div>
+</div>
+
+<style is:global>
+  .dt-corner {
+    position: fixed;
+    right: 1.6rem;
+    bottom: 1.4rem;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .dt-music-toggle {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    /* Size to the static content (dot 4 + gap 3 + square 4 = 11px) so the corner's
+       align-items:center vertically centers the squares against the SCRL readout.
+       The dots' upward hop (translateY) overflows into the top padding — it never
+       changes the box, so the footprint stays stable and SCRL doesn't shift. */
+    box-sizing: border-box;
+    padding: 4px;          /* generous hit area + headroom for the dots' hop */
+    margin: -4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 0;
+  }
+  /* SND [ON/OFF] readout beside the equalizer — matches the mono HUD (fly-mono). */
+  .dt-snd {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7d8484;
+    line-height: 1;
+    white-space: nowrap;
+    margin-right: 3px;   /* sits to the LEFT of the equalizer */
+  }
+  .dt-snd b { font-weight: normal; color: #7d8484; }
+
+  /* SCRL readout — self-styled here so it looks the same on EVERY page (fly-mono /
+     hero.css aren't loaded site-wide). Matches the home HUD: gray label, light value. */
+  .scroll-progress {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #7d8484;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .scroll-progress b { font-weight: normal; color: #e5eaf4; }
+
+  /* Each column: a square dot bouncing above a long bar. */
+  .dt-eq-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+  }
+  .dt-eq-dot {
+    width: 4px;
+    height: 4px;
+    background: #f72f2f;
+    will-change: transform;
+  }
+  .dt-eq-bar {
+    width: 4px;
+    height: 4px;           /* square base, same size as the dot above it */
+    background: #f72f2f;
+  }
+  /* Idle / muted: dimmed, dots centered, bars static, no motion. */
+  .dt-music-toggle:not(.is-playing) .dt-eq-dot,
+  .dt-music-toggle:not(.is-playing) .dt-eq-bar {
+    opacity: 0.4;
+  }
+  .dt-music-toggle:not(.is-playing) .dt-eq-dot { transform: translateY(0); }
+
+  /* Playing: the square bases stay static — a fixed row of squares the dots
+     hop above. Only the dots move. */
+  /* Playing: the dots "joggle" — a fast sine ease-out UP that floats at the top,
+     then a sharp 1-q^5 fall that hangs and snaps into the landing. This bakes the
+     AE expression: hopDur 0.4s (riseRatio 0.7 → rise 0.28s / fall 0.12s, fallPow 5),
+     loopDur 1.4s (so ~1.0s of rest between hops), offsetStep 0.05s per dot. Linear
+     playback preserves the baked curve; travel peaks at -4px (dots only go up). */
+  .dt-music-toggle.is-playing .dt-eq-dot {
+    /* Duration scales the baked cycle. The hop now occupies ~46% of the cycle (the
+       stops below are the original hop rescaled ×1.6), so the rest "gap" between
+       hops is short — the dots joggle almost continuously. */
+    animation: dt-dot 0.65s linear infinite;
+  }
+  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(1) .dt-eq-dot { animation-delay: 0s; }
+  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(2) .dt-eq-dot { animation-delay: -0.05s; }
+  .dt-music-toggle.is-playing .dt-eq-stack:nth-child(3) .dt-eq-dot { animation-delay: -0.10s; }
+  @keyframes dt-dot {
+    /* rise (0–32%): sine ease-out, swings up then floats */
+    0%     { transform: translateY(0); }
+    8%     { transform: translateY(-1.53px); }
+    16%    { transform: translateY(-2.83px); }
+    24%    { transform: translateY(-3.70px); }
+    32%    { transform: translateY(-4px); }
+    /* fall (32–45.7%): hangs, then accelerates hard into landing */
+    35.42% { transform: translateY(-4px); }
+    38.86% { transform: translateY(-3.88px); }
+    41.6%  { transform: translateY(-3.33px); }
+    42.98% { transform: translateY(-2.69px); }
+    44.34% { transform: translateY(-1.64px); }
+    45.71% { transform: translateY(0); }
+    /* rest (45.7–100%): short hold at the landing before the next hop */
+    100%   { transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dt-music-toggle.is-playing .dt-eq-dot { animation: none; }
+  }
+</style>
+
+<script>
+  // Levels are PERCEPTUAL (0 = silent … 1 = full), not raw amplitude. The ear
+  // hears loudness logarithmically, so we map a level to a decibel cut and
+  // then to amplitude: level 1 → 0 dB, level 0 → -RANGE_DB. Lerping through
+  // the perceptual level produces a smooth dB ramp — a natural-sounding fade.
+  // FULL is the knob to tune by ear: each 0.1 down is ~4.8 dB quieter.
+  const FULL = 0.55;   // resting background level (perceptual; ~ -22 dB)
+  const DUCK = 0.4;    // level during page transitions (~ -29 dB)
+  const LERP = 0.06;   // perceptual ease per frame (~1s settle)
+  const RANGE_DB = 48; // dB span from full to effectively silent
+
+  const toAmp = (level: number) =>
+    level <= 0 ? 0 : Math.pow(10, ((level - 1) * RANGE_DB) / 20);
+
+  function initBgMusic() {
+    const audio = document.getElementById("dt-bg-music") as HTMLAudioElement | null;
+    if (!audio || (audio as any).__dtBound) return;
+    (audio as any).__dtBound = true;
+
+    const toggle = document.getElementById("dt-music-toggle");
+    const sndB = toggle?.querySelector<HTMLElement>(".dt-snd b") ?? null;
+
+    audio.volume = 0;
+    let level = 0;       // current perceptual level
+    let target = 0;      // target perceptual level
+    let started = false; // playback has begun (gesture unlocked)
+    let ducked = false;  // a navigation is covering the screen
+    let muted = false;   // user toggled sound off
+
+    // Effective target: muted wins, else duck while transitioning, else full.
+    function recompute() { target = muted ? 0 : (ducked ? DUCK : FULL); }
+    function paint() {
+      const on = started && !muted;
+      toggle?.classList.toggle("is-playing", on);
+      if (sndB) sndB.textContent = on ? "ON" : "OFF";
+    }
+
+    // Ease the perceptual level toward target, then map to real amplitude.
+    function raf() {
+      if (Math.abs(target - level) > 0.001) level += (target - level) * LERP;
+      else level = target;
+      audio.volume = Math.max(0, Math.min(1, toAmp(level)));
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Start on the "Enter with sound" gesture (browser autoplay unlock).
+    function start() {
+      if (started) return;
+      started = true;
+      audio.play().then(() => { recompute(); paint(); }).catch(() => { started = false; });
+    }
+    const enterBtn = document.getElementById("mosaic-enter-btn");
+    if (enterBtn) enterBtn.addEventListener("click", start, { once: true });
+
+    // Silent "enter": mark muted on pointerdown — the button's own handler runs
+    // before the window first-gesture fallback below, so when that fallback calls
+    // start(), playback begins at volume 0. The corner toggle turns it on later.
+    const silentBtn = document.getElementById("mosaic-enter-silent-btn");
+    if (silentBtn) silentBtn.addEventListener("pointerdown", () => {
+      muted = true;
+      recompute();
+      paint();
+      toggle?.setAttribute("aria-pressed", "false");
+    }, { once: true });
+
+    // Fallback: any first click/keypress also unlocks (e.g. no-button paths).
+    const onFirstGesture = () => {
+      start();
+      window.removeEventListener("pointerdown", onFirstGesture);
+      window.removeEventListener("keydown", onFirstGesture);
+    };
+    window.addEventListener("pointerdown", onFirstGesture);
+    window.addEventListener("keydown", onFirstGesture);
+
+    // Corner toggle: first click also unlocks playback; afterwards it mutes.
+    function toggleMute() {
+      if (!started) { start(); muted = false; }
+      else muted = !muted;
+      recompute();
+      paint();
+      toggle?.setAttribute("aria-pressed", String(!muted));
+    }
+    toggle?.addEventListener("click", toggleMute);
+
+    // Duck during transitions, restore when the next page is on screen.
+    document.addEventListener("dt:page-leave", () => { if (started) { ducked = true; recompute(); } });
+    document.addEventListener("dt:page-visible", () => { if (started) { ducked = false; recompute(); } });
+
+    // Pause when the tab is hidden; resume when back.
+    document.addEventListener("visibilitychange", () => {
+      if (!started) return;
+      if (document.hidden) audio.pause();
+      else audio.play().catch(() => {});
+    });
+
+    (window as any).__dtBgMusic = {
+      audio,
+      toggle: toggleMute,
+      get muted() { return muted; },
+      setTarget: (v: number) => { target = Math.max(0, Math.min(1, v)); },
+    };
+  }
+
+  initBgMusic();
+  document.addEventListener("astro:page-load", initBgMusic);
+</script>
+
+<script>
+  // Generic scroll-progress for the persistent SCRL readout — runs on EVERY page.
+  // The home page owns a custom fly-through scroll and sets __dtHomeScrollActive
+  // while it's mounted; we defer to it then and drive the readout everywhere else.
+  (() => {
+    function update() {
+      if ((window as any).__dtHomeScrollActive) return; // home drives it there
+      const b = document.querySelector<HTMLElement>(".scroll-progress b");
+      if (!b) return;
+      const top =
+        document.body.scrollTop || document.documentElement.scrollTop || window.scrollY || 0;
+      const sh = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+      const denom = sh - window.innerHeight;
+      const pct = denom > 0 ? Math.round(Math.max(0, Math.min(1, top / denom)) * 100) : 0;
+      b.textContent = `${String(pct).padStart(3, "0")}%`;
+    }
+    // Capture-phase catches scroll from the body/any element even though it doesn't bubble.
+    window.addEventListener("scroll", update, { capture: true, passive: true });
+    window.addEventListener("resize", update, { passive: true });
+    document.addEventListener("astro:page-load", update);   // reset/recompute after Barba nav
+    document.addEventListener("dt:page-visible", update);
+    update();
+  })();
+</script>

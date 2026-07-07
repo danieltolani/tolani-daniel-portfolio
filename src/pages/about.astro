@@ -1,6 +1,109 @@
 ---
-import ComingSoonPage from '../components/ComingSoonPage.astro';
+import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
+import SpaceDots from '../components/SpaceDots.astro';
+import MosaicPortrait from '../components/MosaicPortrait.astro';
+import '../styles/hero.css'; // Reuse hero variables
+import '../styles/header.css';
+import '../styles/footer.css';
 ---
 
-<ComingSoonPage title="About" />
+<Layout title="About | Portfolio">
 
+  <main class="about-page">
+    <SpaceDots />
+
+    <div class="about-portrait-block">
+      <div class="about-figure">
+        <MosaicPortrait />
+        <span class="about-caption">
+          <span>DANIEL TOLANI</span>
+          <span class="about-caption-red">//</span>
+          <span>04.04.2002</span>
+        </span>
+      </div>
+
+      <div class="about-pars">
+        <p class="about-par">
+          Behold - The things that describe me.
+        </p>
+        <p class="about-par">
+          Shall in come in here.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+  .about-page {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #141417;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    padding: 8rem 1.5rem 5rem;
+  }
+
+  .about-portrait-block {
+    position: relative;
+    z-index: 1; /* above the dot field */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.4rem;
+  }
+
+  /* Figma: 228.65w in a 1512w frame -> the portrait is ~15.12vw. */
+  .about-figure {
+    width: clamp(160px, 15.12vw, 228.65px);
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .about-figure :global(.mosaic-portrait) {
+    width: 100%;
+  }
+
+  /* Caption spans edge to edge of the image: name — // — DOB spread across.
+     ~14px at the 1512 Figma frame, scaling with the portrait. */
+  .about-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: clamp(11px, 0.926vw, 14px);
+    text-transform: uppercase;
+    color: #7d8484;
+  }
+  .about-caption-red {
+    color: #f72f2f;
+    /* Figma: -44% tracking on the slashes */
+    letter-spacing: -0.44em;
+    padding-right: 0.44em; /* re-center: give back what the tracking eats */
+  }
+
+  .about-pars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin-top: 0.6rem;
+  }
+  .about-par {
+    max-width: 32rem;
+    margin: 0;
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    color: #7d8484;
+    text-align: center;
+    text-transform: uppercase;
+  }
+</style>

@@ -1,0 +1,96 @@
+---
+// Layered portrait with a living mosaic between the layers:
+//   base  — daniel-tolani-wBG.png  (full photo with background)
+//   tiles — sparse theme-colored squares, regenerated every second
+//   top   — daniel-tolani-nBG.png  (background-removed cutout)
+// The subject stays crisp on top while tiles blink in the background plane
+// behind him. Multi-instance safe; re-inits per Barba visit; the interval
+// self-terminates when the page is swapped out.
+---
+
+<div class="mosaic-portrait" aria-label="Portrait of Daniel Tolani">
+  <img class="mosaic-portrait-base" src="/png/daniel-tolani-wBG.png" alt="" />
+  <div class="mosaic-portrait-tiles" aria-hidden="true"></div>
+  <img class="mosaic-portrait-top" src="/png/daniel-tolani-nBG.png" alt="Daniel Tolani" />
+</div>
+
+<style is:global>
+  .mosaic-portrait {
+    position: relative;
+    width: min(458px, 82vw);
+    aspect-ratio: 458 / 572;
+  }
+  .mosaic-portrait img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .mosaic-portrait-tiles {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden; /* tiles never spill past the image borders */
+  }
+  .mosaic-portrait-top {
+    position: relative; /* above the tile layer */
+    z-index: 2;
+  }
+</style>
+
+<script>
+  const PORTRAIT = {
+    // Figma: ~34.51px tiles on a 228.65px-wide image — tiles scale with the
+    // rendered portrait instead of being a fixed pixel size.
+    tileRatio: 34.51 / 228.65,
+    density: 0.11,        // fraction of cells holding a tile each cycle
+    intervalMs: 1000,     // "changes every second"
+    colors: ["#f72f2f", "#f72f2f", "#e5eaf4", "#2c2d31"], // red-weighted
+  };
+
+  function buildTiles(layer: HTMLElement) {
+    const w = layer.offsetWidth;
+    const h = layer.offsetHeight;
+    if (!w || !h) return;
+    // Whole squares only, always inside the image: the ratio picks the column
+    // count, the tile size is then an EXACT division of the width, and only
+    // rows that fully fit are used — nothing ever gets cut at an edge.
+    const cols = Math.max(2, Math.round(1 / PORTRAIT.tileRatio));
+    const size = w / cols;
+    const rows = Math.floor(h / size);
+
+    layer.innerHTML = "";
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (Math.random() > PORTRAIT.density) continue;
+        const tile = document.createElement("div");
+        tile.style.cssText =
+          `position:absolute;left:${c * size}px;top:${r * size}px;` +
+          `width:${size}px;height:${size}px;` +
+          `background:${PORTRAIT.colors[Math.floor(Math.random() * PORTRAIT.colors.length)]};`;
+        layer.appendChild(tile);
+      }
+    }
+  }
+
+  function initMosaicPortraits() {
+    document.querySelectorAll<HTMLElement>(".mosaic-portrait").forEach((root) => {
+      if (root.dataset.bound) return;
+      root.dataset.bound = "true";
+      const layer = root.querySelector<HTMLElement>(".mosaic-portrait-tiles");
+      if (!layer) return;
+
+      buildTiles(layer);
+      const timer = setInterval(() => {
+        if (!root.isConnected) { clearInterval(timer); return; }
+        buildTiles(layer);
+      }, PORTRAIT.intervalMs);
+    });
+  }
+
+  initMosaicPortraits();
+  document.addEventListener("astro:page-load", initMosaicPortraits);
+</script>

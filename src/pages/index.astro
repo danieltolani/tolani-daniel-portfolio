@@ -197,15 +197,20 @@ import '../styles/footer.css';
     const xpRoot = section?.querySelector(".projects-experience");
     if (!heroPage || !section || !xpRoot || heroPage.dataset.scrollBound) return;
     heroPage.dataset.scrollBound = "true";
+    // Tell the generic SCRL updater (BackgroundMusic) to stand down — home drives
+    // the readout from its virtual fly-through scroll while it's mounted.
+    (window as any).__dtHomeScrollActive = true;
 
-    // Progress readout lives on <body> (outside the barba container) so the
-    // page entrance row-animations never transform it; removed on page leave.
+    // Progress readout sits in the persistent corner HUD (#dt-corner), to the
+    // RIGHT of the sound toggle. Falls back to <body> if the HUD isn't present.
+    // It lives outside the barba container either way, so the page entrance
+    // row-animations never transform it; removed on page leave.
     let hud = document.querySelector<HTMLElement>(".scroll-progress");
     if (!hud) {
       hud = document.createElement("div");
       hud.className = "scroll-progress fly-mono";
       hud.innerHTML = "SCRL <b>000%</b>";
-      document.body.appendChild(hud);
+      (document.getElementById("dt-corner") || document.body).appendChild(hud);
     }
     const hudVal = hud.querySelector("b");
 
@@ -233,9 +238,13 @@ import '../styles/footer.css';
     // Header's PRJT.WORK uses this for its smooth scroll into the section.
     (window as any).__dtScrollHome = (y: number) => { sc.target = y; };
 
-    // Reel choreography targets (both driven from the virtual scroll below).
+    // Reel choreography targets. The hero reel is scrubbed (dips away with
+    // scroll); the footer reel is TRIGGERED — a real timed ease-out entrance
+    // when you arrive at the bottom, independent of scroll speed.
     const heroReel = document.querySelector<HTMLElement>(".hero-reel");
     const footerReel = document.querySelector<HTMLElement>(".footer-reel");
+    let footerReelShown = false;
+    if (footerReel) gsap.set(footerReel, { y: -240, autoAlpha: 0 });
 
     let frame = 0;
     let prevLen = -1;
@@ -246,7 +255,8 @@ import '../styles/footer.css';
         window.removeEventListener("touchstart", onTouchStart);
         window.removeEventListener("touchmove", onTouchMove);
         delete (window as any).__dtScrollHome;
-        document.querySelector(".scroll-progress")?.remove();
+        // Hand the (persistent) SCRL readout back to the generic updater.
+        (window as any).__dtHomeScrollActive = false;
         return;
       }
 
@@ -291,12 +301,26 @@ import '../styles/footer.css';
         heroReel.style.opacity = (1 - hideP).toFixed(3);
       }
       if (footerReel) {
-        const start = total - window.innerHeight * 0.55;
-        const p = Math.min(1, Math.max(0, (sc.current - start) / (window.innerHeight * 0.4)));
-        const e = 1 - Math.pow(1 - p, 4); // easeOutQuint scrub
-        // Drops IN from above — reads as "arriving", not "was always there".
-        footerReel.style.transform = `translateY(${Math.round((1 - e) * -90)}px)`;
-        footerReel.style.opacity = e.toFixed(3);
+        // Trigger on the reel's ACTUAL viewport entry (not the virtual scroll
+        // value, which crosses "near bottom" long before the glide visually
+        // arrives — the tween would finish off-screen and look pre-placed).
+        const rr = footerReel.getBoundingClientRect();
+        if (!footerReelShown && rr.top < window.innerHeight * 0.96) {
+          footerReelShown = true;
+          // Timed entrance: drops in from above with the house easeOutQuint,
+          // the same regardless of how fast the scroll arrived.
+          // Big travel from well above, after a beat — the drop has to clearly
+          // outrun the page's own upward glide or the two motions cancel and
+          // it reads as already-placed.
+          gsap.fromTo(footerReel,
+            { y: -240, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 1.05, ease: "power4.out", delay: 0.18, overwrite: "auto" }
+          );
+        } else if (footerReelShown && rr.top > window.innerHeight * 1.25) {
+          // Re-arm once the slot is well below the viewport again.
+          footerReelShown = false;
+          gsap.set(footerReel, { y: -240, autoAlpha: 0 });
+        }
       }
 
       if (++frame % 5 === 0 && hudVal) {

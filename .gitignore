@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 .vercel
 .env*.local
+
+# Large audio source (ship the encoded m4a instead)
+public/assets/sfx/Drums+Others-Born_In_this_Body-92bpm.wav

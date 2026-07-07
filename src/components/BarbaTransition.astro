@@ -18,14 +18,26 @@ import MosaicTransition from './MosaicTransition.astro';
   // because module scripts compiled by Astro/Vite may not have been evaluated yet
   // when the event fires after a Barba navigation. Scoped to the container so a
   // leaving project page (still in the DOM mid-transition) can't trigger it.
+  // True once initAll has actually run for the current page cycle, so the late
+  // asset-loaded fallback (below) doesn't double-init when enter() already did.
+  let projectInitDone = false;
   function callProjectInit(container: HTMLElement) {
     if (container.getAttribute('data-barba-namespace') !== 'project') return;
+    if (projectInitDone) return; // already initialized this page cycle — no double-init
     if (typeof (window as any).__dtProjectInit === 'function') {
       (window as any).__dtProjectInit();
+      projectInitDone = true;
     } else {
       console.warn('[barba] project page but __dtProjectInit not ready — interactions skipped');
     }
   }
+
+  // Hard ceiling on how long the red tile cover may wait for the next page's
+  // CSS/JS before revealing anyway. On a slow network a heavy chunk used to hang
+  // the reveal indefinitely (stuck red screen); past this cap we show the text and
+  // layout that ARE ready — images keep their own per-image red cover until loaded,
+  // and interactions wire up via the late-load fallback once the scripts arrive.
+  const ASSET_WAIT_CAP_MS = 1500;
 
   // Signals "the page content is about to become visible" — fired when the load
   // intro starts (after the enter click) and on every Barba enter. Page scripts
@@ -41,6 +53,12 @@ import MosaicTransition from './MosaicTransition.astro';
     pageVisibleResolve?.();
     pageVisibleResolve = null;
     document.dispatchEvent(new CustomEvent('dt:page-visible'));
+  }
+
+  // Signals "a Barba navigation is starting" (the tiles begin covering the
+  // screen). Used to duck the background music during the transition.
+  function dispatchPageLeave() {
+    document.dispatchEvent(new CustomEvent('dt:page-leave'));
   }
 
   // ── Site-wide mosaic image covers ──────────────────────────────────────────
@@ -304,18 +322,29 @@ import MosaicTransition from './MosaicTransition.astro';
             dispatchContentEnter(LOAD_ENTER_DELAY);
           }
         };
+        // Either gate button reveals the site. "Enter with sound" starts audio;
+        // the silent "enter" leaves it muted (handled in BackgroundMusic). Both just
+        // hide the buttons and run the same intro here.
         const enterBtn = document.getElementById('mosaic-enter-btn');
-        if (enterBtn) {
-          enterBtn.addEventListener('click', () => {
-            enterBtn.style.display = 'none';
-            startIntro();
-          }, { once: true });
+        const enterSilentBtn = document.getElementById('mosaic-enter-silent-btn');
+        let entered = false;
+        const revealOnce = () => {
+          if (entered) return;
+          entered = true;
+          if (enterBtn) enterBtn.style.display = 'none';
+          if (enterSilentBtn) enterSilentBtn.style.display = 'none';
+          startIntro();
+        };
+        if (enterBtn || enterSilentBtn) {
+          enterBtn?.addEventListener('click', revealOnce);
+          enterSilentBtn?.addEventListener('click', revealOnce);
         } else {
           startIntro(); // no button (e.g. no-JS path shouldn't reach here) — just run
         }
       },
 
       async beforeEnter(data: any) {
+        projectInitDone = false; // reset for this navigation cycle
         const parser = new DOMParser();
         const nextDoc = parser.parseFromString(data.next.html, 'text/html');
 
@@ -370,7 +399,21 @@ import MosaicTransition from './MosaicTransition.astro';
           }));
         });
 
-        if (loads.length) await Promise.all(loads);
+        // On a fast connection Promise.all resolves first and everything is styled
+        // + interactive before the reveal (unchanged happy path). On a slow one the
+        // cap wins and we stop blocking the red cover — but the page may reveal
+        // before its scripts ran, so once they finally load, wire up interactions
+        // (if enter() couldn't) rather than leaving a project page dead.
+        if (loads.length) {
+          const allLoaded = Promise.all(loads);
+          allLoaded.then(() => {
+            if (!projectInitDone) callProjectInit(data.next.container as HTMLElement);
+          });
+          await Promise.race([
+            allLoaded,
+            new Promise<void>((res) => setTimeout(res, ASSET_WAIT_CAP_MS)),
+          ]);
+        }
 
         // ── Title ─────────────────────────────────────────────────────────────
         const newTitle = nextDoc.querySelector('title');
@@ -379,6 +422,7 @@ import MosaicTransition from './MosaicTransition.astro';
 
       async leave(data: any) {
         const done = (this as any).async();
+        dispatchPageLeave();
         if ((window as any).blockTransition) {
           await (window as any).blockTransition.enter();
         } else {
