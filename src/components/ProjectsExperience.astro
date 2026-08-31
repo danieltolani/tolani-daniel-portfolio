@@ -22,6 +22,10 @@ const getCardPreview = (project: any) => {
   if (src.startsWith("/")) return src;
   return `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_640/${src}.jpg`;
 };
+
+// Optional per-project backdrop behind the preview — useful when the media has
+// a transparent background (e.g. a cut-out 3D asset) and needs contrast.
+const getCardBg = (project: any) => project["preview-media"]?.bg || "";
 ---
 
 <div class="projects-experience" data-embedded={embedded ? "true" : undefined}>
@@ -33,7 +37,7 @@ const getCardPreview = (project: any) => {
             <span class="fly-mono">{(index + 1).toString().padStart(2, "0")} — {project.metadata?.year}</span>
             <span class="fly-accent"></span>
           </div>
-          <div class="fly-card-media">
+          <div class="fly-card-media" style={getCardBg(project) ? `background:${getCardBg(project)}` : undefined}>
             {getCardPreview(project) ? (
               <img src={getCardPreview(project)} alt="" loading="eager" />
             ) : (

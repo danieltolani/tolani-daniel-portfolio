@@ -45,8 +45,9 @@
     "design-process-par": "Design process description coming soon.",
     "design-process-images": [],
     "preview-media": {
-        "src": "",
-        "alt": "Rootstock Preview"
+        "src": "/png/STILL-EARLY/ES-SF-0.png",
+        "alt": "Still Early Preview",
+        "type": "image"
     },
     "design-text-block-1": "Content coming soon.",
     "design-text-block-2": "Content coming soon.",

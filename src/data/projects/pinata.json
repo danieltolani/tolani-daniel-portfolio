@@ -5,6 +5,11 @@
     "videoSrc": "PNT-BWI_Launch_Video",
     "wireframeVideoSrc": "BWI-WIRED_BWI_lon805",
     "videoTitle": "BWI Launch Video",
+    "preview-media": {
+        "src": "/GIF/BWI/BWI-PATTERN-LOOP-1.gif",
+        "alt": "BWI Preview",
+        "type": "gif"
+    },
     "metadata": {
         "year": "2025",
         "role": "Motion Designer",

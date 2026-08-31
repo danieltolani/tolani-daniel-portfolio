@@ -10,41 +10,62 @@
   <div class="status-text-group">
     <p class="status-label">available for work</p>
     <div class="status-time live-time" data-time="">
-      <span data-hour="">16</span><span class="status-blink">:</span><span data-minute="">45</span><span>&nbsp;gmt +1</span>
+      <span data-hour="">16</span><span class="status-blink">:</span><span data-minute="">45</span><span>&nbsp;<span class="status-sep" aria-hidden="true"></span>&nbsp;Kent, UK</span>
     </div>
   </div>
 </div>
 
+<style>
+  .status-sep {
+    display: inline-block;
+    width: 0.42em;
+    height: 0.42em;
+    background: currentColor;
+    vertical-align: middle;
+    /* optical nudge so the box centres on the cap height, not the x-height */
+    transform: translateY(-0.06em);
+    opacity: 0.7;
+  }
+</style>
+
 <script>
   function updateAvailabilityTime() {
     const now = new Date();
-    // Calculate GMT+1
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-    const gmtPlus1 = new Date(utc + (3600000));
 
-    // Format Time: 16:45 gmt +1 (with blinking colon)
-    const hours = gmtPlus1.getHours().toString().padStart(2, '0');
-    const minutes = gmtPlus1.getMinutes().toString().padStart(2, '0');
-    const timeString = `${hours}:${minutes} gmt +1`;
-    
+    // Read the actual current time in London (DST-aware).
+    const parts = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Europe/London',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(now);
+    const hours = parts.find(p => p.type === 'hour')?.value.padStart(2, '0') || '00';
+    const minutes = parts.find(p => p.type === 'minute')?.value.padStart(2, '0') || '00';
+
+    // Format Time: 16:45 ▪ Kent, UK (with blinking colon). Time stays DST-aware
+    // via the Europe/London zone above; location label is fixed.
+    const timeString = `${hours}:${minutes} ▪ Kent, UK`;
+
     const timeEls = document.querySelectorAll('.live-time');
     timeEls.forEach(timeEl => {
         // Update data-time attribute
         timeEl.setAttribute('data-time', timeString);
-        
+
         // Update hour span
         const hourSpan = timeEl.querySelector('[data-hour]');
         if (hourSpan) {
             hourSpan.setAttribute('data-hour', hours);
             hourSpan.textContent = hours;
         }
-        
+
         // Update minute span
         const minuteSpan = timeEl.querySelector('[data-minute]');
         if (minuteSpan) {
             minuteSpan.setAttribute('data-minute', minutes);
             minuteSpan.textContent = minutes;
         }
+
+        // (location label is static in the markup — no per-tick update needed)
     });
   }
 
@@ -52,4 +73,3 @@
   updateAvailabilityTime();
   setInterval(updateAvailabilityTime, 1000);
 </script>
-

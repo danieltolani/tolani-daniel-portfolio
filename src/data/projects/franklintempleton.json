@@ -4,6 +4,11 @@
     "description1": "Description coming soon.",
     "videoSrc": "FKT-POT-HERO-VIDEO",
     "videoTitle": "",
+    "preview-media": {
+        "src": "/png/POT/STY-POT/FT-POT-SF-0.png",
+        "alt": "Portfolios of Tomorrow Preview",
+        "type": "image"
+    },
     "metadata": {
         "year": "2025",
         "role": "Motion Designer",

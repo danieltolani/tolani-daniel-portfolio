@@ -4,6 +4,11 @@
     "description1": "Description coming soon.",
     "videoSrc": "001_MINTLE_MAIN",
     "videoTitle": "DiscoverMintle",
+    "preview-media": {
+        "src": "/png/MINTLE/MT-SF-0.png",
+        "alt": "Mintle Preview",
+        "type": "image"
+    },
     "metadata": {
         "year": "2023",
         "role": "Design & Motion Designer",

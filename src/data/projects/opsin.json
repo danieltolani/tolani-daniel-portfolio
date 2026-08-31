@@ -6,6 +6,12 @@
     "videoSrc": "001_OPSIN_TeaserLaunch",
     "wireframeVideoSrc": "002_OPSIN_Wired",
     "videoTitle": "Opsin Launch Teaser",
+    "preview-media": {
+        "src": "/GIF/OPSIN/OPS-3D_Base_Depth_o.gif",
+        "alt": "Opsin Preview",
+        "type": "gif",
+        "bg": "#EFEFEF"
+    },
     "metadata": {
         "year": "2025",
         "role": "Concept, Sound & Motion Designer",

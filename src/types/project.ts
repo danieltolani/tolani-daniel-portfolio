@@ -3,6 +3,8 @@ export interface ProjectImage {
   alt: string;
   type?: string;
   id?: string;
+  /** Optional CSS background behind a preview with transparency (fly-card only). */
+  bg?: string;
 }
 
 export interface ProjectTextBlock {
