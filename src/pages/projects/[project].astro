@@ -2283,14 +2283,26 @@ if (resolvedWireframeVideoSrc2 && !resolvedWireframeVideoSrc2.startsWith("/")) {
   function scheduleMediaRefresh() {
     const container = document.querySelector('[data-barba-namespace="project"]');
     if (!container) return;
+    // Debounced incremental refresh: the hero's scrub triggers were measured
+    // against the collapsed layout, which renders the hero pulled-up/scaled (the
+    // metadata row vanishes behind the carousel). Waiting for EVERY image before
+    // the first refresh left it wrong for seconds on a cold cache — instead,
+    // re-measure shortly after each image settles so the hero corrects as soon
+    // as the above-the-fold media lands.
+    let nudgeT: ReturnType<typeof setTimeout>;
+    const nudge = () => {
+      clearTimeout(nudgeT);
+      nudgeT = setTimeout(() => ScrollTrigger.refresh(), 120);
+    };
     const pending = Array.from(container.querySelectorAll("img"))
       .filter((im) => !(im.complete && im.naturalWidth > 0))
       .map((im) => new Promise<void>((res) => {
-        im.addEventListener("load", () => res(), { once: true });
-        im.addEventListener("error", () => res(), { once: true });
+        im.addEventListener("load", () => { nudge(); res(); }, { once: true });
+        im.addEventListener("error", () => { nudge(); res(); }, { once: true });
       }));
     if (!pending.length) return;
     Promise.all(pending).then(() => {
+      clearTimeout(nudgeT); // the final full re-measure below supersedes it
       ScrollTrigger.refresh();
       heroCarouselInstance?.resize?.();
       thumbsCarousel?.resize?.();

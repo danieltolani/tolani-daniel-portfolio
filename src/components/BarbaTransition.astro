@@ -203,7 +203,17 @@ import MosaicTransition from './MosaicTransition.astro';
   // Easing curves: page-to-page (with the tile reveal) uses the iOS sheet curve;
   // initial load/refresh uses a no-pause curve (instant start) since there's no
   // tile cover to mask the slow ramp-in.
-  const SHEET_EASE = 'cubic-bezier(0.32, 0.72, 0, 1)';  // page-to-page sheet curve
+  // Page-to-page sweep: one continuous move that the reveal wave UNCOVERS
+  // mid-flight. The original 500ms sheet curve finished while the screen was
+  // still solid red (the wave starts ~REVEAL_SFX_LEAD in and takes
+  // REVEAL_DURATION), so the sweep was never seen; a delayed start read as
+  // jerky (rows sat parked at their offset, then lurched off). Instead the
+  // rows start moving the moment enter() runs, on a longer centre-weighted
+  // curve: barely any travel while still covered, peak velocity as the wave
+  // clears mid-screen (~450ms in), and the settle ends just after the reveal
+  // completes (~760ms) — caught in progress, never held.
+  const SWEEP_MS   = 950;
+  const SWEEP_EASE = 'cubic-bezier(0.45, 0, 0.15, 1)';
 
   // Load/refresh "boom": content stays hidden (just the dark bg shows) until the red
   // tile exit is ~50% done, then the whole page appears in one quick move.
@@ -252,7 +262,7 @@ import MosaicTransition from './MosaicTransition.astro';
 
   // Page-to-page entrance: rows slide up into rest, staggered.
   // dir 'down' = top rows first; 'up' = bottom rows first.
-  function staggerEnter(next: HTMLElement, ease: string = SHEET_EASE, dir: 'down' | 'up' = 'down'): number {
+  function staggerEnter(next: HTMLElement, ease: string = SWEEP_EASE, dir: 'down' | 'up' = 'down'): number {
     next.style.opacity = '1';
     const offset = SHEET_OFFSET();
     const STAGGER_STEP = 70;
@@ -261,10 +271,10 @@ import MosaicTransition from './MosaicTransition.astro';
       const order = dir === 'up' ? (maxRow - bucket) : bucket;
       el.animate(
         [{ transform: `translateY(${offset}px)` }, { transform: 'translateY(0)' }],
-        { duration: 500, easing: ease, delay: order * STAGGER_STEP, fill: 'backwards' }
+        { duration: SWEEP_MS, easing: ease, delay: order * STAGGER_STEP, fill: 'backwards' }
       );
     }
-    return 500 + (maxRow + 1) * STAGGER_STEP;
+    return SWEEP_MS + (maxRow + 1) * STAGGER_STEP;
   }
 
   // Load/refresh entrance: rows stay hidden (just the dark bg shows) until the red
@@ -465,8 +475,10 @@ import MosaicTransition from './MosaicTransition.astro';
 
         gsap.set(next, { opacity: 1, display: 'block' });
 
-        // Staggered row entrance, concurrently with the red reveal — but skip the
-        // transform on project pages so it doesn't break their ScrollTrigger setup.
+        // Staggered row entrance, running concurrently with the red reveal —
+        // the SWEEP_MS/SWEEP_EASE pacing keeps it visibly in motion while the
+        // tiles clear. Skip the transform on project pages so it doesn't break
+        // their ScrollTrigger setup.
         const entranceMs = isProject(next) ? 0 : staggerEnter(next);
 
         if ((window as any).blockTransition) {

@@ -14,32 +14,56 @@ const { embedded = false } = Astro.props;
 const projects = data;
 const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-// Card preview: local files are used as-is; Cloudinary video IDs become a
-// first-frame poster image (so_0) — cards stay light, no autoplaying videos.
-const getCardPreview = (project: any) => {
-  const src = project["preview-media"]?.src || "";
-  if (!src) return "";
-  if (src.startsWith("/")) return src;
-  return `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_640/${src}.jpg`;
-};
+// Card preview resolution. preview-media.src can be:
+//   - a local path ("/...")        -> used as-is (small local assets)
+//   - a Cloudinary IMAGE public id -> optimized still (f_auto,q_auto,w_800)
+//   - a Cloudinary VIDEO public id (type: "video") -> muted autoplay loop,
+//     with a cheap first-frame poster so the card paints instantly.
+const CLD_W = 800;
+const cldImage = (id: string) =>
+  `https://res.cloudinary.com/${cloudName}/image/upload/f_auto,q_auto,w_${CLD_W},c_limit/${id}`;
+const cldVideo = (id: string) =>
+  `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,w_${CLD_W}/${id}.mp4`;
+const cldVideoPoster = (id: string) =>
+  `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_${CLD_W}/${id}.jpg`;
 
-// Optional per-project backdrop behind the preview — useful when the media has
-// a transparent background (e.g. a cut-out 3D asset) and needs contrast.
-const getCardBg = (project: any) => project["preview-media"]?.bg || "";
+const getPreview = (project: any) => {
+  const pm = project["preview-media"];
+  const src: string = pm?.src || "";
+  if (!src) return null;
+  const bg: string = pm?.bg || "";
+  if (pm?.type === "video") {
+    return { kind: "video", src: cldVideo(src), poster: cldVideoPoster(src), bg };
+  }
+  if (src.startsWith("/")) return { kind: "image", src, bg }; // local file as-is
+  return { kind: "image", src: cldImage(src), bg }; // Cloudinary image id
+};
 ---
 
 <div class="projects-experience" data-embedded={embedded ? "true" : undefined}>
   <div class="fly-viewport">
     <div class="fly-world">
-      {projects.map((project, index) => (
+      {projects.map((project, index) => {
+        const preview = getPreview(project);
+        return (
         <a class="fly-item fly-card" href={`/projects/${project.project}`} data-fly-card>
           <div class="fly-card-head">
             <span class="fly-mono">{(index + 1).toString().padStart(2, "0")} — {project.metadata?.year}</span>
             <span class="fly-accent"></span>
           </div>
-          <div class="fly-card-media" style={getCardBg(project) ? `background:${getCardBg(project)}` : undefined}>
-            {getCardPreview(project) ? (
-              <img src={getCardPreview(project)} alt="" loading="eager" />
+          <div class="fly-card-media" style={preview?.bg ? `background:${preview.bg}` : undefined}>
+            {preview?.kind === "video" ? (
+              <video
+                src={preview.src}
+                poster={preview.poster}
+                autoplay
+                muted
+                loop
+                playsinline
+                preload="none"
+              ></video>
+            ) : preview ? (
+              <img src={preview.src} alt="" loading="lazy" decoding="async" />
             ) : (
               <div class="fly-card-fill">
                 <span class="fly-fill-number">{(index + 1).toString().padStart(2, "0")}</span>
@@ -52,7 +76,8 @@ const getCardBg = (project: any) => project["preview-media"]?.bg || "";
             <span class="fly-mono fly-card-cta">view case study ↗</span>
           </div>
         </a>
-      ))}
+        );
+      })}
     </div>
 
     <div class="fly-hud fly-mono">
@@ -114,6 +139,10 @@ const getCardBg = (project: any) => project["preview-media"]?.bg || "";
     top: 50%;
     left: 50%;
     will-change: transform, opacity;
+    /* Hidden until the raf loop writes the first inline transform+opacity —
+       otherwise the SSR'd cards paint untransformed (top-left corner pinned to
+       the viewport center) for the beat between the mosaic reveal and init. */
+    opacity: 0;
   }
 
   /* Card + mono styles shared via flycard.css */
@@ -259,6 +288,16 @@ const getCardBg = (project: any) => project["preview-media"]?.bg || "";
 
     const velEl = root.querySelector(".fly-vel");
     const zEl = root.querySelector(".fly-z");
+
+    // Kick the card preview videos. The autoplay attribute only fires on the
+    // initial HTML parse — a container Barba adopts from DOMParser never starts
+    // its media, so after any navigation the thumbnails sat frozen (the project
+    // pages already do this in their own initAll). Re-assert muted first:
+    // autoplay policy checks the IDL flag, which adoption can leave unset.
+    root.querySelectorAll<HTMLVideoElement>("video[autoplay]").forEach((v) => {
+      v.muted = true;
+      if (v.paused) v.play().catch(() => {});
+    });
 
     // ── Build the slot list from the SSR'd project cards ──
     const cards = Array.from(world.querySelectorAll<HTMLElement>("[data-fly-card]"));
@@ -631,4 +670,8 @@ const getCardBg = (project: any) => project["preview-media"]?.bg || "";
 
   initAllExperiences();
   document.addEventListener("astro:page-load", initAllExperiences);
+  // Barba fires this in enter(), while the mosaic still covers the screen —
+  // init here so the cards are already flying in 3D when the tiles clear,
+  // instead of snapping into place after the astro:page-load in after().
+  document.addEventListener("dt:content-enter", initAllExperiences);
 </script>
