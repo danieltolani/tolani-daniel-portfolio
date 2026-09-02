@@ -304,6 +304,11 @@ import MosaicTransition from './MosaicTransition.astro';
   barba.init({
     preventRunning: true,
     debug: true,
+    // Barba's 2s default fetch timeout force-reloads the page mid-transition
+    // when the next page is slow to arrive (dev-server compiles, cold cache,
+    // slow networks) — which re-armed the ENTER gate and left half-torn-down
+    // page state behind. Give slow responses room to land instead.
+    timeout: 10000,
     transitions: [{
       name: 'default-transition',
 
@@ -458,7 +463,9 @@ import MosaicTransition from './MosaicTransition.astro';
         // First tell the home scroller (if we came from home) to stop writing
         // body.scrollTop — otherwise its still-running RAF loop clobbers this reset
         // back to the home scroll position, and the project reveals mid-page.
-        (window as any).__dtReleaseHomeScroll?.();
+        // `next` is passed so a scroller belonging to the INCOMING container (its
+        // module evaluated during beforeEnter) resets instead of self-destructing.
+        (window as any).__dtReleaseHomeScroll?.(next);
         window.scrollTo(0, 0);
         // html,body{height:100%;overflow-x:hidden} makes the BODY the actual
         // scrolling element — window.scrollTo alone resets nothing, and a stale

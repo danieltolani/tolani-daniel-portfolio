@@ -208,8 +208,22 @@ import '../styles/footer.css';
     // (home) container stays connected until AFTER the barba transition — so during
     // a nav the loop would clobber the incoming page's scroll reset back to the home
     // position. This lets the transition tell us to let go the instant it starts.
+    // Barba passes the INCOMING container: when this module first evaluates during
+    // beforeEnter (first barba nav to home after a hard load elsewhere), the newly
+    // bound scroller belongs to the page being ENTERED — killing it then left home
+    // with no unified scroll (native scroll sailed past the projects section
+    // straight to the footer). For the incoming page's own scroller, reset to the
+    // top instead of dying, matching the scroll reset enter() performs.
     let released = false;
-    (window as any).__dtReleaseHomeScroll = () => { released = true; };
+    const releaseFn = (nextContainer?: Element) => {
+      if (nextContainer && heroPage && nextContainer.contains(heroPage)) {
+        sc.target = 0;
+        sc.current = 0;
+        return;
+      }
+      released = true;
+    };
+    (window as any).__dtReleaseHomeScroll = releaseFn;
 
     // Progress readout sits in the persistent corner HUD (#dt-corner), to the
     // RIGHT of the sound toggle. Falls back to <body> if the HUD isn't present.
@@ -246,7 +260,8 @@ import '../styles/footer.css';
     window.addEventListener("touchmove", onTouchMove, { passive: false });
 
     // Header's PRJT.WORK uses this for its smooth scroll into the section.
-    (window as any).__dtScrollHome = (y: number) => { sc.target = y; };
+    const scrollHomeFn = (y: number) => { sc.target = y; };
+    (window as any).__dtScrollHome = scrollHomeFn;
 
     // Reel choreography targets. The hero reel is scrubbed (dips away with
     // scroll); the footer reel is TRIGGERED — a real timed ease-out entrance
@@ -265,8 +280,11 @@ import '../styles/footer.css';
         window.removeEventListener("wheel", onWheel);
         window.removeEventListener("touchstart", onTouchStart);
         window.removeEventListener("touchmove", onTouchMove);
-        delete (window as any).__dtScrollHome;
-        delete (window as any).__dtReleaseHomeScroll;
+        // Only clear the globals still owned by THIS scroller — a newer home
+        // scroller may have re-registered them between our release and this
+        // teardown frame, and deleting its handlers would orphan it.
+        if ((window as any).__dtScrollHome === scrollHomeFn) delete (window as any).__dtScrollHome;
+        if ((window as any).__dtReleaseHomeScroll === releaseFn) delete (window as any).__dtReleaseHomeScroll;
         // Hand the (persistent) SCRL readout back to the generic updater.
         (window as any).__dtHomeScrollActive = false;
         return;
