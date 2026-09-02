@@ -39,7 +39,10 @@ import '../styles/footer.css';
     </section>
 
     <div class="hero-image-container">
-      <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" data-cover-dir="tl-br" data-cover-white />
+      <picture>
+        <source srcset="/png/hero-image.webp" type="image/webp" />
+        <img src="/png/hero-image.png" alt="Hero composition" class="hero-image" data-cover-dir="tl-br" data-cover-white fetchpriority="high" />
+      </picture>
     </div>
   </main>
 

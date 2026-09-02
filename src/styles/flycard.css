@@ -47,7 +47,8 @@
   margin: 0.8rem 0;
   background: #222327;
 }
-.fly-card-media img {
+.fly-card-media img,
+.fly-card-media video {
   width: 100%;
   height: 100%;
   object-fit: cover;

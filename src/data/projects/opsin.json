@@ -7,9 +7,9 @@
     "wireframeVideoSrc": "002_OPSIN_Wired",
     "videoTitle": "Opsin Launch Teaser",
     "preview-media": {
-        "src": "/GIF/OPSIN/OPS-3D_Base_Depth_o.gif",
+        "src": "portfolio/previews/opsin-3d-base-depth",
         "alt": "Opsin Preview",
-        "type": "gif",
+        "type": "video",
         "bg": "#EFEFEF"
     },
     "metadata": {

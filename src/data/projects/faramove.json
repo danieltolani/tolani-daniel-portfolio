@@ -45,9 +45,9 @@
         { "src": "/png/FARAMOVE/FARAMOVE_Teaser/FRMV-TSR-SKETCH-03.png", "alt": "Faramove 1" }
     ],
     "preview-media": {
-        "src": "/GIF/farmove-arrow-loop-wide.gif",
+        "src": "portfolio/previews/faramove-arrow-loop-wide",
         "alt": "Faramove Preview",
-        "type": "gif"
+        "type": "video"
     },
     "design-text-block-1": "What we needed to highlight were the three features that set Faramove apart. While this would normally feel like an incomplete - or even nonexistent—brief, it turned out to be an exciting moment: I realized I had full creative control.",
     "design-text-block-2": "Starting with free-writing everything that came to mind about logistics and moving straight into sketching, the goal was to avoid leaning on “it’s a mobile app” or listing features. Instead, the aim was to grab attention and spark curiosity—because that’s exactly what a teaser is meant to do.",

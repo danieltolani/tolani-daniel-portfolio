@@ -6,9 +6,9 @@
     "wireframeVideoSrc": "BWI-WIRED_BWI_lon805",
     "videoTitle": "BWI Launch Video",
     "preview-media": {
-        "src": "/GIF/BWI/BWI-PATTERN-LOOP-1.gif",
+        "src": "portfolio/previews/bwi-pattern-loop-1",
         "alt": "BWI Preview",
-        "type": "gif"
+        "type": "video"
     },
     "metadata": {
         "year": "2025",
