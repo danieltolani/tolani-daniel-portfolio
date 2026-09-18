@@ -49,7 +49,6 @@ const getPreview = (project: any) => {
         <a class="fly-item fly-card" href={`/projects/${project.project}`} data-fly-card>
           <div class="fly-card-head">
             <span class="fly-mono">{(index + 1).toString().padStart(2, "0")} — {project.metadata?.year}</span>
-            <span class="fly-accent"></span>
           </div>
           <div class="fly-card-media" style={preview?.bg ? `background:${preview.bg}` : undefined}>
             {preview?.kind === "video" ? (

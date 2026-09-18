@@ -66,32 +66,13 @@
   flex-wrap: wrap;
 }
 
-/* Showreel slot, far right of the hero row (empty container for now). */
+/* Hero placement of the shared Reel component (see Reel.astro for the slot's
+   own look). Sized 15% down from the original 300px; the row's flex placement
+   (right edge + flex-end bottom) keeps the shrink anchored to the bottom-right
+   corner. A transform scale would be clobbered by the scroll choreography's
+   per-frame translateY writes. */
 .hero-reel {
-  position: relative;
-  width: min(300px, 100%);
-  aspect-ratio: 16 / 9;
-  background: #1b1c1e;
-  border: 1px solid #2c2d31;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hero-reel-label {
-  font-family: "Suisse Int'l Mono", monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #4a4b50;
-}
-.hero-reel-accent {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 10px;
-  height: 10px;
-  background: #f72f2f;
+  width: min(255px, 100%);
 }
 
 .hero-title {

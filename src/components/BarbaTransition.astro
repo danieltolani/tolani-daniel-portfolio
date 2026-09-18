@@ -478,6 +478,14 @@ import MosaicTransition from './MosaicTransition.astro';
         armPageVisibleGate();
         callProjectInit(next);
         coverImages(next);
+        // Autoplay never fires on DOMParser-adopted containers — kick every
+        // autoplaying video in the incoming page. The projects experience and
+        // project pages also kick their own; this covers one-offs like the
+        // hero reel.
+        next.querySelectorAll<HTMLVideoElement>('video[autoplay]').forEach((v) => {
+          v.muted = true;
+          if (v.paused) v.play().catch(() => {});
+        });
         dispatchContentEnter(0);
 
         gsap.set(next, { opacity: 1, display: 'block' });

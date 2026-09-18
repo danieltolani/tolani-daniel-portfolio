@@ -1,0 +1,62 @@
+---
+// The showreel slot — SINGLE source of truth for every reel placeholder on
+// the site (hero + footer render this same component, so media/label/sizing
+// changes always land in both). The opsin preview loop stands in until the
+// real showreel exists; the REEL label underneath is the no-media fallback.
+// Placement (width, grid/flex position, scroll choreography hooks like
+// .hero-reel / .footer-reel) stays with the caller via `class`.
+interface Props {
+  class?: string;
+  id?: string;
+}
+const { class: className = "", id } = Astro.props;
+
+// Same Cloudinary transform recipe as the fly cards (see ProjectsExperience):
+// a w_600 clip with a cheap first-frame poster.
+const cloudName = import.meta.env.PUBLIC_CLOUDINARY_CLOUD_NAME;
+const REEL_ID = "portfolio/previews/opsin-3d-base-depth";
+const reelVideo = `https://res.cloudinary.com/${cloudName}/video/upload/q_auto,w_600/${REEL_ID}.mp4`;
+const reelPoster = `https://res.cloudinary.com/${cloudName}/video/upload/so_0,f_auto,q_auto,w_600/${REEL_ID}.jpg`;
+---
+
+<div class:list={["dt-reel", className]} id={id} aria-label="Showreel">
+  <span class="dt-reel-label">REEL</span>
+  <video
+    class="dt-reel-video"
+    src={reelVideo}
+    poster={reelPoster}
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+  ></video>
+</div>
+
+<style is:global>
+  /* Global so the one definition styles the slot wherever it's rendered. */
+  .dt-reel {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: #1b1c1e;
+    border: 1px solid #2c2d31;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dt-reel-label {
+    font-family: "Suisse Int'l Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4a4b50;
+  }
+  .dt-reel-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

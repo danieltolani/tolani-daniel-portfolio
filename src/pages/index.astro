@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import AvailabilityTime from '../components/AvailabilityTime.astro';
 import ProjectsExperience from '../components/ProjectsExperience.astro';
 import SpaceDots from '../components/SpaceDots.astro';
+import Reel from '../components/Reel.astro';
 import '../styles/hero.css';
 import '../styles/header.css';
 import '../styles/footer.css';
@@ -30,11 +31,9 @@ import '../styles/footer.css';
           using aRTISTIC shapes, colors, texts AND sound in a way that they <span class="red-text">MOVE to COMMUNICATE.</span>
         </p>
 
-        <!-- Showreel slot — empty container for now, video drops in later. -->
-        <div class="hero-reel" id="hero-reel" aria-label="Showreel">
-          <span class="hero-reel-label">REEL</span>
-          <span class="hero-reel-accent"></span>
-        </div>
+        <!-- Showreel slot — the shared Reel component; .hero-reel carries only
+             this placement's width and the scroll-choreography hook. -->
+        <Reel class="hero-reel" id="hero-reel" />
       </div>
     </section>
 
